@@ -32,12 +32,23 @@ module.exports = {
       });
     const { execSync } = require('child_process');
     const moment = require('moment');
+    const safeExec = function (command, fallback) {
+      try {
+        return execSync(command, { stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim();
+      } catch (e) {
+        return fallback;
+      }
+    };
     config.plugin('define').tap((args) => {
+      const updateTime = safeExec('git log --pretty=format:%at -1', '');
+      const head = safeExec('git rev-parse HEAD', 'local');
+      const commitInfo = safeExec('git log --pretty=format:%s -1', 'local build');
+      const version = safeExec('git describe --tags', require('./package.json').version);
       args[0]['process.env'].version = JSON.stringify({
-        updateTime: moment(execSync('git log --pretty=format:%at -1').toString().trim() * 1000).utcOffset(8).format('YYYY-MM-DD HH:mm:ss'),
-        head: execSync('git rev-parse HEAD').toString().trim().substring(0, 12),
-        commitInfo: execSync('git log --pretty=format:%s -1').toString().trim(),
-        version: execSync('git describe --tags').toString().trim().split('-')[0]
+        updateTime: updateTime ? moment(updateTime * 1000).utcOffset(8).format('YYYY-MM-DD HH:mm:ss') : moment().utcOffset(8).format('YYYY-MM-DD HH:mm:ss'),
+        head: head.substring(0, 12),
+        commitInfo,
+        version: version.split('-')[0]
       });
       return args;
     });
