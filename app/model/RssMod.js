@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const Rss = require('../common/Rss');
+const logger = require('../libs/logger');
 
 const util = require('../libs/util');
 class RssMod {
@@ -49,48 +50,61 @@ class RssMod {
   };
 
   async dryrun (options) {
+    logger.info('[rss] 开始试运行:', options.alias || options.id || '新任务', 'RSS 数量:', options.rssUrls?.length || 0);
     const id = util.uuid.v4().split('-')[0];
     const rssSet = { ...options };
     rssSet.id = id;
     rssSet.dryrun = true;
     const rss = new Rss(rssSet);
     const torrents = await rss.dryrun();
+    logger.info('[rss] 试运行完成:', options.alias || options.id || '新任务', '种子数量:', torrents.length);
     return torrents;
   };
 
   async scrapeDryrun (options) {
+    logger.info('[rss] 开始检测免费/HR 试运行:', options.alias || options.id || '新任务');
     const torrents = await this.dryrun(options);
     for (const torrent of torrents) {
-      torrent.free = options.scrapeFree ? '未检测' : '未启用';
-      torrent.hr = options.scrapeHr ? '未检测' : '未启用';
+      torrent.free = '未检测';
+      torrent.hr = '未检测';
     }
+    logger.info('[rss] 检测免费/HR 试运行完成:', options.alias || options.id || '新任务', '种子数量:', torrents.length);
     return torrents;
   };
 
   async scrapeTorrent (options) {
     if (!options.link) {
+      logger.warn('[rss] 单条检测失败: 种子详情链接为空');
       throw new Error('种子详情链接为空');
     }
+    logger.info('[rss] 开始单条检测免费/HR:', options.link, 'Cookie 长度:', options.cookie ? String(options.cookie).length : 0);
     const result = {
-      free: options.scrapeFree ? '未检测' : '未启用',
-      hr: options.scrapeHr ? '未检测' : '未启用'
+      free: '未检测',
+      hr: '未检测'
     };
-    if (options.scrapeFree) {
-      try {
-        result.free = await util.scrapeFree(options.link, options.cookie) ? '是' : '否';
-      } catch (e) {
-        result.free = '检测失败';
-        result.freeError = e.message;
+    try {
+      result.free = await util.scrapeFree(options.link, options.cookie) ? '是' : '否';
+      logger.info('[rss] 单条检测免费结果:', options.link, result.free);
+    } catch (e) {
+      result.free = '检测失败';
+      result.freeError = e.message;
+      logger.error('[rss] 单条检测免费失败:', options.link, e.message);
+      if (e.stack) {
+        logger.error('[rss] 错误堆栈:', e.stack);
       }
     }
-    if (options.scrapeHr) {
-      try {
-        result.hr = await util.scrapeHr(options.link, options.cookie) ? '是' : '否';
-      } catch (e) {
-        result.hr = '检测失败';
-        result.hrError = e.message;
+    try {
+      result.hr = await util.scrapeHr(options.link, options.cookie) ? '是' : '否';
+      logger.info('[rss] 单条检测 HR 结果:', options.link, result.hr);
+    } catch (e) {
+      result.hr = '检测失败';
+      result.hrError = e.message;
+      logger.error('[rss] 单条检测 HR 失败:', options.link, e.message);
+      if (e.stack) {
+        logger.error('[rss] 错误堆栈:', e.stack);
       }
     }
+    logger.info('[rss] 单条检测完成:', options.link, 'free=', result.free, 'hr=', result.hr);
     return result;
   };
 

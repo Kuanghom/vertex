@@ -20,11 +20,16 @@ const post = async (url, json) => {
       validateStatus: () => true
     });
     if (!res.data.success) {
-      throw new Error(res.data.message);
+      const err = new Error(res.data.message || res.data.error || '请求失败');
+      err.data = res.data.data;
+      throw err;
     }
     return res.data;
   } catch (error) {
-    throw new Error(error.message);
+    if (error.data) {
+      throw error;
+    }
+    throw new Error(error.message || String(error));
   }
 };
 

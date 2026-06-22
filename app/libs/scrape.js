@@ -9,8 +9,10 @@ const getBody = async function (url, cookie) {
   let body;
   const cache = await redis.get(`vertex:scrape:${url}`);
   if (cache) {
+    logger.info('[scrape] 使用缓存页面:', url);
     body = cache;
   } else {
+    logger.info('[scrape] 请求页面:', url);
     body = (await util.requestPromise({
       url,
       headers: {
@@ -18,6 +20,7 @@ const getBody = async function (url, cookie) {
       }
     }, true)).body;
     await redis.setWithExpire(`vertex:scrape:${url}`, body, 40);
+    logger.info('[scrape] 页面请求完成, 长度:', body?.length || 0, url);
   }
   return body;
 };
@@ -56,6 +59,8 @@ const createConsole = function (logs) {
       logger.error('[scrape]', message);
     } else if (level === 'warn') {
       logger.warn('[scrape]', message);
+    } else if (level === 'debug') {
+      logger.debug('[scrape]', message);
     } else {
       logger.info('[scrape]', message);
     }
@@ -70,32 +75,40 @@ const createConsole = function (logs) {
 };
 
 const evalScrapeFunction = function (scriptCode) {
-  // eslint-disable-next-line no-eval
-  let fn = eval(scriptCode);
-  if (typeof fn !== 'function') {
+  try {
     // eslint-disable-next-line no-eval
-    fn = eval(`(${scriptCode})`);
+    let fn = eval(scriptCode);
+    if (typeof fn !== 'function') {
+      // eslint-disable-next-line no-eval
+      fn = eval(`(${scriptCode})`);
+    }
+    if (typeof fn !== 'function') {
+      throw new Error(`脚本必须返回 async function, 当前返回值类型: ${typeof fn}`);
+    }
+    return fn;
+  } catch (e) {
+    throw new Error(`脚本解析失败: ${e.message || e}`);
   }
-  if (typeof fn !== 'function') {
-    throw new Error('脚本必须返回 async function');
-  }
-  return fn;
 };
 
 const buildScrapeContext = async function (url, cookie, logs, skipCache = false) {
+  const host = new URL(url).host;
+  logger.info('[scrape] 构建脚本上下文:', host, url, skipCache ? '跳过缓存' : '允许缓存');
   let body;
   if (skipCache) {
+    logger.info('[scrape] 调试模式请求页面:', url);
     body = (await util.requestPromise({
       url,
       headers: {
         cookie
       }
     }, true)).body;
+    logger.info('[scrape] 调试模式页面请求完成, 长度:', body?.length || 0, url);
   } else {
     body = await getBody(url, cookie);
   }
   const dom = new JSDOM(body);
-  const host = new URL(url).host;
+  logger.info('[scrape] 页面解析完成:', host, url);
   return {
     url,
     cookie,
@@ -140,35 +153,108 @@ const executeScrapeFunction = async function (fn, context) {
 const runScrapeScript = async function (type, url, cookie) {
   const host = new URL(url).host;
   const scripts = getScrapeScripts(host, type);
-  if (scripts.length === 0) return null;
+  if (scripts.length === 0) {
+    logger.info('[scrape] 未找到匹配的扩展脚本:', host, type, url);
+    return null;
+  }
   const script = scripts[0];
-  logger.info('使用抓取扩展脚本:', script.alias || script.id, host, type, url);
+  logger.info('[scrape] 使用抓取扩展脚本:', script.alias || script.id, host, type, url);
   const logs = [];
-  const context = await buildScrapeContext(url, cookie, logs, false);
-  const fn = evalScrapeFunction(script[`${type}Script`]);
-  const result = !!await executeScrapeFunction(fn, context);
-  logger.info('抓取扩展脚本结果:', script.alias || script.id, host, type, result);
-  return result;
+  try {
+    const context = await buildScrapeContext(url, cookie, logs, false);
+    const fn = evalScrapeFunction(script[`${type}Script`]);
+    const result = !!await executeScrapeFunction(fn, context);
+    logger.info('[scrape] 抓取扩展脚本结果:', script.alias || script.id, host, type, result ? '命中' : '未命中', url);
+    return result;
+  } catch (e) {
+    logger.error('[scrape] 抓取扩展脚本执行失败:', script.alias || script.id, host, type, url, e.message);
+    if (e.stack) {
+      logger.error('[scrape] 错误堆栈:', e.stack);
+    }
+    throw e;
+  }
 };
 
 const debugScrapeScript = async function (type, url, cookie, scriptCode) {
-  if (!scriptCode || !scriptCode.trim()) {
-    throw new Error('脚本内容为空');
-  }
   const logs = [];
-  const context = await buildScrapeContext(url, cookie, logs, true);
-  const fn = evalScrapeFunction(scriptCode);
-  let result;
-  try {
-    result = !!await executeScrapeFunction(fn, context);
-  } catch (e) {
-    context.console.error(e.message || String(e));
-    throw e;
-  }
-  return {
-    result,
-    logs
+  const stageLabel = {
+    validate: '参数校验',
+    fetch: '获取页面',
+    parse: '解析脚本',
+    run: '执行脚本'
   };
+  const buildResult = (extra = {}) => ({
+    type,
+    result: null,
+    logs,
+    error: null,
+    stage: null,
+    stageLabel: null,
+    stack: null,
+    ...extra
+  });
+
+  logger.info('[scrape] 开始调试脚本:', type, url, 'Cookie 长度:', cookie ? String(cookie).length : 0);
+
+  if (!scriptCode || !scriptCode.trim()) {
+    logger.warn('[scrape] 调试脚本失败: 脚本内容为空', type, url);
+    return buildResult({
+      error: '脚本内容为空',
+      stage: 'validate',
+      stageLabel: stageLabel.validate
+    });
+  }
+
+  let context;
+  try {
+    context = await buildScrapeContext(url, cookie, logs, true);
+  } catch (e) {
+    logger.error('[scrape] 调试脚本获取页面失败:', type, url, e.message);
+    if (e.stack) {
+      logger.error('[scrape] 错误堆栈:', e.stack);
+    }
+    return buildResult({
+      error: `获取页面失败: ${e.message || String(e)}`,
+      stage: 'fetch',
+      stageLabel: stageLabel.fetch,
+      stack: e.stack
+    });
+  }
+
+  let fn;
+  try {
+    fn = evalScrapeFunction(scriptCode);
+    logger.info('[scrape] 调试脚本解析成功:', type, url);
+  } catch (e) {
+    logger.error('[scrape] 调试脚本解析失败:', type, url, e.message);
+    if (e.stack) {
+      logger.error('[scrape] 错误堆栈:', e.stack);
+    }
+    return buildResult({
+      error: e.message || String(e),
+      stage: 'parse',
+      stageLabel: stageLabel.parse,
+      stack: e.stack
+    });
+  }
+
+  try {
+    const result = !!await executeScrapeFunction(fn, context);
+    logger.info('[scrape] 调试脚本执行成功:', type, url, 'result=', result, 'console 条数=', logs.length);
+    return buildResult({ result });
+  } catch (e) {
+    context.console.error(e.stack || e.message || String(e));
+    logger.error('[scrape] 调试脚本执行失败:', type, url, e.message);
+    if (e.stack) {
+      logger.error('[scrape] 错误堆栈:', e.stack);
+    }
+    return buildResult({
+      error: `脚本执行失败: ${e.message || String(e)}`,
+      stage: 'run',
+      stageLabel: stageLabel.run,
+      stack: e.stack
+    });
+  }
 };
 
 const _free = async function (url, cookie) {
@@ -455,32 +541,58 @@ const hrWrapper = {
 
 exports.free = async (url, cookie) => {
   const host = new URL(url).host;
-  const customResult = await runScrapeScript('free', url, cookie);
-  if (customResult !== null) return customResult;
-  let result;
-  if (host.includes('m-team')) {
-    result = await _freeMTeam(url, cookie);
-    logger.info('抓取免费结果:', host, url, result ? '免费' : '非免费');
-    return result;
+  logger.info('[scrape] 开始检测免费:', host, url);
+  try {
+    const customResult = await runScrapeScript('free', url, cookie);
+    if (customResult !== null) {
+      logger.info('[scrape] 扩展脚本检测免费结果:', host, url, customResult ? '免费' : '非免费');
+      return customResult;
+    }
+    let result;
+    if (host.includes('m-team')) {
+      result = await _freeMTeam(url, cookie);
+      logger.info('[scrape] 内置检测免费结果:', host, url, result ? '免费' : '非免费');
+      return result;
+    }
+    if (freeWrapper[host]) {
+      result = await freeWrapper[host](url, cookie);
+      logger.info('[scrape] 内置检测免费结果:', host, url, result ? '免费' : '非免费');
+      return result;
+    }
+    logger.warn('[scrape] 未找到免费检测实现:', host, url);
+    throw new Error(`暂不支持 ${host} 抓取免费, 请检查后重试.`);
+  } catch (e) {
+    logger.error('[scrape] 检测免费失败:', host, url, e.message);
+    if (e.stack) {
+      logger.error('[scrape] 错误堆栈:', e.stack);
+    }
+    throw e;
   }
-  if (freeWrapper[host]) {
-    result = await freeWrapper[host](url, cookie);
-    logger.info('抓取免费结果:', host, url, result ? '免费' : '非免费');
-    return result;
-  }
-  throw new Error(`暂不支持 ${host} 抓取免费, 请检查后重试.`);
 };
 
 exports.debugScrapeScript = debugScrapeScript;
 
 exports.hr = async (url, cookie) => {
   const host = new URL(url).host;
-  const customResult = await runScrapeScript('hr', url, cookie);
-  if (customResult !== null) return customResult;
-  if (hrWrapper[host]) {
-    const result = await hrWrapper[host](url, cookie);
-    logger.info('抓取 HR 结果:', host, url, result ? 'HR' : '非 HR');
-    return result;
+  logger.info('[scrape] 开始检测 HR:', host, url);
+  try {
+    const customResult = await runScrapeScript('hr', url, cookie);
+    if (customResult !== null) {
+      logger.info('[scrape] 扩展脚本检测 HR 结果:', host, url, customResult ? 'HR' : '非 HR');
+      return customResult;
+    }
+    if (hrWrapper[host]) {
+      const result = await hrWrapper[host](url, cookie);
+      logger.info('[scrape] 内置检测 HR 结果:', host, url, result ? 'HR' : '非 HR');
+      return result;
+    }
+    logger.warn('[scrape] 未找到 HR 检测实现:', host, url);
+    throw new Error(`暂不支持 ${host} 抓取 HR, 请检查后重试.`);
+  } catch (e) {
+    logger.error('[scrape] 检测 HR 失败:', host, url, e.message);
+    if (e.stack) {
+      logger.error('[scrape] 错误堆栈:', e.stack);
+    }
+    throw e;
   }
-  throw new Error(`暂不支持 ${host} 抓取 HR, 请检查后重试.`);
 };

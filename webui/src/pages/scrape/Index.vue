@@ -232,22 +232,40 @@ export default {
         this.debug.cookie = site.cookie || '';
       }
     },
-    formatDebugOutput (type, data) {
-      const lines = [`[${type === 'free' ? '免费判断' : 'HR 判断'}] 调试完成`];
+    formatDebugOutput (type, data = {}) {
+      const label = type === 'free' ? '免费判断' : 'HR 判断';
+      const lines = [];
+      if (data.error) {
+        lines.push(`[${label}] 调试失败`);
+        if (data.stageLabel || data.stage) {
+          lines.push(`失败阶段: ${data.stageLabel || data.stage}`);
+        }
+        lines.push(`错误信息: ${data.error}`);
+        if (data.stack) {
+          lines.push('');
+          lines.push('--- 错误堆栈 ---');
+          lines.push(data.stack);
+        }
+      } else {
+        lines.push(`[${label}] 调试完成`);
+        lines.push(`脚本返回值: ${String(data.result)}`);
+      }
       if (data.logs && data.logs.length) {
         lines.push('');
         lines.push('--- console 输出 ---');
         for (const log of data.logs) {
           lines.push(`[${log.level}] ${log.message}`);
         }
-      } else {
+      } else if (!data.error) {
         lines.push('');
         lines.push('(无 console 输出)');
       }
-      lines.push('');
-      lines.push(`--- 脚本返回值 ---`);
-      lines.push(String(data.result));
       return lines.join('\n');
+    },
+    appendDebugOutput (output) {
+      this.debugOutput = this.debugOutput
+        ? `${this.debugOutput}\n\n${output}`
+        : output;
     },
     async debugScript (type) {
       const scriptCode = type === 'free' ? this.script.freeScript : this.script.hrScript;
@@ -272,17 +290,24 @@ export default {
           site: this.debug.site,
           script: scriptCode
         });
-        const output = this.formatDebugOutput(type, res.data);
-        this.debugOutput = this.debugOutput
-          ? `${this.debugOutput}\n\n${output}`
-          : output;
+        const data = res.data || {};
+        this.appendDebugOutput(this.formatDebugOutput(type, data));
+        if (data.error) {
+          this.$message().error(data.error);
+        } else {
+          this.$message().success(`${type === 'free' ? '免费判断' : 'HR 判断'}调试完成, 返回值: ${data.result}`);
+        }
       } catch (e) {
-        const output = `[${type === 'free' ? '免费判断' : 'HR 判断'}] 调试失败\n\n${e.message}`;
-        this.debugOutput = this.debugOutput
-          ? `${this.debugOutput}\n\n${output}`
-          : output;
+        const data = e.data || {
+          error: e.message || String(e),
+          stack: e.stack,
+          logs: []
+        };
+        this.appendDebugOutput(this.formatDebugOutput(type, data));
+        this.$message().error(data.error || e.message || '调试失败');
+      } finally {
+        this.debugLoading = '';
       }
-      this.debugLoading = '';
     },
     clearDebugOutput () {
       this.debugOutput = '';

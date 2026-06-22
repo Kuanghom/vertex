@@ -327,7 +327,7 @@
           <a-button type="primary" html-type="submit" style="margin-top: 24px; margin-bottom: 48px;">应用 | 完成</a-button>
           <a-button style="margin-left: 12px; margin-top: 24px; margin-bottom: 48px;" @click="clearRss()">清空</a-button>
           <a-button type="primary" style="margin-left: 12px; margin-top: 24px; margin-bottom: 48px;" @click="dryrun()">试运行</a-button>
-          <a-button type="primary" style="margin-left: 12px; margin-top: 24px; margin-bottom: 48px;" @click="scrapeDryrun()">检测免费/HR</a-button>
+          <a-button type="primary" :loading="dryrunLoading" style="margin-left: 12px; margin-top: 24px; margin-bottom: 48px;" @click="scrapeDryrun()">检测免费/HR</a-button>
         </a-form-item>
       </a-form>
     </div>
@@ -340,7 +340,7 @@
     <div style="text-align: left; ">
       <a-alert message="注意事项" type="info" >
         <template #description>
-          {{ dryrunMode === 'scrape' ? '检测免费/HR 会先执行 RSS 试运行，再访问种子详情页检测免费和 HR 状态，不会添加种子。' : 'RSS 试运行仅判断是否符合 RSS 规则，不检测种子免费或 HR 状态。' }}
+          {{ dryrunMode === 'scrape' ? '检测免费/HR 会先执行 RSS 试运行获取种子列表，不会自动检测免费或 HR 状态。请在列表中点击「检测」按钮逐条检测，与上方「抓取免费」「排除 HR」勾选无关。' : 'RSS 试运行仅判断是否符合 RSS 规则，不检测种子免费或 HR 状态。' }}
           <br>
           RSS 链接: {{ rss.rssUrls[0] }}
         </template>
@@ -361,6 +361,7 @@
             :data-source="dryrunResult"
             :pagination="false"
             :scroll="{ x: 960 }"
+            :row-key="record => record.link || record.name"
           >
             <template #title>
               <span style="font-size: 16px; font-weight: bold;">种子列表</span>
@@ -466,6 +467,8 @@ export default {
       scrapeDryrunColumns,
       dryrunMode: 'rule',
       modalVisible: false,
+      dryrunResult: [],
+      dryrunLoading: false,
       rssList: [],
       downloaders: [],
       notifications: [],
@@ -545,42 +548,64 @@ export default {
     },
     async dryrun () {
       try {
+        this.dryrunLoading = true;
         const res = await this.$api().rss.dryrun({ ...this.rss });
         this.dryrunResult = res.data;
         this.dryrunMode = 'rule';
         this.modalVisible = true;
       } catch (e) {
         this.$message().error(e.message);
+      } finally {
+        this.dryrunLoading = false;
       }
     },
     async scrapeDryrun () {
       try {
-        if ((this.rss.scrapeFree || this.rss.scrapeHr) && !this.rss.cookie) {
+        if (!this.rss.cookie) {
           this.$message().error('检测免费/HR 需要填写 Cookie');
           return;
         }
+        this.dryrunLoading = true;
         const res = await this.$api().rss.scrapeDryrun({ ...this.rss });
-        this.dryrunResult = res.data;
+        this.dryrunResult = res.data.map(item => ({
+          ...item,
+          free: '未检测',
+          hr: '未检测',
+          scrapeLoading: false
+        }));
         this.dryrunMode = 'scrape';
         this.modalVisible = true;
       } catch (e) {
         this.$message().error(e.message);
+      } finally {
+        this.dryrunLoading = false;
       }
     },
     async scrapeTorrent (record) {
+      const index = this.dryrunResult.findIndex(item => item.link === record.link);
+      if (index === -1) {
+        return;
+      }
       try {
-        record.scrapeLoading = true;
+        this.dryrunResult[index] = { ...this.dryrunResult[index], scrapeLoading: true };
         const res = await this.$api().rss.scrapeTorrent({
           link: record.link,
-          cookie: this.rss.cookie,
-          scrapeFree: this.rss.scrapeFree,
-          scrapeHr: this.rss.scrapeHr
+          cookie: this.rss.cookie
         });
-        Object.assign(record, res.data);
+        this.dryrunResult[index] = {
+          ...this.dryrunResult[index],
+          ...res.data,
+          scrapeLoading: false
+        };
+        const { free, hr, freeError, hrError } = res.data;
+        if (free === '检测失败' || hr === '检测失败') {
+          this.$message().warning(`检测完成: 免费 ${free}${freeError ? ` (${freeError})` : ''}, HR ${hr}${hrError ? ` (${hrError})` : ''}`);
+        } else {
+          this.$message().success(`检测完成: 免费 ${free}, HR ${hr}`);
+        }
       } catch (e) {
+        this.dryrunResult[index] = { ...this.dryrunResult[index], scrapeLoading: false };
         this.$message().error(e.message);
-      } finally {
-        record.scrapeLoading = false;
       }
     },
     async enableTask (record) {

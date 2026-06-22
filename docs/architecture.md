@@ -53,7 +53,7 @@ flowchart TD
 
 ```mermaid
 flowchart LR
-  UI["站点扩展页面 /scrape"] --> API["/api/script add/modify"]
+  UI["站点扩展页面 /task/scrape"] --> API["/api/script add/modify"]
   API --> JSON["app/data/script/*.json"]
   RSS["Rss.js"] --> SCRAPE["libs/scrape.js"]
   SCRAPE --> EXT{"是否存在匹配 host 的扩展脚本?"}
@@ -66,7 +66,7 @@ flowchart LR
 
 ## 站点抓取扩展脚本约定
 
-在“站点扩展”一级菜单页面填写 `站点 Host`，例如 `dstudio.me`。`免费判断` 和 `HR 判断` 都需要返回一个函数：
+在“任务配置 → 站点扩展”页面填写 `站点 Host`，例如 `dstudio.me`。`免费判断` 和 `HR 判断` 都需要返回一个函数：
 
 ```js
 async function ({ document, body, url, cookie, host, logger, util }) {
