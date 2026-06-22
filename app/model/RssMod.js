@@ -58,6 +58,33 @@ class RssMod {
     return torrents;
   };
 
+  async scrapeDryrun (options) {
+    const torrents = await this.dryrun(options);
+    for (const torrent of torrents) {
+      if (options.scrapeFree) {
+        try {
+          torrent.free = await util.scrapeFree(torrent.link, options.cookie) ? '是' : '否';
+        } catch (e) {
+          torrent.free = '检测失败';
+          torrent.freeError = e.message;
+        }
+      } else {
+        torrent.free = '未启用';
+      }
+      if (options.scrapeHr) {
+        try {
+          torrent.hr = await util.scrapeHr(torrent.link, options.cookie) ? '是' : '否';
+        } catch (e) {
+          torrent.hr = '检测失败';
+          torrent.hrError = e.message;
+        }
+      } else {
+        torrent.hr = '未启用';
+      }
+    }
+    return torrents;
+  };
+
   async mikanSearch (options) {
     const rssList = util.listRss();
     const rssSet = rssList.filter(item => item.id === options.rss)[0];

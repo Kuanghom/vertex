@@ -21,6 +21,10 @@ export default {
     const url = '/api/rss/dryrun';
     return await post(url, rss);
   },
+  scrapeDryrun: async (rss) => {
+    const url = '/api/rss/scrapeDryrun';
+    return await post(url, rss);
+  },
   mikanSearch: async (rss) => {
     const url = '/api/rss/mikanSearch';
     return await post(url, rss);

@@ -327,6 +327,7 @@
           <a-button type="primary" html-type="submit" style="margin-top: 24px; margin-bottom: 48px;">应用 | 完成</a-button>
           <a-button style="margin-left: 12px; margin-top: 24px; margin-bottom: 48px;" @click="clearRss()">清空</a-button>
           <a-button type="primary" style="margin-left: 12px; margin-top: 24px; margin-bottom: 48px;" @click="dryrun()">试运行</a-button>
+          <a-button type="primary" style="margin-left: 12px; margin-top: 24px; margin-bottom: 48px;" @click="scrapeDryrun()">检测免费/HR</a-button>
         </a-form-item>
       </a-form>
     </div>
@@ -339,7 +340,7 @@
     <div style="text-align: left; ">
       <a-alert message="注意事项" type="info" >
         <template #description>
-          RSS 试运行仅判断是否符合 RSS 规则，不检测种子免费或 HR 状态。
+          {{ dryrunMode === 'scrape' ? '检测免费/HR 会先执行 RSS 试运行，再访问种子详情页检测免费和 HR 状态，不会添加种子。' : 'RSS 试运行仅判断是否符合 RSS 规则，不检测种子免费或 HR 状态。' }}
           <br>
           RSS 链接: {{ rss.rssUrls[0] }}
         </template>
@@ -355,7 +356,7 @@
           :wrapperCol="{ span:24 }">
           <a-table
             :style="`font-size: ${isMobile() ? '12px': '14px'};`"
-            :columns="dryrunColumns"
+            :columns="dryrunMode === 'scrape' ? scrapeDryrunColumns : dryrunColumns"
             size="small"
             :data-source="dryrunResult"
             :pagination="false"
@@ -367,6 +368,14 @@
             <template #bodyCell="{ column, record }">
               <template v-if="column.dataIndex === 'size'">
                 {{ $formatSize(record.size) }}
+              </template>
+              <template v-if="column.dataIndex === 'free'">
+                <a-tag :color="record.free === '是' ? 'success' : (record.free === '检测失败' ? 'error' : 'default')">{{ record.free }}</a-tag>
+                <span v-if="record.freeError" style="color: red;">{{ record.freeError }}</span>
+              </template>
+              <template v-if="column.dataIndex === 'hr'">
+                <a-tag :color="record.hr === '是' ? 'error' : (record.hr === '检测失败' ? 'error' : 'success')">{{ record.hr }}</a-tag>
+                <span v-if="record.hrError" style="color: red;">{{ record.hrError }}</span>
               </template>
             </template>
           </a-table>
@@ -426,9 +435,23 @@ export default {
         width: 28
       }
     ];
+    const scrapeDryrunColumns = [
+      ...dryrunColumns,
+      {
+        title: '免费',
+        dataIndex: 'free',
+        width: 22
+      }, {
+        title: 'HR',
+        dataIndex: 'hr',
+        width: 22
+      }
+    ];
     return {
       columns,
       dryrunColumns,
+      scrapeDryrunColumns,
+      dryrunMode: 'rule',
       modalVisible: false,
       rssList: [],
       downloaders: [],
@@ -511,6 +534,21 @@ export default {
       try {
         const res = await this.$api().rss.dryrun({ ...this.rss });
         this.dryrunResult = res.data;
+        this.dryrunMode = 'rule';
+        this.modalVisible = true;
+      } catch (e) {
+        this.$message().error(e.message);
+      }
+    },
+    async scrapeDryrun () {
+      try {
+        if ((this.rss.scrapeFree || this.rss.scrapeHr) && !this.rss.cookie) {
+          this.$message().error('检测免费/HR 需要填写 Cookie');
+          return;
+        }
+        const res = await this.$api().rss.scrapeDryrun({ ...this.rss });
+        this.dryrunResult = res.data;
+        this.dryrunMode = 'scrape';
         this.modalVisible = true;
       } catch (e) {
         this.$message().error(e.message);

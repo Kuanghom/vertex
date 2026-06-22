@@ -105,6 +105,23 @@ class Rss {
     }
   };
 
+  async scrapeDryrun (req, res) {
+    const options = req.body;
+    try {
+      const r = await rssMod.scrapeDryrun(options);
+      res.send({
+        success: true,
+        data: r
+      });
+    } catch (e) {
+      logger.error(e);
+      res.send({
+        success: false,
+        message: e.message
+      });
+    }
+  };
+
   async mikanSearch (req, res) {
     const options = req.body;
     try {
