@@ -5,13 +5,17 @@ const Script = require('../common/Script');
 
 const util = require('../libs/util');
 class ScriptMod {
+  _isCronScript (scriptSet) {
+    return (scriptSet.scriptType || 'cron') === 'cron';
+  }
+
   add (options) {
     const id = util.uuid.v4().split('-')[0];
     const scriptSet = { ...options };
     scriptSet.id = id;
     fs.writeFileSync(path.join(__dirname, '../data/script/', id + '.json'), JSON.stringify(scriptSet, null, 2));
     if (global.runningScript[id]) global.runningScript[id].destroy();
-    if (scriptSet.enable) global.runningScript[id] = new Script(scriptSet);
+    if (scriptSet.enable && this._isCronScript(scriptSet)) global.runningScript[id] = new Script(scriptSet);
     return '添加 Script 成功';
   };
 
@@ -25,12 +29,15 @@ class ScriptMod {
     const scriptSet = { ...options };
     fs.writeFileSync(path.join(__dirname, '../data/script/', options.id + '.json'), JSON.stringify(scriptSet, null, 2));
     if (global.runningScript[options.id]) global.runningScript[options.id].destroy();
-    if (scriptSet.enable) global.runningScript[options.id] = new Script(scriptSet);
+    if (scriptSet.enable && this._isCronScript(scriptSet)) global.runningScript[options.id] = new Script(scriptSet);
     return '修改 Script 成功';
   };
 
   list () {
     const scriptList = util.listCrontabJavaScript();
+    for (const script of scriptList) {
+      script.scriptType = script.scriptType || 'cron';
+    }
     return scriptList;
   };
 

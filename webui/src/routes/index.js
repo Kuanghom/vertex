@@ -64,6 +64,8 @@ import HistoryWatchCategory from '@/pages/history/WatchCategory';
 import MixSearch from '@/pages/mix/Search';
 import MixDownloader from '@/pages/mix/Downloader';
 
+import ScrapeIndex from '@/pages/scrape/Index';
+
 import Login from '@/pages/user/Login';
 
 const user = {
@@ -359,6 +361,20 @@ const mix = {
   ]
 };
 
+const scrape = {
+  path: 'scrape',
+  component: Layout,
+  children: [
+    {
+      path: '',
+      component: ScrapeIndex,
+      meta: {
+        title: '站点扩展'
+      }
+    }
+  ]
+};
+
 const guide = {
   path: 'guide',
   component: Layout,
@@ -487,6 +503,7 @@ const routes = [{
     rule,
     base,
     task,
+    scrape,
     tool,
     info,
     guide,

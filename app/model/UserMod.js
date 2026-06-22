@@ -109,6 +109,10 @@ class UserMod {
           icon: ['fas', 'link']
         }]
       }, {
+        title: '站点扩展',
+        path: '/scrape',
+        icon: ['fas', 'puzzle-piece']
+      }, {
         title: '影视订阅',
         path: '/subscribe',
         icon: ['fas', 'tv'],

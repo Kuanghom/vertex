@@ -2,8 +2,10 @@ const util = require('./util');
 const redis = require('./redis');
 const logger = require('./logger');
 const { JSDOM } = require('jsdom');
+const fs = require('fs');
+const path = require('path');
 
-const getDocument = async function (url, cookie) {
+const getBody = async function (url, cookie) {
   let body;
   const cache = await redis.get(`vertex:scrape:${url}`);
   if (cache) {
@@ -17,8 +19,70 @@ const getDocument = async function (url, cookie) {
     }, true)).body;
     await redis.setWithExpire(`vertex:scrape:${url}`, body, 40);
   }
+  return body;
+};
+
+const getDocument = async function (url, cookie) {
+  const body = await getBody(url, cookie);
   const dom = new JSDOM(body);
   return dom.window.document;
+};
+
+const assertLoggedIn = function (d) {
+  const body = d.body.innerHTML;
+  if (body.indexOf('必须在登录后才能访问') !== -1 || body.indexOf('用户名：') !== -1 || body.indexOf('login.php') !== -1) {
+    throw new Error('疑似登录状态失效, 请检查 Cookie');
+  }
+};
+
+const getScrapeScripts = function (host, type) {
+  const scriptDir = path.join(__dirname, '../data/script');
+  if (!fs.existsSync(scriptDir)) return [];
+  return fs.readdirSync(scriptDir)
+    .filter(file => path.extname(file) === '.json')
+    .map(file => {
+      try {
+        return JSON.parse(fs.readFileSync(path.join(scriptDir, file), { encoding: 'utf-8' }));
+      } catch (e) {
+        logger.error('读取抓取扩展脚本失败:', file, e.message);
+        return null;
+      }
+    })
+    .filter(Boolean)
+    .filter(script => script.enable && script.scriptType === 'scrape')
+    .filter(script => (script.siteHost || '').split(',').map(i => i.trim().toLowerCase()).indexOf(host.toLowerCase()) !== -1)
+    .filter(script => !!script[`${type}Script`]);
+};
+
+const runScrapeScript = async function (type, url, cookie) {
+  const host = new URL(url).host;
+  const scripts = getScrapeScripts(host, type);
+  if (scripts.length === 0) return null;
+  const script = scripts[0];
+  logger.info('使用抓取扩展脚本:', script.alias || script.id, host, type, url);
+  const body = await getBody(url, cookie);
+  const dom = new JSDOM(body);
+  const context = {
+    url,
+    cookie,
+    host,
+    body,
+    document: dom.window.document,
+    logger,
+    util
+  };
+  // eslint-disable-next-line no-eval
+  let fn = eval(script[`${type}Script`]);
+  if (typeof fn !== 'function') {
+    // eslint-disable-next-line no-eval
+    fn = eval(`(${script[`${type}Script`]})`);
+  }
+  if (typeof fn !== 'function') {
+    throw new Error(`抓取扩展脚本 ${script.alias || script.id} 必须返回函数`);
+  }
+  const result = !!await fn(context);
+  logger.info('抓取扩展脚本结果:', script.alias || script.id, host, type, result);
+  return result;
 };
 
 const _free = async function (url, cookie) {
@@ -196,6 +260,14 @@ const _freeLuminance = async function (url, cookie) {
   return state;
 };
 
+const _freeDepthStudio = async function (url, cookie) {
+  const d = await getDocument(url, cookie);
+  assertLoggedIn(d);
+  const state = d.querySelector('.details-title font.free, .details-title font.twoupfree, #top font.free, #top font.twoupfree');
+  const globalFree = d.body.innerHTML.indexOf('全站 [Free] 生效中') !== -1;
+  return state || globalFree;
+};
+
 const freeWrapper = {
   'pt.btschool.club': _free,
   'club.hares.top': _freeHaresClub,
@@ -242,7 +314,8 @@ const freeWrapper = {
   'www.empornium.is': _freeLuminance,
   'www.empornium.sx': _freeLuminance,
   'www.pixelcove.me': _freeLuminance,
-  'www.cathode-ray.tube': _freeLuminance
+  'www.cathode-ray.tube': _freeLuminance,
+  'dstudio.me': _freeDepthStudio
 };
 
 const _hr = async function (url, cookie) {
@@ -273,6 +346,13 @@ const _hrTheGlory = async function (url, cookie) {
   return hr;
 };
 
+const _hrDepthStudio = async function (url, cookie) {
+  const d = await getDocument(url, cookie);
+  assertLoggedIn(d);
+  const hr = d.querySelector('img.hitandrun, img[alt="H&R"], img[title="H&R"]');
+  return hr;
+};
+
 const hrWrapper = {
   'www.hddolby.com': _hr,
   'hdhome.org': _hr,
@@ -283,24 +363,36 @@ const hrWrapper = {
   'totheglory.im': _hrTheGlory,
   'chdbits.co': _hrCHDBits,
   'ptchdbits.co': _hrCHDBits,
-  'audiences.me': _hr
+  'audiences.me': _hr,
+  'dstudio.me': _hrDepthStudio
 };
 
 exports.free = async (url, cookie) => {
   const host = new URL(url).host;
+  const customResult = await runScrapeScript('free', url, cookie);
+  if (customResult !== null) return customResult;
+  let result;
   if (host.includes('m-team')) {
-    return await _freeMTeam(url, cookie);
+    result = await _freeMTeam(url, cookie);
+    logger.info('抓取免费结果:', host, url, result ? '免费' : '非免费');
+    return result;
   }
   if (freeWrapper[host]) {
-    return await freeWrapper[host](url, cookie);
+    result = await freeWrapper[host](url, cookie);
+    logger.info('抓取免费结果:', host, url, result ? '免费' : '非免费');
+    return result;
   }
   throw new Error(`暂不支持 ${host} 抓取免费, 请检查后重试.`);
 };
 
 exports.hr = async (url, cookie) => {
   const host = new URL(url).host;
+  const customResult = await runScrapeScript('hr', url, cookie);
+  if (customResult !== null) return customResult;
   if (hrWrapper[host]) {
-    return await hrWrapper[host](url, cookie);
+    const result = await hrWrapper[host](url, cookie);
+    logger.info('抓取 HR 结果:', host, url, result ? 'HR' : '非 HR');
+    return result;
   }
   throw new Error(`暂不支持 ${host} 抓取 HR, 请检查后重试.`);
 };

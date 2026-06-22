@@ -135,7 +135,7 @@ const init = function () {
     }
   }
   for (const script of util.listCrontabJavaScript()) {
-    if (script.enable) {
+    if (script.enable && (script.scriptType || 'cron') === 'cron') {
       global.runningScript[script.id] = new Script(script);
     }
   }

@@ -1,17 +1,23 @@
 <template>
-  <div style="font-size: 24px; font-weight: bold;">定时脚本</div>
+  <div style="font-size: 24px; font-weight: bold;">站点扩展</div>
   <a-divider></a-divider>
-  <div class="script">
+  <div class="scrape">
+    <a-alert
+      type="info"
+      show-icon
+      message="站点抓取扩展用于 RSS 任务的“抓取免费”和“排除 HR”判断。开启 RSS 任务中的对应开关后，会优先使用这里配置的站点脚本。"
+      style="margin-bottom: 16px;"
+    />
     <a-table
       :style="`font-size: ${isMobile() ? '12px': '14px'};`"
       :columns="columns"
       size="small"
       :data-source="scripts"
       :pagination="false"
-      :scroll="{ x: 640 }"
+      :scroll="{ x: 720 }"
     >
       <template #title>
-        <span style="font-size: 16px; font-weight: bold;">定时脚本列表</span>
+        <span style="font-size: 16px; font-weight: bold;">站点抓取扩展列表</span>
       </template>
       <template #bodyCell="{ column, record }">
         <template v-if="column.dataIndex === 'enable'">
@@ -33,7 +39,7 @@
       </template>
     </a-table>
     <a-divider></a-divider>
-    <div style="font-size: 16px; font-weight: bold; padding-left: 8px;">新增 | 编辑定时脚本</div>
+    <div style="font-size: 16px; font-weight: bold; padding-left: 8px;">新增 | 编辑站点抓取扩展</div>
     <div style="text-align: left; ">
       <a-form
         labelAlign="right"
@@ -48,35 +54,40 @@
         <a-form-item
           label="别名"
           name="alias"
-          extra="给 定时脚本取一个好记的名字"
+          extra="给站点抓取扩展取一个好记的名字"
           :rules="[{ required: true, message: '${label}不可为空! ' }]">
           <a-input size="small" v-model:value="script.alias"/>
         </a-form-item>
         <a-form-item
           label="启用"
           name="enable"
-          extra="选择是否启用 定时脚本"
+          extra="选择是否启用站点抓取扩展"
           :rules="[{ required: true, message: '${label}不可为空! ' }]">
           <a-checkbox v-model:checked="script.enable">启用</a-checkbox>
         </a-form-item>
         <a-form-item
-          label="执行周期"
-          name="cron"
-          extra="脚本的执行周期, 默认 * * * * * 一分钟执行一次"
+          label="站点 Host"
+          name="siteHost"
+          extra="例如 dstudio.me。多个 host 使用英文逗号分隔"
           :rules="[{ required: true, message: '${label}不可为空! ' }]">
-          <a-input size="small" v-model:value="script.cron"/>
+          <a-input size="small" v-model:value="script.siteHost"/>
         </a-form-item>
         <a-form-item
-          label="Code"
-          name="script"
-          :rules="[{ required: true, message: '${label}不可为空! ' }]">
-          <a-textarea size="small" v-model:value="script.script" :rows="12"/>
+          label="免费判断"
+          name="freeScript"
+          extra="返回 async function (ctx) { ... }，返回 true 表示免费。不需要免费判断时可留空。">
+          <a-textarea size="small" v-model:value="script.freeScript" :rows="8"/>
+        </a-form-item>
+        <a-form-item
+          label="HR 判断"
+          name="hrScript"
+          extra="返回 async function (ctx) { ... }，返回 true 表示 H&R。不需要 HR 判断时可留空。">
+          <a-textarea size="small" v-model:value="script.hrScript" :rows="8"/>
         </a-form-item>
         <a-form-item
           :wrapperCol="isMobile() ? { span:24 } : { span: 21, offset: 3 }">
           <a-button type="primary" html-type="submit" style="margin-top: 24px; margin-bottom: 48px;">应用 | 完成</a-button>
-          <a-button type="primary" @click="run" style="margin-left: 12px; margin-top: 24px; margin-bottom: 48px;">立即执行一次</a-button>
-          <a-button style="margin-left: 12px; margin-top: 24px; margin-bottom: 48px;"  @click="clearScript()">清空</a-button>
+          <a-button style="margin-left: 12px; margin-top: 24px; margin-bottom: 48px;" @click="clearScript()">清空</a-button>
         </a-form-item>
       </a-form>
     </div>
@@ -94,15 +105,15 @@ export default {
       }, {
         title: '别名',
         dataIndex: 'alias',
-        width: 20
+        width: 24
+      }, {
+        title: 'Host',
+        dataIndex: 'siteHost',
+        width: 36
       }, {
         title: '启用',
         dataIndex: 'enable',
         width: 15
-      }, {
-        title: '周期',
-        dataIndex: 'cron',
-        width: 24
       }, {
         title: '操作',
         width: 24
@@ -114,9 +125,10 @@ export default {
       script: {},
       defaultScript: {
         enable: true,
-        scriptType: 'cron',
-        cron: '* * * * *',
-        script: 'logger.info(\'VERTEX IS THE BEST!\')'
+        scriptType: 'scrape',
+        siteHost: 'dstudio.me',
+        freeScript: 'async function ({ document }) {\n  return !!document.querySelector(\'.details-title font.free, .details-title font.twoupfree, #top font.free, #top font.twoupfree\') || document.body.innerHTML.includes(\'全站 [Free] 生效中\')\n}',
+        hrScript: 'async function ({ document }) {\n  return !!document.querySelector(\'img.hitandrun, img[alt="H&R"], img[title="H&R"]\')\n}'
       },
       loading: true
     };
@@ -135,7 +147,7 @@ export default {
         const res = await this.$api().script.list();
         this.scripts = res.data
           .map(item => ({ scriptType: 'cron', ...item }))
-          .filter(item => item.scriptType === 'cron');
+          .filter(item => item.scriptType === 'scrape');
       } catch (e) {
         this.$message().error(e.message);
       }
@@ -143,7 +155,7 @@ export default {
     },
     async modifyScript () {
       try {
-        await this.$api().script.modify({ ...this.script });
+        await this.$api().script.modify({ ...this.script, scriptType: 'scrape' });
         this.$message().success((this.script.id ? '编辑' : '新增') + '成功, 列表正在刷新...');
         setTimeout(() => this.listScript(), 1000);
         this.clearScript();
@@ -151,17 +163,8 @@ export default {
         this.$message().error(e.message);
       }
     },
-    async run () {
-      try {
-        await this.$api().script.run({ ...this.script });
-        this.$message().success('执行成功, 执行结果或报错请查看日志');
-        setTimeout(() => this.listScript(), 1000);
-      } catch (e) {
-        this.$message().error(e.message);
-      }
-    },
     modifyClick (row) {
-      this.script = { ...row };
+      this.script = { ...row, scriptType: 'scrape' };
     },
     async deleteScript (row) {
       try {
@@ -185,7 +188,7 @@ export default {
 };
 </script>
 <style scoped>
-.script {
+.scrape {
   width: 100%;
   max-width: 1440px;
   margin: 0 auto;
