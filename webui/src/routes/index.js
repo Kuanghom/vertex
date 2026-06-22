@@ -65,6 +65,8 @@ import MixDownloader from '@/pages/mix/Downloader';
 
 import GuideRss from '@/pages/guide/Rss';
 
+import Login from '@/pages/user/Login';
+
 const user = {
   path: 'user',
   component: Index,
