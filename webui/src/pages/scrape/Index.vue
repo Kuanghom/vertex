@@ -75,19 +75,76 @@
         <a-form-item
           label="免费判断"
           name="freeScript"
-          extra="返回 async function (ctx) { ... }，返回 true 表示免费。不需要免费判断时可留空。">
+          extra="返回 async function (ctx) { ... }，返回 true 表示免费。脚本内可使用 console.log() 调试。不需要免费判断时可留空。">
           <a-textarea size="small" v-model:value="script.freeScript" :rows="8"/>
         </a-form-item>
         <a-form-item
           label="HR 判断"
           name="hrScript"
-          extra="返回 async function (ctx) { ... }，返回 true 表示 H&R。不需要 HR 判断时可留空。">
+          extra="返回 async function (ctx) { ... }，返回 true 表示 H&R。脚本内可使用 console.log() 调试。不需要 HR 判断时可留空。">
           <a-textarea size="small" v-model:value="script.hrScript" :rows="8"/>
         </a-form-item>
         <a-form-item
           :wrapperCol="isMobile() ? { span:24 } : { span: 21, offset: 3 }">
           <a-button type="primary" html-type="submit" style="margin-top: 24px; margin-bottom: 48px;">应用 | 完成</a-button>
           <a-button style="margin-left: 12px; margin-top: 24px; margin-bottom: 48px;" @click="clearScript()">清空</a-button>
+        </a-form-item>
+      </a-form>
+    </div>
+    <a-divider></a-divider>
+    <div style="font-size: 16px; font-weight: bold; padding-left: 8px;">脚本调试</div>
+    <div style="text-align: left;">
+      <a-form
+        labelAlign="right"
+        :labelWrap="true"
+        :model="debug"
+        size="small"
+        :labelCol="{ span: 3 }"
+        :wrapperCol="{ span: 21 }"
+        autocomplete="off"
+        :class="`container-form-${ isMobile() ? 'mobile' : 'pc' }`">
+        <a-form-item
+          label="测试链接"
+          name="url"
+          extra="种子详情页链接, 用于调试当前编辑中的脚本">
+          <a-input size="small" v-model:value="debug.url" placeholder="https://example.com/details.php?id=12345"/>
+        </a-form-item>
+        <a-form-item
+          label="站点"
+          name="site"
+          extra="选择站点后自动填充 Cookie, 也可手动填写 Cookie">
+          <a-select
+            size="small"
+            v-model:value="debug.site"
+            allowClear
+            placeholder="选择站点"
+            @change="onDebugSiteChange">
+            <a-select-option v-for="site of siteList" :key="site.name" :value="site.name">{{ site.name }}</a-select-option>
+          </a-select>
+        </a-form-item>
+        <a-form-item
+          label="Cookie"
+          name="cookie"
+          extra="Cookie 或 M-Team Api Key">
+          <a-input size="small" v-model:value="debug.cookie"/>
+        </a-form-item>
+        <a-form-item
+          :wrapperCol="isMobile() ? { span:24 } : { span: 21, offset: 3 }">
+          <a-button type="primary" :loading="debugLoading === 'free'" @click="debugScript('free')">调试免费判断</a-button>
+          <a-button type="primary" style="margin-left: 12px;" :loading="debugLoading === 'hr'" @click="debugScript('hr')">调试 HR 判断</a-button>
+          <a-button style="margin-left: 12px;" @click="clearDebugOutput()">清空输出</a-button>
+        </a-form-item>
+        <a-form-item
+          label="调试输出"
+          name="output">
+          <a-textarea
+            size="small"
+            v-model:value="debugOutput"
+            :rows="12"
+            readonly
+            placeholder="点击上方调试按钮后, console.log() 等输出会显示在这里"
+            style="font-family: Consolas, Monaco, monospace;"
+          />
         </a-form-item>
       </a-form>
     </div>
@@ -127,10 +184,18 @@ export default {
         enable: true,
         scriptType: 'scrape',
         siteHost: 'dstudio.me',
-        freeScript: 'async function ({ document }) {\n  return !!document.querySelector(\'.details-title font.free, .details-title font.twoupfree, #top font.free, #top font.twoupfree\') || document.body.innerHTML.includes(\'全站 [Free] 生效中\')\n}',
-        hrScript: 'async function ({ document }) {\n  return !!document.querySelector(\'img.hitandrun, img[alt="H&R"], img[title="H&R"]\')\n}'
+        freeScript: 'async function ({ document, console }) {\n  const freeEl = document.querySelector(\'.details-title font.free, .details-title font.twoupfree, #top font.free, #top font.twoupfree\');\n  console.log(\'free element:\', freeEl);\n  return !!freeEl || document.body.innerHTML.includes(\'全站 [Free] 生效中\');\n}',
+        hrScript: 'async function ({ document, console }) {\n  const hrEl = document.querySelector(\'img.hitandrun, img[alt="H&R"], img[title="H&R"]\');\n  console.log(\'hr element:\', hrEl);\n  return !!hrEl;\n}'
       },
-      loading: true
+      loading: true,
+      siteList: [],
+      debug: {
+        url: '',
+        site: undefined,
+        cookie: ''
+      },
+      debugOutput: '',
+      debugLoading: ''
     };
   },
   methods: {
@@ -146,12 +211,81 @@ export default {
       try {
         const res = await this.$api().script.list();
         this.scripts = res.data
-          .map(item => ({ scriptType: 'cron', ...item }))
+          .map(item => ({ ...item, scriptType: item.scriptType || 'cron' }))
           .filter(item => item.scriptType === 'scrape');
       } catch (e) {
         this.$message().error(e.message);
       }
       this.loading = false;
+    },
+    async listSite () {
+      try {
+        const res = await this.$api().site.list();
+        this.siteList = (res.data.siteList || []).filter(item => item.enable);
+      } catch (e) {
+        this.$message().error(e.message);
+      }
+    },
+    onDebugSiteChange (siteName) {
+      const site = this.siteList.filter(item => item.name === siteName)[0];
+      if (site) {
+        this.debug.cookie = site.cookie || '';
+      }
+    },
+    formatDebugOutput (type, data) {
+      const lines = [`[${type === 'free' ? '免费判断' : 'HR 判断'}] 调试完成`];
+      if (data.logs && data.logs.length) {
+        lines.push('');
+        lines.push('--- console 输出 ---');
+        for (const log of data.logs) {
+          lines.push(`[${log.level}] ${log.message}`);
+        }
+      } else {
+        lines.push('');
+        lines.push('(无 console 输出)');
+      }
+      lines.push('');
+      lines.push(`--- 脚本返回值 ---`);
+      lines.push(String(data.result));
+      return lines.join('\n');
+    },
+    async debugScript (type) {
+      const scriptCode = type === 'free' ? this.script.freeScript : this.script.hrScript;
+      if (!scriptCode || !scriptCode.trim()) {
+        this.$message().warning(`${type === 'free' ? '免费判断' : 'HR 判断'}脚本为空`);
+        return;
+      }
+      if (!this.debug.url) {
+        this.$message().warning('请填写测试链接');
+        return;
+      }
+      if (!this.debug.cookie && !this.debug.site) {
+        this.$message().warning('请填写 Cookie 或选择站点');
+        return;
+      }
+      this.debugLoading = type;
+      try {
+        const res = await this.$api().script.debugScrape({
+          type,
+          url: this.debug.url,
+          cookie: this.debug.cookie,
+          site: this.debug.site,
+          script: scriptCode
+        });
+        const output = this.formatDebugOutput(type, res.data);
+        this.debugOutput = this.debugOutput
+          ? `${this.debugOutput}\n\n${output}`
+          : output;
+      } catch (e) {
+        const output = `[${type === 'free' ? '免费判断' : 'HR 判断'}] 调试失败\n\n${e.message}`;
+        this.debugOutput = this.debugOutput
+          ? `${this.debugOutput}\n\n${output}`
+          : output;
+      }
+      this.debugLoading = '';
+    },
+    clearDebugOutput () {
+      this.debugOutput = '';
     },
     async modifyScript () {
       try {
@@ -183,7 +317,7 @@ export default {
   },
   async mounted () {
     this.clearScript();
-    this.listScript();
+    await Promise.all([this.listScript(), this.listSite()]);
   }
 };
 </script>

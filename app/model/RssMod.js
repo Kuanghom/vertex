@@ -61,28 +61,37 @@ class RssMod {
   async scrapeDryrun (options) {
     const torrents = await this.dryrun(options);
     for (const torrent of torrents) {
-      if (options.scrapeFree) {
-        try {
-          torrent.free = await util.scrapeFree(torrent.link, options.cookie) ? '是' : '否';
-        } catch (e) {
-          torrent.free = '检测失败';
-          torrent.freeError = e.message;
-        }
-      } else {
-        torrent.free = '未启用';
-      }
-      if (options.scrapeHr) {
-        try {
-          torrent.hr = await util.scrapeHr(torrent.link, options.cookie) ? '是' : '否';
-        } catch (e) {
-          torrent.hr = '检测失败';
-          torrent.hrError = e.message;
-        }
-      } else {
-        torrent.hr = '未启用';
-      }
+      torrent.free = options.scrapeFree ? '未检测' : '未启用';
+      torrent.hr = options.scrapeHr ? '未检测' : '未启用';
     }
     return torrents;
+  };
+
+  async scrapeTorrent (options) {
+    if (!options.link) {
+      throw new Error('种子详情链接为空');
+    }
+    const result = {
+      free: options.scrapeFree ? '未检测' : '未启用',
+      hr: options.scrapeHr ? '未检测' : '未启用'
+    };
+    if (options.scrapeFree) {
+      try {
+        result.free = await util.scrapeFree(options.link, options.cookie) ? '是' : '否';
+      } catch (e) {
+        result.free = '检测失败';
+        result.freeError = e.message;
+      }
+    }
+    if (options.scrapeHr) {
+      try {
+        result.hr = await util.scrapeHr(options.link, options.cookie) ? '是' : '否';
+      } catch (e) {
+        result.hr = '检测失败';
+        result.hrError = e.message;
+      }
+    }
+    return result;
   };
 
   async mikanSearch (options) {

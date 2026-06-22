@@ -186,6 +186,7 @@ module.exports = function (app, express, router) {
   router.post('/script/modify', ctrl.Script.modify);
   router.post('/script/delete', ctrl.Script.delete);
   router.post('/script/run', ctrl.Script.run);
+  router.post('/script/debugScrape', ctrl.Script.debugScrape);
 
   router.get('/watch/list', ctrl.Watch.list);
   router.get('/watch/listHistory', ctrl.Watch.listHistory);
@@ -198,6 +199,7 @@ module.exports = function (app, express, router) {
   router.post('/rss/add', ctrl.Rss.add);
   router.post('/rss/dryrun', ctrl.Rss.dryrun);
   router.post('/rss/scrapeDryrun', ctrl.Rss.scrapeDryrun);
+  router.post('/rss/scrapeTorrent', ctrl.Rss.scrapeTorrent);
   router.post('/rss/modify', ctrl.Rss.modify);
   router.post('/rss/delete', ctrl.Rss.delete);
   router.post('/rss/deleteRecord', ctrl.Rss.deleteRecord);

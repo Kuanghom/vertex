@@ -87,5 +87,22 @@ class Script {
       });
     }
   };
+
+  async debugScrape (req, res) {
+    const options = req.body;
+    try {
+      const r = await scriptMod.debugScrape(options);
+      res.send({
+        success: true,
+        data: r
+      });
+    } catch (e) {
+      logger.error(e);
+      res.send({
+        success: false,
+        message: e.message
+      });
+    }
+  };
 }
 module.exports = Script;

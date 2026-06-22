@@ -35,6 +35,79 @@ const assertLoggedIn = function (d) {
   }
 };
 
+const formatLogArgs = function (args) {
+  return args.map(arg => {
+    if (typeof arg === 'object') {
+      try {
+        return JSON.stringify(arg);
+      } catch (e) {
+        return String(arg);
+      }
+    }
+    return String(arg);
+  }).join(' ');
+};
+
+const createConsole = function (logs) {
+  const push = (level, args) => {
+    const message = formatLogArgs(args);
+    logs.push({ level, message });
+    if (level === 'error') {
+      logger.error('[scrape]', message);
+    } else if (level === 'warn') {
+      logger.warn('[scrape]', message);
+    } else {
+      logger.info('[scrape]', message);
+    }
+  };
+  return {
+    log: (...args) => push('log', args),
+    info: (...args) => push('info', args),
+    warn: (...args) => push('warn', args),
+    error: (...args) => push('error', args),
+    debug: (...args) => push('debug', args)
+  };
+};
+
+const evalScrapeFunction = function (scriptCode) {
+  // eslint-disable-next-line no-eval
+  let fn = eval(scriptCode);
+  if (typeof fn !== 'function') {
+    // eslint-disable-next-line no-eval
+    fn = eval(`(${scriptCode})`);
+  }
+  if (typeof fn !== 'function') {
+    throw new Error('脚本必须返回 async function');
+  }
+  return fn;
+};
+
+const buildScrapeContext = async function (url, cookie, logs, skipCache = false) {
+  let body;
+  if (skipCache) {
+    body = (await util.requestPromise({
+      url,
+      headers: {
+        cookie
+      }
+    }, true)).body;
+  } else {
+    body = await getBody(url, cookie);
+  }
+  const dom = new JSDOM(body);
+  const host = new URL(url).host;
+  return {
+    url,
+    cookie,
+    host,
+    body,
+    document: dom.window.document,
+    logger,
+    util,
+    console: createConsole(logs)
+  };
+};
+
 const getScrapeScripts = function (host, type) {
   const scriptDir = path.join(__dirname, '../data/script');
   if (!fs.existsSync(scriptDir)) return [];
@@ -54,35 +127,48 @@ const getScrapeScripts = function (host, type) {
     .filter(script => !!script[`${type}Script`]);
 };
 
+const executeScrapeFunction = async function (fn, context) {
+  const originalConsole = global.console;
+  global.console = context.console;
+  try {
+    return await fn(context);
+  } finally {
+    global.console = originalConsole;
+  }
+};
+
 const runScrapeScript = async function (type, url, cookie) {
   const host = new URL(url).host;
   const scripts = getScrapeScripts(host, type);
   if (scripts.length === 0) return null;
   const script = scripts[0];
   logger.info('使用抓取扩展脚本:', script.alias || script.id, host, type, url);
-  const body = await getBody(url, cookie);
-  const dom = new JSDOM(body);
-  const context = {
-    url,
-    cookie,
-    host,
-    body,
-    document: dom.window.document,
-    logger,
-    util
-  };
-  // eslint-disable-next-line no-eval
-  let fn = eval(script[`${type}Script`]);
-  if (typeof fn !== 'function') {
-    // eslint-disable-next-line no-eval
-    fn = eval(`(${script[`${type}Script`]})`);
-  }
-  if (typeof fn !== 'function') {
-    throw new Error(`抓取扩展脚本 ${script.alias || script.id} 必须返回函数`);
-  }
-  const result = !!await fn(context);
+  const logs = [];
+  const context = await buildScrapeContext(url, cookie, logs, false);
+  const fn = evalScrapeFunction(script[`${type}Script`]);
+  const result = !!await executeScrapeFunction(fn, context);
   logger.info('抓取扩展脚本结果:', script.alias || script.id, host, type, result);
   return result;
+};
+
+const debugScrapeScript = async function (type, url, cookie, scriptCode) {
+  if (!scriptCode || !scriptCode.trim()) {
+    throw new Error('脚本内容为空');
+  }
+  const logs = [];
+  const context = await buildScrapeContext(url, cookie, logs, true);
+  const fn = evalScrapeFunction(scriptCode);
+  let result;
+  try {
+    result = !!await executeScrapeFunction(fn, context);
+  } catch (e) {
+    context.console.error(e.message || String(e));
+    throw e;
+  }
+  return {
+    result,
+    logs
+  };
 };
 
 const _free = async function (url, cookie) {
@@ -384,6 +470,8 @@ exports.free = async (url, cookie) => {
   }
   throw new Error(`暂不支持 ${host} 抓取免费, 请检查后重试.`);
 };
+
+exports.debugScrapeScript = debugScrapeScript;
 
 exports.hr = async (url, cookie) => {
   const host = new URL(url).host;

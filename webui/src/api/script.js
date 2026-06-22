@@ -16,5 +16,9 @@ export default {
   run: async (script) => {
     const url = '/api/script/run';
     return await post(url, script);
+  },
+  debugScrape: async (body) => {
+    const url = '/api/script/debugScrape';
+    return await post(url, body);
   }
 };

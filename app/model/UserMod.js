@@ -107,11 +107,11 @@ class UserMod {
           title: '批量链接',
           path: '/task/bulkLink',
           icon: ['fas', 'link']
+        }, {
+          title: '站点扩展',
+          path: '/task/scrape',
+          icon: ['fas', 'puzzle-piece']
         }]
-      }, {
-        title: '站点扩展',
-        path: '/scrape',
-        icon: ['fas', 'puzzle-piece']
       }, {
         title: '影视订阅',
         path: '/subscribe',

@@ -377,6 +377,16 @@
                 <a-tag :color="record.hr === '是' ? 'error' : (record.hr === '检测失败' ? 'error' : 'success')">{{ record.hr }}</a-tag>
                 <span v-if="record.hrError" style="color: red;">{{ record.hrError }}</span>
               </template>
+              <template v-if="column.title === '操作'">
+                <a-button
+                  v-if="dryrunMode === 'scrape'"
+                  size="small"
+                  type="primary"
+                  :loading="record.scrapeLoading"
+                  @click="scrapeTorrent(record)">
+                  检测
+                </a-button>
+              </template>
             </template>
           </a-table>
         </a-form-item>
@@ -445,6 +455,9 @@ export default {
         title: 'HR',
         dataIndex: 'hr',
         width: 22
+      }, {
+        title: '操作',
+        width: 18
       }
     ];
     return {
@@ -552,6 +565,22 @@ export default {
         this.modalVisible = true;
       } catch (e) {
         this.$message().error(e.message);
+      }
+    },
+    async scrapeTorrent (record) {
+      try {
+        record.scrapeLoading = true;
+        const res = await this.$api().rss.scrapeTorrent({
+          link: record.link,
+          cookie: this.rss.cookie,
+          scrapeFree: this.rss.scrapeFree,
+          scrapeHr: this.rss.scrapeHr
+        });
+        Object.assign(record, res.data);
+      } catch (e) {
+        this.$message().error(e.message);
+      } finally {
+        record.scrapeLoading = false;
       }
     },
     async enableTask (record) {

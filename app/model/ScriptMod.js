@@ -51,6 +51,30 @@ class ScriptMod {
         logger.error(e);
       }
     })();
+  };
+
+  async debugScrape (options) {
+    const scrape = require('../libs/scrape');
+    const { type, url, cookie, site, script } = options;
+    if (!url) {
+      throw new Error('测试链接不可为空');
+    }
+    if (!['free', 'hr'].includes(type)) {
+      throw new Error('调试类型无效');
+    }
+    let _cookie = cookie;
+    if (!_cookie && site) {
+      const siteConfig = util.listSite().filter(item => item.name === site)[0];
+      if (!siteConfig) {
+        throw new Error(`未找到站点 ${site}`);
+      }
+      _cookie = siteConfig.cookie;
+    }
+    if (!_cookie) {
+      throw new Error('Cookie 不可为空, 请填写 Cookie 或选择站点');
+    }
+    const scriptCode = script || options[`${type}Script`];
+    return scrape.debugScrapeScript(type, url, _cookie, scriptCode);
   }
 }
 

@@ -309,6 +309,12 @@ const task = {
       meta: {
         title: '定时脚本 - 任务配置'
       }
+    }, {
+      path: 'scrape',
+      component: ScrapeIndex,
+      meta: {
+        title: '站点扩展 - 任务配置'
+      }
     }
   ]
 };
@@ -356,20 +362,6 @@ const mix = {
       component: MixDownloader,
       meta: {
         title: '种子聚合 - 聚合操作'
-      }
-    }
-  ]
-};
-
-const scrape = {
-  path: 'scrape',
-  component: Layout,
-  children: [
-    {
-      path: '',
-      component: ScrapeIndex,
-      meta: {
-        title: '站点扩展'
       }
     }
   ]
@@ -503,14 +495,17 @@ const routes = [{
     rule,
     base,
     task,
-    scrape,
     tool,
     info,
     guide,
     subscribe,
     setting,
     history,
-    mix
+    mix,
+    {
+      path: 'scrape',
+      redirect: '/task/scrape'
+    }
   ]
 }];
 

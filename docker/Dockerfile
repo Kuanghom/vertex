@@ -23,7 +23,7 @@ RUN \
   apk del gcc g++ python3 git cmake make npm libc-dev && \
   echo 'bind 127.0.0.1' >> /app/redis.conf && \
   echo 'daemonize yes' >> /app/redis.conf
-COPY src/static /app/vertex/app/static
+COPY app/static /app/vertex/app/static
 RUN \
   useradd -d /app/vertex -s /bin/sh vt && \
   chown -R vt /vertex && \

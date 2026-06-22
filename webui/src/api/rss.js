@@ -25,6 +25,10 @@ export default {
     const url = '/api/rss/scrapeDryrun';
     return await post(url, rss);
   },
+  scrapeTorrent: async (body) => {
+    const url = '/api/rss/scrapeTorrent';
+    return await post(url, body);
+  },
   mikanSearch: async (rss) => {
     const url = '/api/rss/mikanSearch';
     return await post(url, rss);
