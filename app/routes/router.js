@@ -291,6 +291,15 @@ module.exports = function (app, express, router) {
   router.all('/openapi/:apiKey/wechat', ctrl.Webhook.wechat);
   router.all('/openapi/:apiKey/slack', ctrl.Webhook.slack);
 
+  router.use((req, res) => {
+    logger.warn('[api] 未找到接口:', req.method, req.originalUrl);
+    res.status(404);
+    res.send({
+      success: false,
+      message: `API 不存在: ${req.method} ${req.originalUrl}, 请确认后端已更新并重启服务`
+    });
+  });
+
   app.use('/api', router);
   app.use('/proxy/client/:client', clientProxy);
   app.use('/proxy/site/:site', siteProxy);

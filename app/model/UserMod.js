@@ -263,7 +263,7 @@ class UserMod {
       }
       if (m.sub) {
         for (const mm of m.sub) {
-          if (global.menu[0] && global.menu.indexOf(mm.path) !== -1) {
+          if (global.menu[0] && (global.menu.indexOf(mm.path) !== -1 || (mm.path === '/task/scrape' && global.menu.indexOf('/scrape') !== -1))) {
             mm.hidden = true;
           }
         }

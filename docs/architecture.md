@@ -24,7 +24,7 @@ vertex/
 │       ├── api/                 # API 封装
 │       ├── pages/task/Rss.vue   # RSS 任务配置
 │       ├── pages/task/Script.vue# 定时脚本配置
-│       └── pages/scrape/Index.vue# 站点抓取扩展配置
+│       └── pages/task/Scrape.vue   # 站点抓取扩展配置
 ├── docker/                      # 容器启动文件
 └── webhook/                     # 外部 Webhook 集成
 ```

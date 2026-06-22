@@ -51,6 +51,10 @@ class SettingMod {
       otp: global.auth.otp
     };
     global.webhookPushTo = options.webhookPushTo;
+    if (options.menu && options.menu.length) {
+      options.menu = options.menu.map(item => item === '/scrape' ? '/task/scrape' : item);
+      options.menu = [...new Set(options.menu)];
+    }
     global.menu = options.menu || [];
     global.dashboardContent = options.dashboardContent || [];
     global.userAgent = options.userAgent;

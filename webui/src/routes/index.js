@@ -26,8 +26,7 @@ import TaskLink from '@/pages/task/Link';
 import TaskBulkLink from '@/pages/task/BulkLink';
 import TaskWatchCategory from '@/pages/task/WatchCategory';
 import TaskScript from '@/pages/task/Script';
-
-import GuideRss from '@/pages/guide/Rss';
+import TaskScrape from '@/pages/task/Scrape';
 import GuideSubsribe from '@/pages/guide/Subscribe';
 
 import ToolMikanHistory from '@/pages/tool/MikanHistory';
@@ -64,9 +63,7 @@ import HistoryWatchCategory from '@/pages/history/WatchCategory';
 import MixSearch from '@/pages/mix/Search';
 import MixDownloader from '@/pages/mix/Downloader';
 
-import ScrapeIndex from '@/pages/scrape/Index';
-
-import Login from '@/pages/user/Login';
+import GuideRss from '@/pages/guide/Rss';
 
 const user = {
   path: 'user',
@@ -311,7 +308,7 @@ const task = {
       }
     }, {
       path: 'scrape',
-      component: ScrapeIndex,
+      component: TaskScrape,
       meta: {
         title: '站点扩展 - 任务配置'
       }

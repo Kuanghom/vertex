@@ -91,6 +91,24 @@ const init = function () {
     watermark: 'vertex'
   };
   global.trustAllCerts = setting.trustAllCerts;
+  const menuPathMigrations = {
+    '/scrape': '/task/scrape'
+  };
+  if (setting.menu && setting.menu.length) {
+    let menuChanged = false;
+    setting.menu = setting.menu.map((item) => {
+      const migrated = menuPathMigrations[item] || item;
+      if (migrated !== item) {
+        menuChanged = true;
+      }
+      return migrated;
+    });
+    setting.menu = [...new Set(setting.menu)];
+    if (menuChanged) {
+      fs.writeFileSync(path.join(__dirname, './data/setting.json'), JSON.stringify(setting, null, 2));
+      logger.info('菜单路径已迁移: /scrape -> /task/scrape');
+    }
+  }
   global.menu = setting.menu || [];
   global.dashboardContent = setting.dashboardContent || [];
   global.wechatToken = setting.wechatToken;
