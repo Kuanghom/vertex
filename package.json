@@ -6,7 +6,7 @@
   "scripts": {
     "app": "export HTTPS_PORT=4443 && export HTTPS_ENABLE=true && export DISPLAY=:99 && export PORT=4000 && nodemon app/app.js",
     "eslint": "eslint app",
-    "build:webui": "cd webui && npm run build",
+    "build:webui": "cd webui && npm run build"
   },
   "author": "",
   "license": "MIT",

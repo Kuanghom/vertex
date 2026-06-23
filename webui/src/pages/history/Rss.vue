@@ -10,7 +10,7 @@
       :data-source="torrents"
       :pagination="pagination"
       @change="handleChange"
-      :scroll="{ x: 960 }"
+      :scroll="{ x: 1200 }"
     >
       <template #title>
         <span style="font-size: 16px; font-weight: bold;">RSS 历史</span>
@@ -27,14 +27,39 @@
         <template v-if="column.dataIndex === 'rssId'">
           {{ (rssList.filter(item => item.id === record.rssId)[0] || { alias: '已删除' }).alias }}
         </template>
+        <template v-if="column.dataIndex === 'name'">
+          <a
+            v-if="record.link"
+            class="torrent-name-link"
+            @click.prevent="gotoDetail(record)">{{ record.name }}</a>
+          <span v-else>{{ record.name }}</span>
+        </template>
         <template v-if="['size', 'upload', 'download'].indexOf(column.dataIndex) !== -1">
           {{ $formatSize(record[column.dataIndex]) }}
         </template>
-        <template v-if="['recordTime', 'deleteTime'].indexOf(column.dataIndex) !== -1 && record[column.dataIndex]">
+        <template v-if="['recordTime', 'deleteTime', 'pubTime'].indexOf(column.dataIndex) !== -1 && record[column.dataIndex]">
           {{ $moment(record[column.dataIndex] * 1000).format('YYYY-MM-DD HH:mm:ss') }}
         </template>
+        <template v-if="column.dataIndex === 'pubTime' && !record.pubTime">
+          -
+        </template>
         <template v-if="column.dataIndex === 'recordNote'">
-          <span>{{ record.recordNote.indexOf('wish') !== -1 ? '豆瓣' : record.recordNote }}</span>
+          <span>{{ formatRecordNote(record) }}</span>
+          <a-popover
+            v-if="showRuleDetail(record)"
+            title="未匹配规则"
+            trigger="click">
+            <template #content>
+              <div v-for="rule of record.recordDetail.failedRules" :key="rule.id" style="margin-bottom: 4px;">
+                {{ rule.alias }} (优先级: {{ rule.priority }})
+              </div>
+            </template>
+            <span class="rule-detail-icon" title="查看详情">ⓘ</span>
+          </a-popover>
+        </template>
+        <template v-if="column.dataIndex === 'clientId'">
+          <a v-if="record.clientId" @click="gotoClient(record.clientId)">{{ record.clientAlias || record.clientId }}</a>
+          <span v-else>-</span>
         </template>
         <template v-if="column.title === '操作'">
           <a @click="gotoDetail(record)">打开</a>
@@ -69,6 +94,10 @@ export default {
         dataIndex: 'size',
         width: 24
       }, {
+        title: '发布时间',
+        dataIndex: 'pubTime',
+        width: 32
+      }, {
         title: '上传流量',
         dataIndex: 'upload',
         width: 24
@@ -88,6 +117,10 @@ export default {
         title: '种子状态',
         dataIndex: 'recordNote',
         width: 32
+      }, {
+        title: '下载器',
+        dataIndex: 'clientId',
+        width: 24
       }, {
         title: '操作',
         dataIndex: 'option',
@@ -124,6 +157,15 @@ export default {
         return false;
       }
     },
+    formatRecordNote (record) {
+      return record.recordNote.indexOf('wish') !== -1 ? '豆瓣' : record.recordNote;
+    },
+    showRuleDetail (record) {
+      return record.recordNote === '拒绝原因: 不符合所有规则' &&
+        record.recordDetail &&
+        record.recordDetail.failedRules &&
+        record.recordDetail.failedRules.length;
+    },
     async listHistory () {
       this.loading = true;
       try {
@@ -143,6 +185,9 @@ export default {
       } catch (e) {
         this.$message().error(e.message);
       }
+    },
+    gotoClient (clientId) {
+      window.open(`/proxy/client/${clientId}/`);
     },
     async gotoDetail (record) {
       if (!record.link) return await this.$message().error('链接不存在');
@@ -179,5 +224,19 @@ export default {
   width: 100%;
   max-width: 1440px;
   margin: 0 auto;
+}
+.torrent-name-link {
+  color: inherit;
+  text-decoration: none;
+}
+.torrent-name-link:hover {
+  color: inherit;
+  text-decoration: none;
+}
+.rule-detail-icon {
+  margin-left: 6px;
+  color: #1890ff;
+  cursor: pointer;
+  font-weight: bold;
 }
 </style>

@@ -21,6 +21,22 @@ const scrape = require('./scrape');
 const db = new Database(path.join(__dirname, '../db/sql.db'));
 puppeteer.use(StealthPlugin());
 
+const initTorrentsColumns = function () {
+  const columns = [
+    ['pub_time', 'INTEGER'],
+    ['client_id', 'TEXT'],
+    ['record_detail', 'TEXT']
+  ];
+  const existing = db.prepare('PRAGMA table_info(torrents)').all().map(item => item.name);
+  for (const [name, type] of columns) {
+    if (!existing.includes(name)) {
+      db.prepare(`ALTER TABLE torrents ADD COLUMN ${name} ${type}`).run();
+      logger.info('torrents 表新增字段:', name);
+    }
+  }
+};
+initTorrentsColumns();
+
 let browser;
 
 const ttl = 15000;

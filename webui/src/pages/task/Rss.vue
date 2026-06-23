@@ -367,6 +367,14 @@
               <span style="font-size: 16px; font-weight: bold;">种子列表</span>
             </template>
             <template #bodyCell="{ column, record }">
+              <template v-if="column.dataIndex === 'name'">
+                <a
+                  v-if="record.link"
+                  class="torrent-name-link"
+                  @click.prevent="gotoTorrentDetail(record)">{{ record.name }}</a>
+                <span v-else>{{ record.name }}</span>
+                <span class="torrent-pub-time">{{ formatPubTime(record.pubTime) }}</span>
+              </template>
               <template v-if="column.dataIndex === 'size'">
                 {{ $formatSize(record.size) }}
               </template>
@@ -536,6 +544,19 @@ export default {
         this.$message().error(e.message);
       }
     },
+    formatPubTime (pubTime) {
+      if (!pubTime) {
+        return '-';
+      }
+      return this.$moment(pubTime * 1000).format('YYYY-MM-DD HH:mm:ss');
+    },
+    gotoTorrentDetail (record) {
+      if (!record.link) {
+        this.$message().error('链接不存在');
+        return;
+      }
+      window.open(record.link);
+    },
     async modifyRss () {
       try {
         await this.$api().rss.modify({ ...this.rss });
@@ -660,5 +681,19 @@ export default {
   width: 100%;
   max-width: 1440px;
   margin: 0 auto;
+}
+.torrent-name-link {
+  color: inherit;
+  text-decoration: none;
+}
+.torrent-name-link:hover {
+  color: inherit;
+  text-decoration: none;
+}
+.torrent-pub-time {
+  margin-left: 12px;
+  color: rgba(0, 0, 0, 0.45);
+  font-size: 12px;
+  white-space: nowrap;
 }
 </style>
