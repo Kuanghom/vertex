@@ -11,6 +11,7 @@ import selectRule from './selectRule';
 import rss from './rss';
 import script from './script';
 import watch from './watch';
+import u2Rss from './u2Rss';
 import subscribe from './subscribe';
 import torrent from './torrent';
 import log from './log';
@@ -31,7 +32,8 @@ const api = {
   subscribe,
   torrent,
   log,
-  watch
+  watch,
+  u2Rss
 };
 
 export default () => { return api; };

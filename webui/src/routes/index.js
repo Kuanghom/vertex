@@ -27,6 +27,7 @@ import TaskBulkLink from '@/pages/task/BulkLink';
 import TaskWatchCategory from '@/pages/task/WatchCategory';
 import TaskScript from '@/pages/task/Script';
 import TaskScrape from '@/pages/task/Scrape';
+import TaskU2Rss from '@/pages/task/U2Rss';
 import GuideSubsribe from '@/pages/guide/Subscribe';
 
 import ToolMikanHistory from '@/pages/tool/MikanHistory';
@@ -307,6 +308,12 @@ const task = {
       component: TaskScript,
       meta: {
         title: '定时脚本 - 任务配置'
+      }
+    }, {
+      path: 'u2Rss',
+      component: TaskU2Rss,
+      meta: {
+        title: 'U2 RSS - 任务配置'
       }
     }, {
       path: 'scrape',

@@ -360,7 +360,7 @@
             size="small"
             :data-source="dryrunResult"
             :pagination="false"
-            :scroll="{ x: 960 }"
+            :scroll="{ x: 1080 }"
             :row-key="record => record.link || record.name"
           >
             <template #title>
@@ -373,10 +373,12 @@
                   class="torrent-name-link"
                   @click.prevent="gotoTorrentDetail(record)">{{ record.name }}</a>
                 <span v-else>{{ record.name }}</span>
-                <span class="torrent-pub-time">{{ formatPubTime(record.pubTime) }}</span>
               </template>
               <template v-if="column.dataIndex === 'size'">
                 {{ $formatSize(record.size) }}
+              </template>
+              <template v-if="column.dataIndex === 'pubTime'">
+                {{ formatPubTime(record.pubTime) }}
               </template>
               <template v-if="column.dataIndex === 'free'">
                 <a-tag :color="record.free === '是' ? 'success' : (record.free === '检测失败' ? 'error' : 'default')">{{ record.free }}</a-tag>
@@ -448,6 +450,10 @@ export default {
         title: '种子大小',
         dataIndex: 'size',
         width: 14
+      }, {
+        title: '发布时间',
+        dataIndex: 'pubTime',
+        width: 28
       }, {
         title: '结果',
         dataIndex: 'status',
@@ -689,11 +695,5 @@ export default {
 .torrent-name-link:hover {
   color: inherit;
   text-decoration: none;
-}
-.torrent-pub-time {
-  margin-left: 12px;
-  color: rgba(0, 0, 0, 0.45);
-  font-size: 12px;
-  white-space: nowrap;
 }
 </style>

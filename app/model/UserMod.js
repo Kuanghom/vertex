@@ -108,6 +108,10 @@ class UserMod {
           path: '/task/bulkLink',
           icon: ['fas', 'link']
         }, {
+          title: 'U2 RSS',
+          path: '/task/u2Rss',
+          icon: ['fas', 'wand-magic-sparkles']
+        }, {
           title: '站点扩展',
           path: '/task/scrape',
           icon: ['fas', 'puzzle-piece']

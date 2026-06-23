@@ -206,6 +206,12 @@ module.exports = function (app, express, router) {
   router.post('/rss/mikanSearch', ctrl.Rss.mikanSearch);
   router.post('/rss/mikanPush', ctrl.Rss.mikanPush);
 
+  router.get('/u2Rss/get', ctrl.U2Rss.get);
+  router.get('/u2Rss/reveal', ctrl.U2Rss.reveal);
+  router.post('/u2Rss/save', ctrl.U2Rss.save);
+  router.post('/u2Rss/preview', ctrl.U2Rss.preview);
+  router.get('/u2Rss/regenerateToken', ctrl.U2Rss.regenerateToken);
+
   router.get('/subscribe/list', ctrl.Douban.list);
   router.post('/subscribe/add', ctrl.Douban.add);
   router.post('/subscribe/modify', ctrl.Douban.modify);
@@ -290,6 +296,7 @@ module.exports = function (app, express, router) {
   router.all('/openapi/:apiKey/jellyfin', ctrl.Webhook.jellyfin);
   router.all('/openapi/:apiKey/wechat', ctrl.Webhook.wechat);
   router.all('/openapi/:apiKey/slack', ctrl.Webhook.slack);
+  router.get('/openapi/:apiKey/u2-rss', ctrl.U2Rss.feed);
 
   router.use((req, res) => {
     logger.warn('[api] 未找到接口:', req.method, req.originalUrl);

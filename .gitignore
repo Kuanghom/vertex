@@ -6,6 +6,8 @@ app/data
 app/db/sql.db
 config.yaml
 torrents
+u2.cookie
+.vertex-data
 develop
 /.idea/*
 
