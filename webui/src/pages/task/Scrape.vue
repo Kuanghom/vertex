@@ -75,13 +75,13 @@
         <a-form-item
           label="免费判断"
           name="freeScript"
-          extra="返回 async function (ctx) { ... }，返回 true 表示免费。脚本内可使用 console.log() 调试。不需要免费判断时可留空。">
+          extra="返回 async ({ document, console, util }) => { ... } 或 async function (ctx) { ... }，返回 true 表示免费。脚本内可使用 console.log() 调试。不需要免费判断时可留空。">
           <a-textarea size="small" v-model:value="script.freeScript" :rows="8"/>
         </a-form-item>
         <a-form-item
           label="HR 判断"
           name="hrScript"
-          extra="返回 async function (ctx) { ... }，返回 true 表示 H&R。脚本内可使用 console.log() 调试。不需要 HR 判断时可留空。">
+          extra="返回 async ({ document, console, util }) => { ... } 或 async function (ctx) { ... }，返回 true 表示 H&R。脚本内可使用 console.log() 调试。不需要 HR 判断时可留空。">
           <a-textarea size="small" v-model:value="script.hrScript" :rows="8"/>
         </a-form-item>
         <a-form-item
@@ -184,8 +184,8 @@ export default {
         enable: true,
         scriptType: 'scrape',
         siteHost: 'dstudio.me',
-        freeScript: 'async function ({ document, console }) {\n  const freeEl = document.querySelector(\'.details-title font.free, .details-title font.twoupfree, #top font.free, #top font.twoupfree\');\n  console.log(\'free element:\', freeEl);\n  return !!freeEl || document.body.innerHTML.includes(\'全站 [Free] 生效中\');\n}',
-        hrScript: 'async function ({ document, console }) {\n  const hrEl = document.querySelector(\'img.hitandrun, img[alt="H&R"], img[title="H&R"]\');\n  console.log(\'hr element:\', hrEl);\n  return !!hrEl;\n}'
+        freeScript: 'async ({ document, console }) => {\n  const freeEl = document.querySelector(\'.details-title font.free, .details-title font.twoupfree, #top font.free, #top font.twoupfree\');\n  console.log(\'free element:\', freeEl);\n  return !!freeEl || document.body.innerHTML.includes(\'全站 [Free] 生效中\');\n}',
+        hrScript: 'async ({ document, console }) => {\n  const hrEl = document.querySelector(\'img.hitandrun, img[alt="H&R"], img[title="H&R"]\');\n  console.log(\'hr element:\', hrEl);\n  return !!hrEl;\n}'
       },
       loading: true,
       siteList: [],
@@ -262,6 +262,66 @@ export default {
       }
       return lines.join('\n');
     },
+    restoreLogArg (arg) {
+      if (Array.isArray(arg)) {
+        return arg.map(item => this.restoreLogArg(item));
+      }
+      if (arg && typeof arg === 'object' && arg.__vertexType === 'dom') {
+        return {
+          '[DOM Element]': arg.preview,
+          tagName: arg.tagName,
+          nodeName: arg.nodeName,
+          className: arg.className,
+          id: arg.id,
+          textContent: arg.textContent,
+          outerHTML: arg.outerHTML,
+          innerHTML: arg.innerHTML
+        };
+      }
+      if (arg && typeof arg === 'object' && arg.__vertexType === 'error') {
+        const err = new Error(arg.message);
+        err.name = arg.name || 'Error';
+        err.stack = arg.stack;
+        return err;
+      }
+      if (arg && typeof arg === 'object' && arg.__vertexType === 'object') {
+        return arg.value;
+      }
+      return arg;
+    },
+    printDebugToBrowserConsole (type, data = {}) {
+      const label = type === 'free' ? '免费判断' : 'HR 判断';
+      const groupLabel = `[Vertex Scrape Debug] ${label}`;
+      console.group(groupLabel);
+      console.info('测试链接:', this.debug.url);
+      if (data.error) {
+        console.error('调试失败:', data.error);
+        if (data.stageLabel || data.stage) {
+          console.error('失败阶段:', data.stageLabel || data.stage);
+        }
+        if (data.stack) {
+          console.error(data.stack);
+        }
+      } else {
+        console.info('脚本返回值:', data.result);
+      }
+      if (data.logs && data.logs.length) {
+        console.group('console 输出');
+        for (const log of data.logs) {
+          const method = ['log', 'info', 'warn', 'error', 'debug'].includes(log.level) ? log.level : 'log';
+          const fn = console[method] || console.log;
+          if (log.args && log.args.length) {
+            fn(...log.args.map(arg => this.restoreLogArg(arg)));
+          } else {
+            fn(log.message);
+          }
+        }
+        console.groupEnd();
+      } else if (!data.error) {
+        console.info('(无 console 输出)');
+      }
+      console.groupEnd();
+    },
     appendDebugOutput (output) {
       this.debugOutput = this.debugOutput
         ? `${this.debugOutput}\n\n${output}`
@@ -292,6 +352,7 @@ export default {
         });
         const data = res.data || {};
         this.appendDebugOutput(this.formatDebugOutput(type, data));
+        this.printDebugToBrowserConsole(type, data);
         if (data.error) {
           this.$message().error(data.error);
         } else {
@@ -304,6 +365,7 @@ export default {
           logs: []
         };
         this.appendDebugOutput(this.formatDebugOutput(type, data));
+        this.printDebugToBrowserConsole(type, data);
         this.$message().error(data.error || e.message || '调试失败');
       } finally {
         this.debugLoading = '';

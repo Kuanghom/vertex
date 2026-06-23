@@ -27,7 +27,7 @@ const getBody = async function (url, cookie) {
 
 const getDocument = async function (url, cookie) {
   const body = await getBody(url, cookie);
-  const dom = new JSDOM(body);
+  const dom = new JSDOM(body, { url });
   return dom.window.document;
 };
 
@@ -38,11 +38,43 @@ const assertLoggedIn = function (d) {
   }
 };
 
+const formatDomNode = function (node) {
+  if (!node || typeof node !== 'object') {
+    return null;
+  }
+  const nodeType = node.nodeType;
+  if (nodeType === 9 || node.nodeName === '#document') {
+    return `[Document url=${node.URL || ''} title=${node.title || ''} bodyLength=${node.body?.innerHTML?.length || 0}]`;
+  }
+  if (nodeType === 1 || typeof node.tagName === 'string') {
+    const preview = (node.outerHTML || '').replace(/\s+/g, ' ').slice(0, 200);
+    return `[Element <${node.tagName}> class="${node.className || ''}"] ${preview}${preview.length >= 200 ? '...' : ''}`;
+  }
+  if (nodeType === 3) {
+    return `[Text "${(node.textContent || '').slice(0, 100)}"]`;
+  }
+  return null;
+};
+
 const formatLogArgs = function (args) {
   return args.map(arg => {
-    if (typeof arg === 'object') {
+    const domText = formatDomNode(arg);
+    if (domText) {
+      return domText;
+    }
+    if (arg && typeof arg === 'object') {
       try {
-        return JSON.stringify(arg);
+        const json = JSON.stringify(arg);
+        if (json !== '{}' && json !== '[]') {
+          return json;
+        }
+        if (typeof arg.message === 'string') {
+          return arg.stack || arg.message;
+        }
+        if (typeof arg.outerHTML === 'string') {
+          return formatDomNode(arg) || arg.outerHTML.slice(0, 200);
+        }
+        return String(arg);
       } catch (e) {
         return String(arg);
       }
@@ -51,10 +83,60 @@ const formatLogArgs = function (args) {
   }).join(' ');
 };
 
+const serializeLogArg = function (arg) {
+  if (formatDomNode(arg)) {
+    return {
+      __vertexType: 'dom',
+      preview: formatDomNode(arg),
+      nodeName: arg.nodeName,
+      tagName: arg.tagName,
+      className: arg.className,
+      id: arg.id,
+      textContent: arg.textContent,
+      outerHTML: (arg.outerHTML || '').slice(0, 2000),
+      innerHTML: arg.nodeType === 1 ? (arg.innerHTML || '').slice(0, 2000) : undefined
+    };
+  }
+  if (arg instanceof Error) {
+    return {
+      __vertexType: 'error',
+      name: arg.name,
+      message: arg.message,
+      stack: arg.stack
+    };
+  }
+  if (arg === null || arg === undefined) {
+    return arg;
+  }
+  const argType = typeof arg;
+  if (argType === 'string' || argType === 'number' || argType === 'boolean' || argType === 'bigint') {
+    return arg;
+  }
+  if (argType === 'function') {
+    return `[Function ${arg.name || 'anonymous'}]`;
+  }
+  if (Array.isArray(arg)) {
+    return arg.map(serializeLogArg);
+  }
+  if (argType === 'object') {
+    try {
+      JSON.stringify(arg);
+      return arg;
+    } catch (e) {
+      return { __vertexType: 'object', value: String(arg) };
+    }
+  }
+  return String(arg);
+};
+
 const createConsole = function (logs) {
   const push = (level, args) => {
     const message = formatLogArgs(args);
-    logs.push({ level, message });
+    logs.push({
+      level,
+      message,
+      args: args.map(serializeLogArg)
+    });
     if (level === 'error') {
       logger.error('[scrape]', message);
     } else if (level === 'warn') {
@@ -75,20 +157,35 @@ const createConsole = function (logs) {
 };
 
 const evalScrapeFunction = function (scriptCode) {
-  try {
-    // eslint-disable-next-line no-eval
-    let fn = eval(scriptCode);
-    if (typeof fn !== 'function') {
-      // eslint-disable-next-line no-eval
-      fn = eval(`(${scriptCode})`);
-    }
-    if (typeof fn !== 'function') {
-      throw new Error(`脚本必须返回 async function, 当前返回值类型: ${typeof fn}`);
-    }
-    return fn;
-  } catch (e) {
-    throw new Error(`脚本解析失败: ${e.message || e}`);
+  const code = (scriptCode || '').trim();
+  if (!code) {
+    throw new Error('脚本内容为空');
   }
+
+  const attempts = [
+    () => {
+      // eslint-disable-next-line no-eval
+      return eval(`(${code})`);
+    },
+    () => {
+      // eslint-disable-next-line no-eval
+      return eval(code);
+    }
+  ];
+
+  let lastError;
+  for (const attempt of attempts) {
+    try {
+      const fn = attempt();
+      if (typeof fn === 'function') {
+        return fn;
+      }
+      lastError = new Error(`脚本必须返回 function, 当前返回值类型: ${typeof fn}`);
+    } catch (e) {
+      lastError = e;
+    }
+  }
+  throw new Error(`脚本解析失败: ${lastError?.message || lastError || '未知错误'}`);
 };
 
 const buildScrapeContext = async function (url, cookie, logs, skipCache = false) {
@@ -107,7 +204,7 @@ const buildScrapeContext = async function (url, cookie, logs, skipCache = false)
   } else {
     body = await getBody(url, cookie);
   }
-  const dom = new JSDOM(body);
+  const dom = new JSDOM(body, { url });
   logger.info('[scrape] 页面解析完成:', host, url);
   return {
     url,

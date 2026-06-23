@@ -73,6 +73,15 @@ module.exports = {
     // workbox
     workboxOptions: {
       swDest: 'service-worker.js',
+      skipWaiting: true,
+      clientsClaim: true,
+      navigateFallbackDenylist: [/^\/api/, /^\/proxy/],
+      runtimeCaching: [
+        {
+          urlPattern: ({ url }) => url.pathname.startsWith('/api/') || url.pathname.startsWith('/proxy/'),
+          handler: 'NetworkOnly'
+        }
+      ],
       exclude: [
         /\.map$/,
         /^manifest.*\.js(?:on)?$/,
