@@ -185,7 +185,7 @@ export default {
         scriptType: 'scrape',
         siteHost: 'dstudio.me',
         freeScript: 'async ({ document, console }) => {\n  const freeEl = document.querySelector(\'.details-title font.free, .details-title font.twoupfree, #top font.free, #top font.twoupfree\');\n  console.log(\'free element:\', freeEl);\n  return !!freeEl || document.body.innerHTML.includes(\'全站 [Free] 生效中\');\n}',
-        hrScript: 'async ({ document, console }) => {\n  const hrEl = document.querySelector(\'img.hitandrun, img[alt="H&R"], img[title="H&R"]\');\n  console.log(\'hr element:\', hrEl);\n  return !!hrEl;\n}'
+        hrScript: 'async ({ document, console }) => {\n  const hrEl = document.querySelector(\'#outer .details-title img.hitandrun, #outer .details-title img[alt="H&R"], #outer .details-title img[title="H&R"]\');\n  console.log(\'hr element:\', hrEl);\n  return !!hrEl;\n}'
       },
       loading: true,
       siteList: [],

@@ -618,7 +618,7 @@ const _hrTheGlory = async function (url, cookie) {
 const _hrDepthStudio = async function (url, cookie) {
   const d = await getDocument(url, cookie);
   assertLoggedIn(d);
-  const hr = d.querySelector('img.hitandrun, img[alt="H&R"], img[title="H&R"]');
+  const hr = d.querySelector('#outer .details-title img.hitandrun, #outer .details-title img[alt="H&R"], #outer .details-title img[title="H&R"]');
   return hr;
 };
 
