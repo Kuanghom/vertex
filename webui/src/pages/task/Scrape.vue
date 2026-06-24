@@ -5,7 +5,7 @@
     <a-alert
       type="info"
       show-icon
-      message="站点抓取扩展用于 RSS 任务的“抓取免费”和“排除 HR”判断。开启 RSS 任务中的对应开关后，会优先使用这里配置的站点脚本。"
+      message="站点抓取扩展用于 RSS 任务的促销筛选、排除 HR 及分类后缀判断。开启 RSS 任务中的对应开关后，会优先使用这里配置的站点脚本或模板。"
       style="margin-bottom: 16px;"
     />
     <a-table
@@ -73,9 +73,23 @@
           <a-input size="small" v-model:value="script.siteHost"/>
         </a-form-item>
         <a-form-item
+          label="优惠模板"
+          name="promoTemplate"
+          extra="选择内置优惠检测模板。留空则跟随 scrape.js 内置站点规则；选「自定义脚本」时需填写下方优惠判断脚本。">
+          <a-select size="small" v-model:value="script.promoTemplate" allowClear placeholder="跟随内置站点规则">
+            <a-select-option v-for="item of promoTemplates" :key="item.value" :value="item.value">{{ item.label }}</a-select-option>
+          </a-select>
+        </a-form-item>
+        <a-form-item
+          label="优惠判断"
+          name="promoScript"
+          extra="返回 async ({ document, console, util }) => { ... }，返回值应为优惠类型: free / 2xfree / 2x / 50% / 30% / 2x50% / normal。使用模板时可留空。">
+          <a-textarea size="small" v-model:value="script.promoScript" :rows="6"/>
+        </a-form-item>
+        <a-form-item
           label="免费判断"
           name="freeScript"
-          extra="返回 async ({ document, console, util }) => { ... } 或 async function (ctx) { ... }，返回 true 表示免费。脚本内可使用 console.log() 调试。不需要免费判断时可留空。">
+          extra="返回 true 表示免费（兼容旧配置）。推荐使用上方优惠模板；不需要时可留空。">
           <a-textarea size="small" v-model:value="script.freeScript" :rows="8"/>
         </a-form-item>
         <a-form-item
@@ -130,7 +144,8 @@
         </a-form-item>
         <a-form-item
           :wrapperCol="isMobile() ? { span:24 } : { span: 21, offset: 3 }">
-          <a-button type="primary" :loading="debugLoading === 'free'" @click="debugScript('free')">调试免费判断</a-button>
+          <a-button type="primary" :loading="debugLoading === 'promo'" @click="debugScript('promo')">调试优惠判断</a-button>
+          <a-button type="primary" style="margin-left: 12px;" :loading="debugLoading === 'free'" @click="debugScript('free')">调试免费判断</a-button>
           <a-button type="primary" style="margin-left: 12px;" :loading="debugLoading === 'hr'" @click="debugScript('hr')">调试 HR 判断</a-button>
           <a-button style="margin-left: 12px;" @click="clearDebugOutput()">清空输出</a-button>
         </a-form-item>
@@ -176,8 +191,28 @@ export default {
         width: 24
       }
     ];
+    const promoTemplates = [
+      { value: 'nexusphp', label: 'NexusPHP 系通用' },
+      { value: 'mteam', label: 'M-Team 馒头' },
+      { value: 'opencd', label: 'OpenCD' },
+      { value: 'ttg', label: 'TTG' },
+      { value: 'u2', label: 'U2' },
+      { value: 'hdbits', label: 'HDBits' },
+      { value: 'hdarea', label: 'HDArea' },
+      { value: 'byr', label: 'BYR PT' },
+      { value: 'hhanclub', label: 'HHanClub' },
+      { value: 'hudbt', label: 'HUDBT' },
+      { value: 'putao', label: '葡萄 PT' },
+      { value: 'hares', label: 'Hares' },
+      { value: 'bitporn', label: 'BitPorn' },
+      { value: 'hdcity', label: 'HDCity' },
+      { value: 'luminance', label: 'Gazelle / Luminance' },
+      { value: 'dstudio', label: 'Depth Studio' },
+      { value: 'custom', label: '自定义脚本' }
+    ];
     return {
       columns,
+      promoTemplates,
       scripts: [],
       script: {},
       defaultScript: {
@@ -233,7 +268,8 @@ export default {
       }
     },
     formatDebugOutput (type, data = {}) {
-      const label = type === 'free' ? '免费判断' : 'HR 判断';
+      const labelMap = { free: '免费判断', hr: 'HR 判断', promo: '优惠判断' };
+      const label = labelMap[type] || type;
       const lines = [];
       if (data.error) {
         lines.push(`[${label}] 调试失败`);
@@ -290,7 +326,8 @@ export default {
       return arg;
     },
     printDebugToBrowserConsole (type, data = {}) {
-      const label = type === 'free' ? '免费判断' : 'HR 判断';
+      const labelMap = { free: '免费判断', hr: 'HR 判断', promo: '优惠判断' };
+      const label = labelMap[type] || type;
       const groupLabel = `[Vertex Scrape Debug] ${label}`;
       console.group(groupLabel);
       console.info('测试链接:', this.debug.url);
@@ -328,9 +365,19 @@ export default {
         : output;
     },
     async debugScript (type) {
-      const scriptCode = type === 'free' ? this.script.freeScript : this.script.hrScript;
+      const scriptCodeMap = {
+        free: this.script.freeScript,
+        hr: this.script.hrScript,
+        promo: this.script.promoScript
+      };
+      const scriptCode = scriptCodeMap[type];
+      const labelMap = { free: '免费判断', hr: 'HR 判断', promo: '优惠判断' };
+      if (type === 'promo' && !scriptCode?.trim() && this.script.promoTemplate && this.script.promoTemplate !== 'custom') {
+        this.$message().warning('当前使用优惠模板, 无需脚本。若要调试模板请直接填写测试链接与 Cookie 后在 RSS 任务中检测。');
+        return;
+      }
       if (!scriptCode || !scriptCode.trim()) {
-        this.$message().warning(`${type === 'free' ? '免费判断' : 'HR 判断'}脚本为空`);
+        this.$message().warning(`${labelMap[type] || type}脚本为空`);
         return;
       }
       if (!this.debug.url) {
@@ -356,7 +403,7 @@ export default {
         if (data.error) {
           this.$message().error(data.error);
         } else {
-          this.$message().success(`${type === 'free' ? '免费判断' : 'HR 判断'}调试完成, 返回值: ${data.result}`);
+          this.$message().success(`${labelMap[type] || type}调试完成, 返回值: ${data.result}`);
         }
       } catch (e) {
         const data = e.data || {

@@ -25,6 +25,10 @@ export default {
     const url = '/api/rss/scrapeDryrun';
     return await post(url, rss);
   },
+  promoSupport: async (hosts) => {
+    const url = '/api/rss/promoSupport?host=' + encodeURIComponent(hosts.join(','));
+    return await get(url);
+  },
   scrapeTorrent: async (body) => {
     const url = '/api/rss/scrapeTorrent';
     return await post(url, body);

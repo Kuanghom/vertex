@@ -17,6 +17,7 @@ const redlock = require('./redlock');
 
 const logger = require('./logger');
 const scrape = require('./scrape');
+const scrapePromo = require('./scrapePromo');
 
 const db = new Database(path.join(__dirname, '../db/sql.db'));
 puppeteer.use(StealthPlugin());
@@ -87,6 +88,14 @@ const _importJson = function (path) {
 
 exports.scrapeFree = scrape.free;
 exports.scrapeHr = scrape.hr;
+exports.scrapePromo = scrape.promo;
+exports.matchScrapePromo = scrape.matchPromo;
+exports.matchPromoTypes = scrapePromo.matchTypes;
+exports.getPromoSupport = scrape.getPromoSupport;
+exports.formatPromo = scrape.formatPromo;
+exports.PROMO_LABELS = scrape.PROMO_LABELS;
+exports.PROMO_TYPES = scrape.PROMO_TYPES;
+exports.TEMPLATE_SUPPORT = scrape.TEMPLATE_SUPPORT;
 
 exports._requestPromise = util.promisify(request);
 exports.requestPromise = async function (_options, usePuppeteer = true) {

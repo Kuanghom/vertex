@@ -75,7 +75,7 @@ class ScriptMod {
         result: null
       };
     }
-    if (!['free', 'hr'].includes(type)) {
+    if (!['free', 'hr', 'promo'].includes(type)) {
       logger.warn('[script] 站点扩展调试失败: 调试类型无效', type);
       return {
         error: '调试类型无效',
@@ -111,7 +111,7 @@ class ScriptMod {
         result: null
       };
     }
-    const scriptCode = script || options[`${type}Script`];
+    const scriptCode = script || options[`${type}Script`] || (type === 'promo' ? options.promoScript : undefined);
     const result = await scrape.debugScrapeScript(type, url, _cookie, scriptCode);
     if (result.error) {
       logger.warn('[script] 站点扩展调试失败:', type, url, result.stageLabel || result.stage, result.error);

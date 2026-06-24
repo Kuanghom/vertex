@@ -27,6 +27,8 @@ class Rss {
     this.skipSameTorrent = rss.skipSameTorrent;
     this.scrapeFree = rss.scrapeFree;
     this.scrapeHr = rss.scrapeHr;
+    this.scrapePromo = rss.scrapePromo || (rss.scrapeFree ? ['free'] : []);
+    this.categorySuffixHr = rss.categorySuffixHr;
     this.sleepTime = rss.sleepTime;
     this.cookie = rss.cookie;
     this.savePath = rss.savePath;
@@ -304,22 +306,24 @@ class Rss {
         await this.ntf.rejectTorrent(this._rss, _client, torrent, '拒绝原因: 不符合所有规则');
         return;
       }
-      if (this.scrapeFree) {
+      if (this.scrapePromo.length > 0) {
         try {
-          if (!await util.scrapeFree(torrent.link, this.cookie)) {
-            const isScraped = await redis.get(`vertex:scrape:free:${torrent.hash}`);
+          const promoType = await util.scrapePromo(torrent.link, this.cookie);
+          if (!util.matchPromoTypes(promoType, this.scrapePromo)) {
+            const isScraped = await redis.get(`vertex:scrape:promo:${torrent.hash}`);
             if (this.sleepTime && (moment().unix() - +this.sleepTime) < torrent.pubTime && !isScraped) {
               logger.info(this.alias, '已设置等待时间', this.sleepTime, ', ', torrent.name, '发布时间为', moment(torrent.pubTime * 1000).format('YYYY-MM-DD HH:mm:ss'), ', 跳过');
-              await redis.setWithExpire(`vertex:scrape:free:${torrent.hash}`, '7777', 3600 * 4);
+              await redis.setWithExpire(`vertex:scrape:promo:${torrent.hash}`, '1', 3600 * 4);
             } else {
-              await this._insertTorrentRecord(torrent, 2, '拒绝原因: 非免费种', { client: _client });
+              const promoLabel = util.formatPromo(promoType).label;
+              await this._insertTorrentRecord(torrent, 2, `拒绝原因: 促销不符 (当前: ${promoLabel})`, { client: _client });
             }
-            await this.ntf.rejectTorrent(this._rss, _client, torrent, '拒绝原因: 非免费种');
+            await this.ntf.rejectTorrent(this._rss, _client, torrent, '拒绝原因: 促销不符');
             return;
           }
         } catch (e) {
-          logger.error(this.alias, '抓取免费种子失败: ', e.message);
-          await this._insertTorrentRecord(torrent, 2, `拒绝原因: 抓取免费种子失败 ${e.message}`, { client: _client });
+          logger.error(this.alias, '抓取促销状态失败: ', e.message);
+          await this._insertTorrentRecord(torrent, 2, `拒绝原因: 抓取促销状态失败 ${e.message}`, { client: _client });
           await this.ntf.scrapeError(this._rss, torrent);
           return;
         }
@@ -364,7 +368,19 @@ class Rss {
       if (savePath) {
         savePath = savePath.replace('{RANDOM}', util.uuid.v4().replace(/-/g, ''));
       }
-      const category = fitRule.category || this.category;
+      let category = fitRule.category || this.category;
+      if (this.categorySuffixHr && category) {
+        try {
+          if (await util.scrapeHr(torrent.link, this.cookie)) {
+            category = `${category}-HR`;
+          }
+        } catch (e) {
+          logger.error(this.alias, '检测 HR 以追加分类后缀失败: ', e.message);
+          await this._insertTorrentRecord(torrent, 2, `拒绝原因: 检测 HR 失败 ${e.message}`, { client: _client });
+          await this.ntf.scrapeError(this._rss, torrent);
+          return;
+        }
+      }
       const client = fitRule.client ? global.runningClient[fitRule.client] : _client;
       try {
         let truehash = '';

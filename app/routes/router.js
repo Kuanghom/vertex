@@ -200,6 +200,7 @@ module.exports = function (app, express, router) {
   router.post('/rss/dryrun', ctrl.Rss.dryrun);
   router.post('/rss/scrapeDryrun', ctrl.Rss.scrapeDryrun);
   router.post('/rss/scrapeTorrent', ctrl.Rss.scrapeTorrent);
+  router.get('/rss/promoSupport', ctrl.Rss.promoSupport);
   router.post('/rss/modify', ctrl.Rss.modify);
   router.post('/rss/delete', ctrl.Rss.delete);
   router.post('/rss/deleteRecord', ctrl.Rss.deleteRecord);

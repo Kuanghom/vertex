@@ -45,6 +45,8 @@ class RssMod {
       }
       rss.acceptRules = rss.acceptRules || [];
       rss.rejectRules = rss.rejectRules || [];
+      rss.scrapePromo = rss.scrapePromo || (rss.scrapeFree ? ['free'] : []);
+      rss.categorySuffixHr = rss.categorySuffixHr || false;
     }
     return rssList;
   };
@@ -65,7 +67,7 @@ class RssMod {
     logger.info('[rss] 开始检测免费/HR 试运行:', options.alias || options.id || '新任务');
     const torrents = await this.dryrun(options);
     for (const torrent of torrents) {
-      torrent.free = '未检测';
+      torrent.promo = '未检测';
       torrent.hr = '未检测';
     }
     logger.info('[rss] 检测免费/HR 试运行完成:', options.alias || options.id || '新任务', '种子数量:', torrents.length);
@@ -77,18 +79,21 @@ class RssMod {
       logger.warn('[rss] 单条检测失败: 种子详情链接为空');
       throw new Error('种子详情链接为空');
     }
-    logger.info('[rss] 开始单条检测免费/HR:', options.link, 'Cookie 长度:', options.cookie ? String(options.cookie).length : 0);
+    logger.info('[rss] 开始单条检测促销/HR:', options.link, 'Cookie 长度:', options.cookie ? String(options.cookie).length : 0);
     const result = {
-      free: '未检测',
+      promo: '未检测',
       hr: '未检测'
     };
     try {
-      result.free = await util.scrapeFree(options.link, options.cookie) ? '是' : '否';
-      logger.info('[rss] 单条检测免费结果:', options.link, result.free);
+      const promoType = await util.scrapePromo(options.link, options.cookie);
+      const formatted = util.formatPromo(promoType);
+      result.promo = formatted.label;
+      result.promoType = formatted.type;
+      logger.info('[rss] 单条检测促销结果:', options.link, result.promo);
     } catch (e) {
-      result.free = '检测失败';
-      result.freeError = e.message;
-      logger.error('[rss] 单条检测免费失败:', options.link, e.message);
+      result.promo = '检测失败';
+      result.promoError = e.message;
+      logger.error('[rss] 单条检测促销失败:', options.link, e.message);
       if (e.stack) {
         logger.error('[rss] 错误堆栈:', e.stack);
       }
@@ -104,8 +109,25 @@ class RssMod {
         logger.error('[rss] 错误堆栈:', e.stack);
       }
     }
-    logger.info('[rss] 单条检测完成:', options.link, 'free=', result.free, 'hr=', result.hr);
+    logger.info('[rss] 单条检测完成:', options.link, 'promo=', result.promo, 'hr=', result.hr);
     return result;
+  };
+
+  promoSupport (hosts) {
+    const support = {};
+    for (const host of hosts) {
+      support[host] = util.getPromoSupport(host);
+    }
+    const merged = new Set();
+    for (const types of Object.values(support)) {
+      for (const type of types) {
+        merged.add(type);
+      }
+    }
+    return {
+      hosts: support,
+      merged: Array.from(merged)
+    };
   };
 
   async mikanSearch (options) {

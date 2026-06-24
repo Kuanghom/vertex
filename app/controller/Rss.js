@@ -151,6 +151,23 @@ class Rss {
     }
   };
 
+  async promoSupport (req, res) {
+    try {
+      const hosts = (req.query.host || '').split(',').map(i => i.trim()).filter(Boolean);
+      const r = rssMod.promoSupport(hosts);
+      res.send({
+        success: true,
+        data: r
+      });
+    } catch (e) {
+      logger.error(e);
+      res.send({
+        success: false,
+        message: e.message
+      });
+    }
+  };
+
   async mikanSearch (req, res) {
     const options = req.body;
     try {

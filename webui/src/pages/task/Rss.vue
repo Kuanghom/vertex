@@ -148,10 +148,21 @@
           </a-button>
         </a-form-item>
         <a-form-item
-          label="抓取免费"
-          name="scrapeFree"
-          :rules="[{ required: true, message: '${label}不可为空! ' }]">
-          <a-checkbox v-model:checked="rss.scrapeFree">抓取免费</a-checkbox>
+          label="促销筛选"
+          name="scrapePromo"
+          extra="勾选后仅添加符合促销状态的种子；多选为「或」关系，满足任一即可。不可选项表示当前 RSS 地址对应站点不支持该促销类型。">
+          <a-checkbox-group v-model:value="rss.scrapePromo" style="width: 100%;">
+            <a-row>
+              <a-col v-for="item of promoOptions" :span="8" :key="item.value">
+                <a-checkbox
+                  :value="item.value"
+                  :disabled="promoSupportReady && supportedPromo.indexOf(item.value) === -1">
+                  <PromoTag :label="item.label" :promo-type="item.value" />
+                  <span v-if="promoSupportReady && supportedPromo.indexOf(item.value) === -1" style="color: #999;">(不支持)</span>
+                </a-checkbox>
+              </a-col>
+            </a-row>
+          </a-checkbox-group>
         </a-form-item>
         <a-form-item
           label="排除 HR"
@@ -160,8 +171,14 @@
           <a-checkbox v-model:checked="rss.scrapeHr">排除 HR</a-checkbox>
         </a-form-item>
         <a-form-item
+          label="分类增加-HR"
+          name="categorySuffixHr"
+          extra="勾选后，若种子为 H&R 状态，推送至下载器时会在「分类」后自动追加 -HR 后缀（例如分类 movie 变为 movie-HR）。需填写 Cookie 以检测 HR。">
+          <a-checkbox v-model:checked="rss.categorySuffixHr">分类增加-HR</a-checkbox>
+        </a-form-item>
+        <a-form-item
           label="Cookie"
-          v-if="rss.scrapeHr || rss.scrapeFree"
+          v-if="needScrapeCookie"
           name="cookie"
           extra="Cookie, M-Team 为 api key"
           :rules="[{ required: true, message: '${label}不可为空! ' }]">
@@ -253,7 +270,7 @@
         <a-form-item
           label="等待时间"
           name="sleepTime"
-          extra="若在 Rss 时种子是非免费状态, 将在种子发布后的一段时间内重复抓取免费状态, 建议等待时间略小于 Rss 周期">
+          extra="若在 Rss 时种子不符合促销筛选, 将在种子发布后的一段时间内重复检测促销状态, 建议等待时间略小于 Rss 周期">
           <a-input size="small" v-model:value="rss.sleepTime"/>
         </a-form-item>
         <a-form-item
@@ -327,7 +344,7 @@
           <a-button type="primary" html-type="submit" style="margin-top: 24px; margin-bottom: 48px;">应用 | 完成</a-button>
           <a-button style="margin-left: 12px; margin-top: 24px; margin-bottom: 48px;" @click="clearRss()">清空</a-button>
           <a-button type="primary" style="margin-left: 12px; margin-top: 24px; margin-bottom: 48px;" @click="dryrun()">试运行</a-button>
-          <a-button type="primary" :loading="dryrunLoading" style="margin-left: 12px; margin-top: 24px; margin-bottom: 48px;" @click="scrapeDryrun()">检测免费/HR</a-button>
+          <a-button type="primary" :loading="dryrunLoading" style="margin-left: 12px; margin-top: 24px; margin-bottom: 48px;" @click="scrapeDryrun()">检测促销/HR</a-button>
         </a-form-item>
       </a-form>
     </div>
@@ -340,7 +357,7 @@
     <div style="text-align: left; ">
       <a-alert message="注意事项" type="info" >
         <template #description>
-          {{ dryrunMode === 'scrape' ? '检测免费/HR 会先执行 RSS 试运行获取种子列表，不会自动检测免费或 HR 状态。请在列表中点击「检测」按钮逐条检测，与上方「抓取免费」「排除 HR」勾选无关。' : 'RSS 试运行仅判断是否符合 RSS 规则，不检测种子免费或 HR 状态。' }}
+          {{ dryrunMode === 'scrape' ? '检测促销/HR 会先执行 RSS 试运行获取种子列表，不会自动检测。请在列表中点击「检测」按钮逐条查看促销与 HR 状态，与上方筛选勾选无关。' : 'RSS 试运行仅判断是否符合 RSS 规则，不检测种子促销或 HR 状态。' }}
           <br>
           RSS 链接: {{ rss.rssUrls[0] }}
         </template>
@@ -380,9 +397,9 @@
               <template v-if="column.dataIndex === 'pubTime'">
                 {{ formatPubTime(record.pubTime) }}
               </template>
-              <template v-if="column.dataIndex === 'free'">
-                <a-tag :color="record.free === '是' ? 'success' : (record.free === '检测失败' ? 'error' : 'default')">{{ record.free }}</a-tag>
-                <span v-if="record.freeError" style="color: red;">{{ record.freeError }}</span>
+              <template v-if="column.dataIndex === 'promo'">
+                <PromoTag :label="record.promo" :promo-type="record.promoType" />
+                <span v-if="record.promoError" style="color: red;">{{ record.promoError }}</span>
               </template>
               <template v-if="column.dataIndex === 'hr'">
                 <a-tag :color="record.hr === '是' ? 'error' : (record.hr === '检测失败' ? 'error' : 'success')">{{ record.hr }}</a-tag>
@@ -410,7 +427,13 @@
   </a-modal>
 </template>
 <script>
+import PromoTag from '../../components/PromoTag.vue';
+import { PROMO_OPTIONS } from '../../util/promoTag';
+
 export default {
+  components: {
+    PromoTag
+  },
   data () {
     const columns = [
       {
@@ -463,8 +486,8 @@ export default {
     const scrapeDryrunColumns = [
       ...dryrunColumns,
       {
-        title: '免费',
-        dataIndex: 'free',
+        title: '促销',
+        dataIndex: 'promo',
         width: 22
       }, {
         title: 'HR',
@@ -475,8 +498,12 @@ export default {
         width: 18
       }
     ];
+    const promoOptions = PROMO_OPTIONS;
     return {
       columns,
+      promoOptions,
+      supportedPromo: [],
+      promoSupportReady: false,
       dryrunColumns,
       scrapeDryrunColumns,
       dryrunMode: 'rule',
@@ -491,8 +518,9 @@ export default {
       defaultRss: {
         clientArr: [],
         enable: false,
-        scrapeFree: false,
+        scrapePromo: [],
         scrapeHr: false,
+        categorySuffixHr: false,
         autoReseed: false,
         onlyReseed: false,
         maxSleepTime: 600,
@@ -510,7 +538,46 @@ export default {
       registCode: []
     };
   },
+  computed: {
+    needScrapeCookie () {
+      return this.rss.scrapeHr ||
+        (this.rss.scrapePromo && this.rss.scrapePromo.length > 0) ||
+        this.rss.categorySuffixHr;
+    }
+  },
+  watch: {
+    'rss.rssUrls': {
+      handler () {
+        this.refreshPromoSupport();
+      },
+      deep: true
+    }
+  },
   methods: {
+    async refreshPromoSupport () {
+      const hosts = [];
+      for (const url of this.rss.rssUrls || []) {
+        if (!url) continue;
+        try {
+          hosts.push(new URL(url).host);
+        } catch (e) {
+          // ignore invalid url
+        }
+      }
+      if (hosts.length === 0) {
+        this.supportedPromo = [];
+        this.promoSupportReady = false;
+        return;
+      }
+      try {
+        const res = await this.$api().rss.promoSupport(hosts);
+        this.supportedPromo = res.data.merged || [];
+        this.promoSupportReady = this.supportedPromo.length > 0;
+      } catch (e) {
+        this.supportedPromo = [];
+        this.promoSupportReady = false;
+      }
+    },
     isMobile () {
       if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
         return true;
@@ -565,7 +632,11 @@ export default {
     },
     async modifyRss () {
       try {
-        await this.$api().rss.modify({ ...this.rss });
+        const payload = {
+          ...this.rss,
+          scrapeFree: (this.rss.scrapePromo || []).indexOf('free') !== -1
+        };
+        await this.$api().rss.modify(payload);
         this.$message().success((this.rss.id ? '编辑' : '新增') + '成功, 列表正在刷新...');
         setTimeout(() => this.listRss(), 1000);
         this.clearRss();
@@ -589,14 +660,14 @@ export default {
     async scrapeDryrun () {
       try {
         if (!this.rss.cookie) {
-          this.$message().error('检测免费/HR 需要填写 Cookie');
+          this.$message().error('检测促销/HR 需要填写 Cookie');
           return;
         }
         this.dryrunLoading = true;
         const res = await this.$api().rss.scrapeDryrun({ ...this.rss });
         this.dryrunResult = res.data.map(item => ({
           ...item,
-          free: '未检测',
+          promo: '未检测',
           hr: '未检测',
           scrapeLoading: false
         }));
@@ -624,11 +695,11 @@ export default {
           ...res.data,
           scrapeLoading: false
         };
-        const { free, hr, freeError, hrError } = res.data;
-        if (free === '检测失败' || hr === '检测失败') {
-          this.$message().warning(`检测完成: 免费 ${free}${freeError ? ` (${freeError})` : ''}, HR ${hr}${hrError ? ` (${hrError})` : ''}`);
+        const { promo, hr, promoError, hrError } = res.data;
+        if (promo === '检测失败' || hr === '检测失败') {
+          this.$message().warning(`检测完成: 促销 ${promo}${promoError ? ` (${promoError})` : ''}, HR ${hr}${hrError ? ` (${hrError})` : ''}`);
         } else {
-          this.$message().success(`检测完成: 免费 ${free}, HR ${hr}`);
+          this.$message().success(`检测完成: 促销 ${promo}, HR ${hr}`);
         }
       } catch (e) {
         this.dryrunResult[index] = { ...this.dryrunResult[index], scrapeLoading: false };
@@ -646,7 +717,12 @@ export default {
       }
     },
     modifyClick (row) {
-      this.rss = { ...row };
+      this.rss = {
+        ...row,
+        scrapePromo: row.scrapePromo || (row.scrapeFree ? ['free'] : []),
+        categorySuffixHr: row.categorySuffixHr || false
+      };
+      this.refreshPromoSupport();
     },
     cloneClick (row) {
       this.rss = JSON.parse(JSON.stringify(row));
@@ -669,8 +745,11 @@ export default {
         clientArr: [],
         rejectRules: [],
         reseedClients: [],
-        rssUrls: ['']
+        rssUrls: [''],
+        scrapePromo: []
       };
+      this.supportedPromo = [];
+      this.promoSupportReady = false;
     }
   },
   async mounted () {
@@ -695,5 +774,13 @@ export default {
 .torrent-name-link:hover {
   color: inherit;
   text-decoration: none;
+}
+:deep(.ant-checkbox-wrapper) {
+  align-items: center;
+}
+:deep(.ant-checkbox + span) {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 </style>

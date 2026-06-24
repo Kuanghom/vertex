@@ -1,6 +1,7 @@
 const util = require('./util');
 const redis = require('./redis');
 const logger = require('./logger');
+const scrapePromo = require('./scrapePromo');
 const { JSDOM } = require('jsdom');
 const fs = require('fs');
 const path = require('path');
@@ -234,7 +235,12 @@ const getScrapeScripts = function (host, type) {
     .filter(Boolean)
     .filter(script => script.enable && script.scriptType === 'scrape')
     .filter(script => (script.siteHost || '').split(',').map(i => i.trim().toLowerCase()).indexOf(host.toLowerCase()) !== -1)
-    .filter(script => !!script[`${type}Script`]);
+    .filter(script => {
+      if (type === 'promo') {
+        return !!script.promoScript || !!script.promoTemplate;
+      }
+      return !!script[`${type}Script`];
+    });
 };
 
 const executeScrapeFunction = async function (fn, context) {
@@ -336,7 +342,9 @@ const debugScrapeScript = async function (type, url, cookie, scriptCode) {
   }
 
   try {
-    const result = !!await executeScrapeFunction(fn, context);
+    const result = type === 'promo'
+      ? scrapePromo.normalizePromoType(await executeScrapeFunction(fn, context))
+      : !!await executeScrapeFunction(fn, context);
     logger.info('[scrape] 调试脚本执行成功:', type, url, 'result=', result, 'console 条数=', logs.length);
     return buildResult({ result });
   } catch (e) {
@@ -667,7 +675,53 @@ exports.free = async (url, cookie) => {
   }
 };
 
+const runScrapePromoScript = async function (url, cookie) {
+  const host = new URL(url).host;
+  const scripts = getScrapeScripts(host, 'promo');
+  if (scripts.length === 0) {
+    return null;
+  }
+  const script = scripts[0];
+  logger.info('[scrape] 使用扩展优惠配置:', script.alias || script.id, host, url);
+  if (script.promoTemplate && script.promoTemplate !== 'custom' && !script.promoScript) {
+    return scrapePromo.detectByTemplate(script.promoTemplate, url, cookie);
+  }
+  const logs = [];
+  const context = await buildScrapeContext(url, cookie, logs, false);
+  const fn = evalScrapeFunction(script.promoScript);
+  const result = await executeScrapeFunction(fn, context);
+  return scrapePromo.normalizePromoType(result);
+};
+
 exports.debugScrapeScript = debugScrapeScript;
+
+exports.getPromoSupport = scrapePromo.getPromoSupport;
+exports.formatPromo = scrapePromo.formatPromo;
+exports.PROMO_LABELS = scrapePromo.PROMO_LABELS;
+exports.PROMO_TYPES = scrapePromo.PROMO_TYPES;
+exports.TEMPLATE_SUPPORT = scrapePromo.TEMPLATE_SUPPORT;
+
+exports.promo = async (url, cookie) => {
+  const host = new URL(url).host;
+  try {
+    const customResult = await runScrapePromoScript(url, cookie);
+    if (customResult !== null) {
+      return customResult;
+    }
+    return await scrapePromo.detect(url, cookie);
+  } catch (e) {
+    logger.error('[scrape] 检测优惠失败:', host, url, e.message);
+    if (e.stack) {
+      logger.error('[scrape] 错误堆栈:', e.stack);
+    }
+    throw e;
+  }
+};
+
+exports.matchPromo = async (url, cookie, types) => {
+  const promo = await exports.promo(url, cookie);
+  return scrapePromo.matchTypes(promo, types);
+};
 
 exports.hr = async (url, cookie) => {
   const host = new URL(url).host;
