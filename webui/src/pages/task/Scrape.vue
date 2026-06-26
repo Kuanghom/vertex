@@ -75,27 +75,32 @@
         <a-form-item
           label="优惠模板"
           name="promoTemplate"
-          extra="选择内置优惠检测模板。留空则跟随 scrape.js 内置站点规则；选「自定义脚本」时需填写下方优惠判断脚本。">
-          <a-select size="small" v-model:value="script.promoTemplate" allowClear placeholder="跟随内置站点规则">
+          extra="选择内置优惠检测模板。留空则显示 NexusPHP 通用参考；切换模板会自动填充优惠/免费/HR 三类脚本。">
+          <a-select
+            size="small"
+            v-model:value="script.promoTemplate"
+            allowClear
+            placeholder="跟随内置站点规则"
+            @change="onPromoTemplateChange">
             <a-select-option v-for="item of promoTemplates" :key="item.value" :value="item.value">{{ item.label }}</a-select-option>
           </a-select>
         </a-form-item>
         <a-form-item
           label="优惠判断"
           name="promoScript"
-          extra="返回 async ({ document, console, util }) => { ... }，返回值应为优惠类型: free / 2xfree / 2x / 50% / 30% / 2x50% / normal。使用模板时可留空。">
+          extra="选择模板会自动填充参考脚本；留空时显示 NexusPHP 通用参考。返回值: free / 2xfree / 2x / 50% / 30% / 2x50% / normal。">
           <a-textarea size="small" v-model:value="script.promoScript" :rows="6"/>
         </a-form-item>
         <a-form-item
           label="免费判断"
           name="freeScript"
-          extra="返回 true 表示免费（兼容旧配置）。推荐使用上方优惠模板；不需要时可留空。">
+          extra="返回 true 表示免费（兼容旧配置）。切换优惠模板时会同步填充参考脚本。">
           <a-textarea size="small" v-model:value="script.freeScript" :rows="8"/>
         </a-form-item>
         <a-form-item
           label="HR 判断"
           name="hrScript"
-          extra="返回 async ({ document, console, util }) => { ... } 或 async function (ctx) { ... }，返回 true 表示 H&R。脚本内可使用 console.log() 调试。不需要 HR 判断时可留空。">
+          extra="返回 true 表示 H&R。切换优惠模板时会同步填充参考脚本；无 HR 的站点模板会填充返回 false 的占位脚本。">
           <a-textarea size="small" v-model:value="script.hrScript" :rows="8"/>
         </a-form-item>
         <a-form-item
@@ -166,6 +171,14 @@
   </div>
 </template>
 <script>
+import {
+  getScrapeScriptTemplates,
+  getDefaultPromoTemplate,
+  getDefaultPromoScript,
+  getDefaultFreeScript,
+  getDefaultHrScript
+} from '../../util/promoScriptTemplates';
+
 export default {
   data () {
     const columns = [
@@ -219,8 +232,10 @@ export default {
         enable: true,
         scriptType: 'scrape',
         siteHost: 'dstudio.me',
-        freeScript: 'async ({ document, console }) => {\n  const freeEl = document.querySelector(\'.details-title font.free, .details-title font.twoupfree, #top font.free, #top font.twoupfree\');\n  console.log(\'free element:\', freeEl);\n  return !!freeEl || document.body.innerHTML.includes(\'全站 [Free] 生效中\');\n}',
-        hrScript: 'async ({ document, console }) => {\n  const hrEl = document.querySelector(\'#outer .details-title img.hitandrun, #outer .details-title img[alt="H&R"], #outer .details-title img[title="H&R"]\');\n  console.log(\'hr element:\', hrEl);\n  return !!hrEl;\n}'
+        promoTemplate: getDefaultPromoTemplate(),
+        promoScript: getDefaultPromoScript(),
+        freeScript: getDefaultFreeScript(),
+        hrScript: getDefaultHrScript()
       },
       loading: true,
       siteList: [],
@@ -259,6 +274,21 @@ export default {
         this.siteList = (res.data.siteList || []).filter(item => item.enable);
       } catch (e) {
         this.$message().error(e.message);
+      }
+    },
+    onPromoTemplateChange (template) {
+      this.applyScrapeScriptTemplates(this.script, false);
+    },
+    applyScrapeScriptTemplates (script = this.script, onlyIfEmpty = false) {
+      const templates = getScrapeScriptTemplates(script.promoTemplate);
+      if (!onlyIfEmpty || !script.promoScript?.trim()) {
+        script.promoScript = templates.promo;
+      }
+      if (!onlyIfEmpty || !script.freeScript?.trim()) {
+        script.freeScript = templates.free;
+      }
+      if (!onlyIfEmpty || !script.hrScript?.trim()) {
+        script.hrScript = templates.hr;
       }
     },
     onDebugSiteChange (siteName) {
@@ -372,10 +402,6 @@ export default {
       };
       const scriptCode = scriptCodeMap[type];
       const labelMap = { free: '免费判断', hr: 'HR 判断', promo: '优惠判断' };
-      if (type === 'promo' && !scriptCode?.trim() && this.script.promoTemplate && this.script.promoTemplate !== 'custom') {
-        this.$message().warning('当前使用优惠模板, 无需脚本。若要调试模板请直接填写测试链接与 Cookie 后在 RSS 任务中检测。');
-        return;
-      }
       if (!scriptCode || !scriptCode.trim()) {
         this.$message().warning(`${labelMap[type] || type}脚本为空`);
         return;
@@ -433,6 +459,7 @@ export default {
     },
     modifyClick (row) {
       this.script = { ...row, scriptType: 'scrape' };
+      this.applyScrapeScriptTemplates(this.script, true);
     },
     async deleteScript (row) {
       try {

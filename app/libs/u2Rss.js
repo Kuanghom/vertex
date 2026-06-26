@@ -3,6 +3,7 @@ const path = require('path');
 const moment = require('moment');
 const { JSDOM } = require('jsdom');
 const crypto = require('crypto');
+const scrapePromo = require('./scrapePromo');
 const logger = require('./logger');
 const redis = require('./redis');
 const util = require('./util');
@@ -149,21 +150,12 @@ const parseTorrentRate = (freeInfo, freeTdElm) => {
 };
 
 const parseTorrentRateFromDocument = (document) => {
-  let freeTd = null;
-  for (const td of document.querySelectorAll('td.rowhead')) {
-    if (/流量優惠|流量优惠/.test(td.textContent || '')) {
-      freeTd = td.nextElementSibling;
-      break;
-    }
-  }
+  const freeTd = scrapePromo.getU2PromoCell(document);
   if (!freeTd) return { ...DEFAULT_RATE };
-  const faqLink = [...freeTd.querySelectorAll('a.faqlink')].find((a) => /優惠歷史|优惠历史/.test(a.textContent || ''));
-  let freeText = '';
-  if (faqLink?.previousSibling) {
-    freeText = (faqLink.previousSibling.textContent || '').trim();
-  }
-  const imgElm = freeTd.querySelector('img');
-  if (!imgElm || /普通/.test(freeText)) {
+  const imgElm = freeTd.querySelector(
+    'img.pro_free, img.pro_free2up, img.pro_2up, img.pro_50pctdown, img.pro_30pctdown, img.pro_50pctdown2up, img.pro_custom'
+  );
+  if (!imgElm) {
     return { ...DEFAULT_RATE };
   }
   return parseTorrentRate(imgElm.getAttribute('alt') || '', freeTd);

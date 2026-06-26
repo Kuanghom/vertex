@@ -37,16 +37,6 @@ const TEMPLATE_SUPPORT = {
   custom: PROMO_TYPES
 };
 
-const NEXUSPHP_CLASS_MAP = {
-  twouphalfdown: '2x50%',
-  twoupfree: '2xfree',
-  halfdown: '50%',
-  thirtiedown: '30%',
-  thirtypercent: '30%',
-  twoup: '2x',
-  free: 'free'
-};
-
 const HOST_TEMPLATE = {
   'pt.btschool.club': 'nexusphp',
   'hdhome.org': 'nexusphp',
@@ -97,7 +87,87 @@ const HOST_TEMPLATE = {
   'club.hares.top': 'hares'
 };
 
+const NEXUSPHP_CLASS_MAP = {
+  twouphalfdown: '2x50%',
+  twoupfree: '2xfree',
+  halfdown: '50%',
+  thirtiedown: '30%',
+  thirtypercent: '30%',
+  twoup: '2x',
+  free: 'free'
+};
+
+const normalizeScrapeCookie = function (url, cookie) {
+  if (!cookie) return cookie;
+  const host = new URL(url).host;
+  if (host === 'u2.dmhy.org' && !String(cookie).includes('=')) {
+    return `nexusphp_u2=${cookie}`;
+  }
+  return cookie;
+};
+
+const getU2PromoCell = function (d) {
+  const promoImg = d.querySelector(
+    'td.rowfollow img.pro_free, td.rowfollow img.pro_free2up, td.rowfollow img.pro_2up, ' +
+    'td.rowfollow img.pro_50pctdown, td.rowfollow img.pro_30pctdown, td.rowfollow img.pro_50pctdown2up, ' +
+    'td.rowfollow img.pro_custom'
+  );
+  if (promoImg) {
+    return promoImg.closest('td.rowfollow');
+  }
+  const promoLink = d.querySelector('td.rowfollow a[href*="promotion.php?action=torrent"]');
+  if (promoLink) {
+    return promoLink.closest('td.rowfollow');
+  }
+  return null;
+};
+
+const parseU2Ratio = function (cell, className) {
+  const img = cell.querySelector(`img.${className}`);
+  if (!img) return null;
+  const next = img.nextElementSibling;
+  if (next && next.tagName === 'B') {
+    const match = next.textContent.match(/([0.]+)X/i);
+    return match ? parseFloat(match[1]) : null;
+  }
+  return null;
+};
+
+const parseU2CustomPromo = function (cell) {
+  const up = parseU2Ratio(cell, 'arrowup');
+  const down = parseU2Ratio(cell, 'arrowdown');
+  if (down !== null && down <= 0) return 'free';
+  if (up !== null && up >= 2 && down !== null && down >= 0.49 && down <= 0.51) return '2x50%';
+  if (up !== null && up >= 2 && down !== null && down <= 0) return '2xfree';
+  if (down !== null && down <= 0.3) return '30%';
+  if (down !== null && down <= 0.5) return '50%';
+  if (up !== null && up >= 2) return '2x';
+  return 'normal';
+};
+
+const parseU2PromoFromCell = function (cell) {
+  if (!cell) return 'normal';
+  const classOrder = [
+    ['pro_50pctdown2up', '2x50%'],
+    ['pro_free2up', '2xfree'],
+    ['pro_50pctdown', '50%'],
+    ['pro_30pctdown', '30%'],
+    ['pro_2up', '2x'],
+    ['pro_free', 'free']
+  ];
+  for (const [cls, type] of classOrder) {
+    if (cell.querySelector(`img.${cls}`)) return type;
+  }
+  if (cell.querySelector('img.pro_custom')) {
+    return parseU2CustomPromo(cell);
+  }
+  const down = parseU2Ratio(cell, 'arrowdown');
+  if (down !== null && down <= 0) return 'free';
+  return 'normal';
+};
+
 const getBody = async function (url, cookie) {
+  const _cookie = normalizeScrapeCookie(url, cookie);
   let body;
   const cache = await redis.get(`vertex:scrape:${url}`);
   if (cache) {
@@ -105,7 +175,7 @@ const getBody = async function (url, cookie) {
   } else {
     body = (await util.requestPromise({
       url,
-      headers: { cookie }
+      headers: { cookie: _cookie }
     }, true)).body;
     await redis.setWithExpire(`vertex:scrape:${url}`, body, 40);
   }
@@ -217,15 +287,7 @@ const detectTTG = async function (url, cookie) {
 const detectU2 = async function (url, cookie) {
   const d = await getDocument(url, cookie);
   assertNexusLoggedIn(d);
-  const html = d.body.innerHTML;
-  const block = html.match(/流量優惠[\s\S]{0,1200}/)?.[0] || html;
-  if (/class=pro_50pctdown2up/.test(block)) return '2x50%';
-  if (/class=pro_free2up/.test(block)) return '2xfree';
-  if (/class=pro_50pctdown/.test(block) || (/class=arrowdown/.test(block) && /0\.50X/.test(block))) return '50%';
-  if (/class=pro_30pctdown/.test(block) || (/class=arrowdown/.test(block) && /0\.30X/.test(block))) return '30%';
-  if (/class=pro_2up/.test(block)) return '2x';
-  if (/class=pro_free/.test(block)) return 'free';
-  return 'normal';
+  return parseU2PromoFromCell(getU2PromoCell(d));
 };
 
 const detectHDBits = async function (url, cookie) {
@@ -443,5 +505,7 @@ exports.matchTypes = function (promoType, types) {
   return types.indexOf(normalizePromoType(promoType)) !== -1;
 };
 
-exports.normalizePromoType = normalizePromoType;
+exports.normalizeScrapeCookie = normalizeScrapeCookie;
+exports.getU2PromoCell = getU2PromoCell;
+exports.parseU2PromoFromCell = parseU2PromoFromCell;
 exports.getDocument = getDocument;

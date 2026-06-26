@@ -7,6 +7,7 @@ const fs = require('fs');
 const path = require('path');
 
 const getBody = async function (url, cookie) {
+  const _cookie = scrapePromo.normalizeScrapeCookie(url, cookie);
   let body;
   const cache = await redis.get(`vertex:scrape:${url}`);
   if (cache) {
@@ -17,7 +18,7 @@ const getBody = async function (url, cookie) {
     body = (await util.requestPromise({
       url,
       headers: {
-        cookie
+        cookie: _cookie
       }
     }, true)).body;
     await redis.setWithExpire(`vertex:scrape:${url}`, body, 40);
@@ -439,10 +440,12 @@ const _freeDmhy = async function (url, cookie) {
   if (d.body.innerHTML.indexOf('userdetails') === -1) {
     throw new Error('疑似登录状态失效, 请检查 Cookie');
   }
-  const state = d.querySelector('td[valign=top] img[class=pro_free2up]') ||
-    d.querySelector('td[valign=top] img[class=pro_free]') ||
-    (d.querySelector('td[valign=top] img[class=arrowdown]') && d.querySelector('td[valign=top] img[class=arrowdown]').nextSibling.innerHTML === '0.00X');
-  return state;
+  const type = scrapePromo.parseU2PromoFromCell(scrapePromo.getU2PromoCell(d));
+  return type === 'free' || type === '2xfree';
+};
+
+const _hrU2 = async function () {
+  return false;
 };
 
 const _freeHaresClub = async function (url, cookie) {
@@ -641,7 +644,8 @@ const hrWrapper = {
   'chdbits.co': _hrCHDBits,
   'ptchdbits.co': _hrCHDBits,
   'audiences.me': _hr,
-  'dstudio.me': _hrDepthStudio
+  'dstudio.me': _hrDepthStudio,
+  'u2.dmhy.org': _hrU2
 };
 
 exports.free = async (url, cookie) => {
