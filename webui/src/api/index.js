@@ -3,6 +3,7 @@ import server from './server';
 import site from './site';
 import setting from './setting';
 import notification from './notification';
+import siteTag from './siteTag';
 import downloader from './downloader';
 import deleteRule from './deleteRule';
 import linkRule from './linkRule';
@@ -23,6 +24,7 @@ const api = {
   server,
   site,
   notification,
+  siteTag,
   deleteRule,
   linkRule,
   rssRule,

@@ -74,7 +74,17 @@ exports.isVersionGreaterThan = function (version, compareVersion) {
   return false;
 };
 
-exports.addTorrent = async function (clientUrl, cookie, torrentUrl, isSkipChecking, uploadLimit, downloadLimit, savePath, category, autoTMM, firstLastPiecePrio, paused) {
+exports.supportsAddTags = function (apiVersion) {
+  return !!(apiVersion && exports.isVersionGreaterThan(apiVersion, '2.6.1'));
+};
+
+function formatTagsParam (tags) {
+  if (!tags) return '';
+  if (Array.isArray(tags)) return tags.filter(Boolean).join(',');
+  return String(tags).trim();
+}
+
+exports.addTorrent = async function (clientUrl, cookie, torrentUrl, isSkipChecking, uploadLimit, downloadLimit, savePath, category, autoTMM, firstLastPiecePrio, paused, tags) {
   const apiVersion = await exports.getCachedApiVersion(clientUrl, cookie);
   const pausedParam = apiVersion && exports.isVersionGreaterThan(apiVersion, '2.9.3') ? 'stopped' : 'paused';
 
@@ -102,12 +112,16 @@ exports.addTorrent = async function (clientUrl, cookie, torrentUrl, isSkipChecki
   if (autoTMM) {
     message.formData.autoTMM = '' + autoTMM;
   }
+  const tagsParam = formatTagsParam(tags);
+  if (tagsParam && exports.supportsAddTags(apiVersion)) {
+    message.formData.tags = tagsParam;
+  }
   const res = await util.requestPromise(message);
-  logger.debug(clientUrl, '添加种子', torrentUrl, '\n返回信息', { body: res.body, statusCode: res.statusCode });
+  logger.debug(clientUrl, '添加种子', torrentUrl, tagsParam || '', '\n返回信息', { body: res.body, statusCode: res.statusCode });
   return res;
 };
 
-exports.addTorrentByTorrentFile = async function (clientUrl, cookie, filepath, isSkipChecking, uploadLimit, downloadLimit, savePath, category, autoTMM, firstLastPiecePrio, paused) {
+exports.addTorrentByTorrentFile = async function (clientUrl, cookie, filepath, isSkipChecking, uploadLimit, downloadLimit, savePath, category, autoTMM, firstLastPiecePrio, paused, tags) {
   const apiVersion = await exports.getCachedApiVersion(clientUrl, cookie);
   const pausedParam = apiVersion && exports.isVersionGreaterThan(apiVersion, '2.9.3') ? 'stopped' : 'paused';
 
@@ -135,8 +149,12 @@ exports.addTorrentByTorrentFile = async function (clientUrl, cookie, filepath, i
   if (autoTMM) {
     message.formData.autoTMM = '' + autoTMM;
   }
+  const tagsParam = formatTagsParam(tags);
+  if (tagsParam && exports.supportsAddTags(apiVersion)) {
+    message.formData.tags = tagsParam;
+  }
   const res = await util.requestPromise(message);
-  logger.debug(clientUrl, '添加种子', filepath, '\n返回信息', { body: res.body, statusCode: res.statusCode });
+  logger.debug(clientUrl, '添加种子', filepath, tagsParam || '', '\n返回信息', { body: res.body, statusCode: res.statusCode });
   return res;
 };
 
@@ -153,6 +171,9 @@ exports.addTorrentTag = async function (clientUrl, cookie, hash, tag) {
     }
   };
   const res = await util.requestPromise(message);
+  if (res.statusCode !== 200 && res.statusCode !== 204) {
+    throw new Error('状态码: ' + res.statusCode + (res.body ? ', ' + res.body : ''));
+  }
   return res;
 };
 

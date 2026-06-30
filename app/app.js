@@ -147,6 +147,7 @@ const init = function () {
       global.runningSite[site.name] = new Site(site);
     }
   }
+  require('./libs/siteTag').getConfig();
   for (const douban of util.listDouban()) {
     if (douban.enable) {
       global.runningDouban[douban.id] = new Douban(douban);

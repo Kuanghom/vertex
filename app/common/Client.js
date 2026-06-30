@@ -322,11 +322,23 @@ class Client {
     }
   };
 
-  async addTorrent (torrentUrl, hash, isSkipChecking = false, uploadLimit = 0, downloadLimit = 0, savePath, category, autoTMM, paused) {
+  async supportsAddTimeTags () {
+    if (this._client.type !== 'qBittorrent') return false;
+    if (this._supportsAddTimeTags != null) return this._supportsAddTimeTags;
+    try {
+      const version = await this.client.getCachedApiVersion(this.clientUrl, this.cookie);
+      this._supportsAddTimeTags = this.client.supportsAddTags(version);
+    } catch (e) {
+      this._supportsAddTimeTags = false;
+    }
+    return this._supportsAddTimeTags;
+  }
+
+  async addTorrent (torrentUrl, hash, isSkipChecking = false, uploadLimit = 0, downloadLimit = 0, savePath, category, autoTMM, paused, tags) {
     if (!this.status) {
       throw new Error('客户端' + this.alias + '当前状态为不可用');
     }
-    const { statusCode } = await this.client.addTorrent(this.clientUrl, this.cookie, torrentUrl, isSkipChecking, uploadLimit, downloadLimit, savePath, category, autoTMM, this.firstLastPiecePrio, paused);
+    const { statusCode } = await this.client.addTorrent(this.clientUrl, this.cookie, torrentUrl, isSkipChecking, uploadLimit, downloadLimit, savePath, category, autoTMM, this.firstLastPiecePrio, paused, tags);
     if (statusCode !== 200 && statusCode !== 204) {
       this.login();
       throw new Error('状态码: ' + statusCode);
@@ -344,8 +356,25 @@ class Client {
     }
   }
 
-  async addTorrentByTorrentFile (filepath, hash, isSkipChecking = false, uploadLimit = 0, downloadLimit = 0, savePath, category, autoTMM, paused) {
-    const { statusCode } = await this.client.addTorrentByTorrentFile(this.clientUrl, this.cookie, filepath, isSkipChecking, uploadLimit, downloadLimit, savePath, category, autoTMM, this.firstLastPiecePrio, paused);
+  async resolveTorrentHash (context = {}) {
+    const name = String(context.name || '').trim();
+    if (!name) return null;
+    for (let i = 0; i < 15; i += 1) {
+      if (this.maindata && this.maindata.torrents) {
+        for (const torrent of this.maindata.torrents) {
+          if (String(torrent.name).trim() === name && (!context.size || +torrent.size === +context.size)) {
+            return torrent.hash;
+          }
+        }
+      }
+      await util.sleep(1000);
+      await this.getMaindata();
+    }
+    return null;
+  }
+
+  async addTorrentByTorrentFile (filepath, hash, isSkipChecking = false, uploadLimit = 0, downloadLimit = 0, savePath, category, autoTMM, paused, tags) {
+    const { statusCode } = await this.client.addTorrentByTorrentFile(this.clientUrl, this.cookie, filepath, isSkipChecking, uploadLimit, downloadLimit, savePath, category, autoTMM, this.firstLastPiecePrio, paused, tags);
     if (statusCode !== 200 && statusCode !== 204) {
       this.login();
       throw new Error('状态码: ' + statusCode);

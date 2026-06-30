@@ -1,0 +1,1954 @@
+{
+  "enabled": true,
+  "items": [
+    {
+      "id": "0001",
+      "name": "音乐乌托邦",
+      "tag": "音乐乌托邦",
+      "siteHosts": [
+        "musopia.vip"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0002",
+      "name": "Depth Studio",
+      "tag": "Depth Studio",
+      "siteHosts": [
+        "dstudio.me"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0003",
+      "name": "CDY-传道院",
+      "tag": "传道院",
+      "siteHosts": [
+        "pt.cdy.skin"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0004",
+      "name": "BaoZi-包子",
+      "tag": "包子",
+      "siteHosts": [
+        "p.t-baozi.cc"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0005",
+      "name": "TangPT-躺平",
+      "tag": "躺平",
+      "siteHosts": [
+        "tangpt.top"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0006",
+      "name": "XingWan-星湾",
+      "tag": "星湾",
+      "siteHosts": [
+        "xingwan.cc"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0007",
+      "name": "Mooko",
+      "tag": "Mooko",
+      "siteHosts": [
+        "mooko.org"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0008",
+      "name": "MomentPT-瞬间",
+      "tag": "瞬间",
+      "siteHosts": [
+        "momentpt.top"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0009",
+      "name": "Dubhe-天枢",
+      "tag": "天枢",
+      "siteHosts": [
+        "dubhe.site"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0010",
+      "name": "ZRPT-自然",
+      "tag": "自然",
+      "siteHosts": [
+        "zrpt.cc"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0011",
+      "name": "MuXueGe-慕雪阁",
+      "tag": "慕雪阁",
+      "siteHosts": [
+        "pt.muxuege.org"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0012",
+      "name": "YHPP-昆仑",
+      "tag": "昆仑",
+      "siteHosts": [
+        "yhpp.cc"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0013",
+      "name": "ASMR PT",
+      "tag": "ASMR PT",
+      "siteHosts": [
+        "asmrpt.org"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0014",
+      "name": "HXPT-好学",
+      "tag": "好学",
+      "siteHosts": [
+        "hxpt.org"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0015",
+      "name": "PTFans",
+      "tag": "PTFans",
+      "siteHosts": [
+        "ptfans.cc"
+      ],
+      "trackerHosts": [
+        "ptfans.cc"
+      ],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0016",
+      "name": "LuckPT",
+      "tag": "Lucky",
+      "siteHosts": [
+        "pt.luckpt.de"
+      ],
+      "trackerHosts": [
+        "tracker.luckpt.de"
+      ],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0017",
+      "name": "SBPT",
+      "tag": "SBPT",
+      "siteHosts": [
+        "sbpt.link"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0018",
+      "name": "NovaHD-星云",
+      "tag": "novahd",
+      "siteHosts": [
+        "tracker.novahd.top"
+      ],
+      "trackerHosts": [
+        "tracker.novahd.top"
+      ],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0019",
+      "name": "CangBaoGe-藏宝阁",
+      "tag": "藏宝阁",
+      "siteHosts": [
+        "cangbao.ge"
+      ],
+      "trackerHosts": [
+        "cangbao.ge"
+      ],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0020",
+      "name": "SiQi-思齐",
+      "tag": "思齐",
+      "siteHosts": [
+        "si-qi.xyz"
+      ],
+      "trackerHosts": [
+        "si-qi.xyz"
+      ],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0021",
+      "name": "MYPT-我的PT",
+      "tag": "我的PT",
+      "siteHosts": [
+        "pt.mypt.cc"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0022",
+      "name": "13City",
+      "tag": "13City",
+      "siteHosts": [
+        "13city.org"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0023",
+      "name": "Lajidui-垃圾堆",
+      "tag": "垃圾堆",
+      "siteHosts": [
+        "pt.lajidui.top"
+      ],
+      "trackerHosts": [
+        "pt.lajidui.top"
+      ],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0024",
+      "name": "March-三月传媒",
+      "tag": "三月传媒",
+      "siteHosts": [
+        "duckboobee.org"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0025",
+      "name": "alingPT",
+      "tag": "alingPT",
+      "siteHosts": [
+        "pt.aling.de"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0026",
+      "name": "LongPT-龙PT",
+      "tag": "龙宝",
+      "siteHosts": [
+        "longpt.org"
+      ],
+      "trackerHosts": [
+        "longpt.org"
+      ],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0027",
+      "name": "PTSkit-拾刻",
+      "tag": "拾刻",
+      "siteHosts": [
+        "ptskit.org"
+      ],
+      "trackerHosts": [
+        "tracker.ptskit.org"
+      ],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0028",
+      "name": "Tey-太乙",
+      "tag": "太乙",
+      "siteHosts": [
+        "pt.tey.cc"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0029",
+      "name": "ClearJAV",
+      "tag": "ClearJAV",
+      "siteHosts": [
+        "clearjav.com"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0030",
+      "name": "Tokyo",
+      "tag": "Tokyo",
+      "siteHosts": [
+        "tokyo-manga.top"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0031",
+      "name": "Generation-Free",
+      "tag": "Free",
+      "siteHosts": [
+        "generation-free.org"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0032",
+      "name": "PlayLet",
+      "tag": "PlayLet",
+      "siteHosts": [
+        "playlet.cc"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0033",
+      "name": "Railgun",
+      "tag": "Railgun",
+      "siteHosts": [
+        "bilibili.download"
+      ],
+      "trackerHosts": [
+        "bilibili.download"
+      ],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0034",
+      "name": "LemonHDNet-柠檬不甜",
+      "tag": "柠檬不甜",
+      "siteHosts": [
+        "lemonhd.net"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0035",
+      "name": "Ying-樱花",
+      "tag": "樱花",
+      "siteHosts": [
+        "pt.ying.us.kg"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0036",
+      "name": "SewerPT-下水道",
+      "tag": "下水道",
+      "siteHosts": [
+        "sewerpt.com"
+      ],
+      "trackerHosts": [
+        "sewerpt.com"
+      ],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0037",
+      "name": "CSPT-财神",
+      "tag": "财神",
+      "siteHosts": [
+        "cspt.top"
+      ],
+      "trackerHosts": [
+        "tracker.cspt.top",
+        "tracker.cspt.cc",
+        "tracker.cspt.date",
+        "cspt.top"
+      ],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0038",
+      "name": "TMPT-唐门",
+      "tag": "唐门",
+      "siteHosts": [
+        "tmpt.top"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0039",
+      "name": "XingYunGe-星陨阁",
+      "tag": "星陨阁",
+      "siteHosts": [
+        "pt.xingyungept.org"
+      ],
+      "trackerHosts": [
+        "tracker.xingyungept.org"
+      ],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0040",
+      "name": "PTLAO-忘年桥",
+      "tag": "忘年桥",
+      "siteHosts": [
+        "ptlao.top"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0041",
+      "name": "Afun",
+      "tag": "Afun",
+      "siteHosts": [
+        "ptlover.cc"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0042",
+      "name": "HSPT-回声",
+      "tag": "回声",
+      "siteHosts": [
+        "hspt.club"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0043",
+      "name": "Sunny-阳光",
+      "tag": "阳光",
+      "siteHosts": [
+        "sunnypt.top"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0044",
+      "name": "LemonHD-柠檬不酸",
+      "tag": "柠檬不酸",
+      "siteHosts": [
+        "lemonhd.club"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0045",
+      "name": "52movie",
+      "tag": "52movie",
+      "siteHosts": [
+        "52movie.top"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0046",
+      "name": "Raingfh-雨",
+      "tag": "雨",
+      "siteHosts": [
+        "raingfh.top"
+      ],
+      "trackerHosts": [
+        "raingfh.top"
+      ],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0047",
+      "name": "PTLGS-劳改所",
+      "tag": "劳改所",
+      "siteHosts": [
+        "ptlgs.org"
+      ],
+      "trackerHosts": [
+        "ptl.gs",
+        "relay01.ptl.gs"
+      ],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0048",
+      "name": "NJTUPT-浦园",
+      "tag": "浦园",
+      "siteHosts": [
+        "njtupt.top"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0049",
+      "name": "PTZone",
+      "tag": "PTZONE",
+      "siteHosts": [
+        "ptzone.xyz"
+      ],
+      "trackerHosts": [
+        "ptzone.xyz"
+      ],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0050",
+      "name": "CDFile",
+      "tag": "CDFile",
+      "siteHosts": [
+        "pt.cdfile.org"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0051",
+      "name": "ToSky",
+      "tag": "ToSky",
+      "siteHosts": [
+        "t.tosky.club"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0052",
+      "name": "HDBao",
+      "tag": "HDBao",
+      "siteHosts": [
+        "hdbao.cc"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0053",
+      "name": "YemaPT-野马",
+      "tag": "野马",
+      "siteHosts": [
+        "web.yemapt.org"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0054",
+      "name": "CrabPT-蟹黄堡",
+      "tag": "蟹黄堡",
+      "siteHosts": [
+        "crabpt.vip"
+      ],
+      "trackerHosts": [
+        "crabpt.vip"
+      ],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0055",
+      "name": "QingWaPT-青蛙",
+      "tag": "青蛙",
+      "siteHosts": [
+        "qingwapt.com"
+      ],
+      "trackerHosts": [
+        "tracker.qingwapt.org",
+        "tracker.qingwapt.com",
+        "tracker.qingwa.pro"
+      ],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0056",
+      "name": "AGSV-末日",
+      "tag": "末日",
+      "siteHosts": [
+        "pt.agsvpt.cn"
+      ],
+      "trackerHosts": [
+        "tracker.agsvpt.cn"
+      ],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0057",
+      "name": "HDKylin-麒麟",
+      "tag": "麒麟",
+      "siteHosts": [
+        "hdkyl.in"
+      ],
+      "trackerHosts": [
+        "tracker.hdkyl.in",
+        "hdkylin.top"
+      ],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0058",
+      "name": "Kelu",
+      "tag": "Kelu",
+      "siteHosts": [
+        "our.kelu.one"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0059",
+      "name": "FearNoPeer",
+      "tag": "FearNoPeer",
+      "siteHosts": [
+        "fearnopeer.com"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0060",
+      "name": "PTVicomo-象岛",
+      "tag": "象岛",
+      "siteHosts": [
+        "ptvicomo.net"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0061",
+      "name": "PTCafe-咖啡",
+      "tag": "咖啡",
+      "siteHosts": [
+        "ptcafe.club"
+      ],
+      "trackerHosts": [
+        "tracker.ptcafe.club"
+      ],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0062",
+      "name": "HDClone",
+      "tag": "HDClone",
+      "siteHosts": [
+        "pt.hdclone.top"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0063",
+      "name": "StarSpace-星空",
+      "tag": "星空",
+      "siteHosts": [
+        "star-space.net"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0064",
+      "name": "BitPorn",
+      "tag": "BitPorn",
+      "siteHosts": [
+        "bitporn.eu"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0065",
+      "name": "PandaPT-熊猫",
+      "tag": "熊猫",
+      "siteHosts": [
+        "pandapt.net"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0066",
+      "name": "ROUSI-肉丝",
+      "tag": "肉丝",
+      "siteHosts": [
+        "rousi.pro"
+      ],
+      "trackerHosts": [
+        "rousi.pro"
+      ],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0067",
+      "name": "Fappaizuri",
+      "tag": "Fappaizuri",
+      "siteHosts": [
+        "fappaizuri.me"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0068",
+      "name": "OKPT",
+      "tag": "OKPT",
+      "siteHosts": [
+        "okpt.net"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0069",
+      "name": "Dajiao-打胶",
+      "tag": "打胶",
+      "siteHosts": [
+        "dajiao.cyou"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0070",
+      "name": "GGPT",
+      "tag": "GGPT",
+      "siteHosts": [
+        "gamegamept.com"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0071",
+      "name": "ilolicon-萝莉",
+      "tag": "萝莉",
+      "siteHosts": [
+        "mua.xloli.cc"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0072",
+      "name": "Ubits-U堡",
+      "tag": "UB",
+      "siteHosts": [
+        "ubits.club"
+      ],
+      "trackerHosts": [
+        "t.ubits.club"
+      ],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0073",
+      "name": "TU88",
+      "tag": "TU88",
+      "siteHosts": [
+        "pt.tu88.men"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0074",
+      "name": "FSM-飞天拉面神教",
+      "tag": "飞天拉面神教",
+      "siteHosts": [
+        "fsm.name"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0075",
+      "name": "Kufei-库非",
+      "tag": "库非",
+      "siteHosts": [
+        "kufei.org"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0076",
+      "name": "Zhuque-朱雀",
+      "tag": "朱雀",
+      "siteHosts": [
+        "zhuque.in"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0077",
+      "name": "Cyanbug-大青虫",
+      "tag": "大青虫",
+      "siteHosts": [
+        "cyanbug.net"
+      ],
+      "trackerHosts": [
+        "tracker.cyanbug.net"
+      ],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0078",
+      "name": "XingTan-杏坛",
+      "tag": "杏坛",
+      "siteHosts": [
+        "xingtan.one"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0079",
+      "name": "ZMPT-织梦",
+      "tag": "织梦",
+      "siteHosts": [
+        "zmpt.cc"
+      ],
+      "trackerHosts": [
+        "zmpt.cc"
+      ],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0080",
+      "name": "ICC2022-冰淇淋",
+      "tag": "冰淇淋",
+      "siteHosts": [
+        "icc2022.com"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0081",
+      "name": "RedLeaves-红叶",
+      "tag": "红叶",
+      "siteHosts": [
+        "leaves.red"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0082",
+      "name": "MonikaDesign-莫妮卡",
+      "tag": "莫妮卡",
+      "siteHosts": [
+        "monikadesign.uk"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0083",
+      "name": "HHanClub-憨憨",
+      "tag": "憨憨",
+      "siteHosts": [
+        "hhanclub.net"
+      ],
+      "trackerHosts": [
+        "tracker.hhanclub.net"
+      ],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0084",
+      "name": "HDPT-明教",
+      "tag": "明教",
+      "siteHosts": [
+        "hdpt.xyz"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0085",
+      "name": "Azusa-梓喵",
+      "tag": "梓喵",
+      "siteHosts": [
+        "azusa.wiki"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0086",
+      "name": "LST",
+      "tag": "LST",
+      "siteHosts": [
+        "lst.gg"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0087",
+      "name": "WinterSakura-冬樱",
+      "tag": "冬樱",
+      "siteHosts": [
+        "wintersakura.net"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0088",
+      "name": "KamePT-龟站",
+      "tag": "龟",
+      "siteHosts": [
+        "kamept.com"
+      ],
+      "trackerHosts": [
+        "tracker.kame.gay",
+        "kamept.com"
+      ],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0089",
+      "name": "HDVideo",
+      "tag": "HDVideo",
+      "siteHosts": [
+        "hdvideo.top"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0090",
+      "name": "CarPT-车站",
+      "tag": "车站",
+      "siteHosts": [
+        "carpt.net"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0091",
+      "name": "Farmm-自由农场",
+      "tag": "自由农场",
+      "siteHosts": [
+        "pt.0ff.cc"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0092",
+      "name": "Piggo-猪猪",
+      "tag": "猪猪",
+      "siteHosts": [
+        "piggo.me"
+      ],
+      "trackerHosts": [
+        "tracker.piggo.me"
+      ],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0093",
+      "name": "GainBound-丐帮",
+      "tag": "丐帮",
+      "siteHosts": [
+        "gainbound.net"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0094",
+      "name": "HUNO",
+      "tag": "HUNO",
+      "siteHosts": [
+        "hawke.uno"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0095",
+      "name": "PTChina-铂金学院",
+      "tag": "铂金学院",
+      "siteHosts": [
+        "ptchina.org"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0096",
+      "name": "GTK",
+      "tag": "GTK",
+      "siteHosts": [
+        "pt.gtkpw.xyz"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0097",
+      "name": "Audiences-观众",
+      "tag": "观众",
+      "siteHosts": [
+        "audiences.me"
+      ],
+      "trackerHosts": [
+        "t.audiences.me",
+        "tracker.cinefiles.info"
+      ],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0098",
+      "name": "HaresClub-白兔",
+      "tag": "白兔",
+      "siteHosts": [
+        "club.hares.top"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0099",
+      "name": "GreatPosterWall-海豹",
+      "tag": "海豹",
+      "siteHosts": [
+        "greatposterwall.com"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0100",
+      "name": "HappyFappy",
+      "tag": "happyfappy",
+      "siteHosts": [
+        "happyfappy.net"
+      ],
+      "trackerHosts": [
+        "tracker.happyfappy.org"
+      ],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0101",
+      "name": "UltraHD",
+      "tag": "UltraHD",
+      "siteHosts": [
+        "ultrahd.net"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0102",
+      "name": "HTPT-海棠",
+      "tag": "海棠",
+      "siteHosts": [
+        "htpt.cc"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0103",
+      "name": "HDATMOS-阿童木",
+      "tag": "阿童木",
+      "siteHosts": [
+        "hdatmos.club"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0104",
+      "name": "DragonHD-龍之家",
+      "tag": "龍之家",
+      "siteHosts": [
+        "dragonhd.xyz"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0105",
+      "name": "HDFans-红豆饭",
+      "tag": "红豆饭",
+      "siteHosts": [
+        "hdfans.org"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0106",
+      "name": "HaiDan-海胆",
+      "tag": "海胆",
+      "siteHosts": [
+        "haidan.cc"
+      ],
+      "trackerHosts": [
+        "announce.haidan.video",
+        "announce.haidan.cc"
+      ],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0107",
+      "name": "Aither",
+      "tag": "Aither",
+      "siteHosts": [
+        "aither.cc"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0108",
+      "name": "LeagueHD-柠檬",
+      "tag": "柠檬",
+      "siteHosts": [
+        "lemonhd.org"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0109",
+      "name": "PTTime-时间",
+      "tag": "PTTime",
+      "siteHosts": [
+        "pttime.org"
+      ],
+      "trackerHosts": [
+        "pttime.org"
+      ],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0110",
+      "name": "HDDolby-杜比",
+      "tag": "杜比",
+      "siteHosts": [
+        "hddolby.com"
+      ],
+      "trackerHosts": [
+        "t.hddolby.com"
+      ],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0111",
+      "name": "1PTBa",
+      "tag": "1PTBa",
+      "siteHosts": [
+        "1ptba.com"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0112",
+      "name": "SoulVoice-聆音",
+      "tag": "聆音",
+      "siteHosts": [
+        "pt.soulvoice.club"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0113",
+      "name": "Milkie-奶昔",
+      "tag": "奶昔",
+      "siteHosts": [
+        "milkie.cc"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0114",
+      "name": "OShen-奥申",
+      "tag": "奥申",
+      "siteHosts": [
+        "oshen.win"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0115",
+      "name": "PTSbao-烧包",
+      "tag": "烧包",
+      "siteHosts": [
+        "ptsbao.club"
+      ],
+      "trackerHosts": [
+        "ptsbao.club"
+      ],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0116",
+      "name": "itzmx",
+      "tag": "itzmx",
+      "siteHosts": [
+        "pt.itzmx.com"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0117",
+      "name": "Beitai-备胎",
+      "tag": "备胎",
+      "siteHosts": [
+        "beitai.pt"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0118",
+      "name": "DicMusic-海豚",
+      "tag": "海豚",
+      "siteHosts": [
+        "dicmusic.com"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0119",
+      "name": "52PT",
+      "tag": "52PT",
+      "siteHosts": [
+        "52pt.site"
+      ],
+      "trackerHosts": [
+        "52pt.site"
+      ],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0120",
+      "name": "NicePT-老师",
+      "tag": "老师",
+      "siteHosts": [
+        "nicept.net"
+      ],
+      "trackerHosts": [
+        "nicept.net"
+      ],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0121",
+      "name": "PterClub-猫站",
+      "tag": "猫",
+      "siteHosts": [
+        "pterclub.net"
+      ],
+      "trackerHosts": [
+        "tracker.pterclub.net"
+      ],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0122",
+      "name": "PTHome-铂金家",
+      "tag": "铂金家",
+      "siteHosts": [
+        "pthome.net"
+      ],
+      "trackerHosts": [
+        "t.pthome.org"
+      ],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0123",
+      "name": "Anthelion",
+      "tag": "Anthelion",
+      "siteHosts": [
+        "anthelion.me"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0124",
+      "name": "Orpheus",
+      "tag": "Orpheus",
+      "siteHosts": [
+        "orpheus.network"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0125",
+      "name": "Ourbits-我堡",
+      "tag": "我堡",
+      "siteHosts": [
+        "ourbits.club"
+      ],
+      "trackerHosts": [
+        "ourbits.club"
+      ],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0126",
+      "name": "CHDbits-彩虹岛",
+      "tag": "彩虹岛",
+      "siteHosts": [
+        "ptchdbits.co"
+      ],
+      "trackerHosts": [
+        "tracker.ptchdbits.co",
+        "tracker.rainbowisland.co",
+        "chdbits.xyz"
+      ],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0127",
+      "name": "HDArea-好大",
+      "tag": "好大",
+      "siteHosts": [
+        "hdarea.club"
+      ],
+      "trackerHosts": [
+        "tracker.hdarea.club"
+      ],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0128",
+      "name": "HDUPT-好多油",
+      "tag": "好多油",
+      "siteHosts": [
+        "pt.hdupt.com"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0129",
+      "name": "Nebulance",
+      "tag": "Nebulance",
+      "siteHosts": [
+        "nebulance.io"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0130",
+      "name": "HDHome-家园",
+      "tag": "家园",
+      "siteHosts": [
+        "hdhome.org"
+      ],
+      "trackerHosts": [
+        "t.hdhome.org"
+      ],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0131",
+      "name": "NanYangPT-南洋",
+      "tag": "南洋",
+      "siteHosts": [
+        "nanyangpt.com"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0132",
+      "name": "HDTime-时光",
+      "tag": "时光",
+      "siteHosts": [
+        "hdtime.org"
+      ],
+      "trackerHosts": [
+        "tracker.hdtime.org"
+      ],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0133",
+      "name": "AlphaRatio",
+      "tag": "AlphaRatio",
+      "siteHosts": [
+        "alpharatio.cc"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0134",
+      "name": "HD4FANS-兽",
+      "tag": "兽",
+      "siteHosts": [
+        "pt.hd4fans.org"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0135",
+      "name": "JoyHD",
+      "tag": "JoyHD",
+      "siteHosts": [
+        "joyhd.net"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0136",
+      "name": "HDSky-天空",
+      "tag": "空",
+      "siteHosts": [
+        "hdsky.me"
+      ],
+      "trackerHosts": [
+        "tracker.hdsky.me"
+      ],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0137",
+      "name": "KeepFRDS-朋友",
+      "tag": "月月",
+      "siteHosts": [
+        "pt.keepfrds.com"
+      ],
+      "trackerHosts": [
+        "tracker.keepfrds.com"
+      ],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0138",
+      "name": "BTSchool-学校",
+      "tag": "学校",
+      "siteHosts": [
+        "pt.btschool.club"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0139",
+      "name": "AnimeZ",
+      "tag": "AnimeZ",
+      "siteHosts": [
+        "animez.to"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0140",
+      "name": "M-Team-馒头",
+      "tag": "馒头",
+      "siteHosts": [
+        "kp.m-team.cc"
+      ],
+      "trackerHosts": [
+        "tracker.m-team.cc"
+      ],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0141",
+      "name": "DiscFan-蝶粉",
+      "tag": "蝶粉",
+      "siteHosts": [
+        "discfan.net"
+      ],
+      "trackerHosts": [
+        "discfan.net"
+      ],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0142",
+      "name": "HitPT-百川",
+      "tag": "百川",
+      "siteHosts": [
+        "hitpt.com"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0143",
+      "name": "TLFBits",
+      "tag": "TLFBits",
+      "siteHosts": [
+        "pt.eastgame.org"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0144",
+      "name": "Empornium-峨眉派",
+      "tag": "峨眉派",
+      "siteHosts": [
+        "empornium.sx"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0145",
+      "name": "TjuPT-北洋园",
+      "tag": "北洋园",
+      "siteHosts": [
+        "tjupt.org"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0146",
+      "name": "SpringSunDay-春天",
+      "tag": "不可说",
+      "siteHosts": [
+        "springsunday.net"
+      ],
+      "trackerHosts": [
+        "on.springsunday.net"
+      ],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0147",
+      "name": "OpenCD-皇后",
+      "tag": "后",
+      "siteHosts": [
+        "open.cd"
+      ],
+      "trackerHosts": [
+        "tracker.open.cd"
+      ],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0148",
+      "name": "MoreThanTV",
+      "tag": "MoreThanTV",
+      "siteHosts": [
+        "morethantv.me"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0149",
+      "name": "Jpopsuki",
+      "tag": "鸡婆婆",
+      "siteHosts": [
+        "jpopsuki.eu"
+      ],
+      "trackerHosts": [
+        "jpopsuki.eu"
+      ],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0150",
+      "name": "TCCF",
+      "tag": "TCCF",
+      "siteHosts": [
+        "et8.org"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0151",
+      "name": "HDCity",
+      "tag": "HDCity",
+      "siteHosts": [
+        "hdcity.city"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0152",
+      "name": "SJTU-葡萄",
+      "tag": "葡萄",
+      "siteHosts": [
+        "pt.sjtu.edu.cn"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0153",
+      "name": "HUDBT-蝴蝶",
+      "tag": "蝴蝶",
+      "siteHosts": [
+        "hudbt.hust.edu.cn"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0154",
+      "name": "ToTheGlory-TTG",
+      "tag": "听听歌",
+      "siteHosts": [
+        "totheglory.im"
+      ],
+      "trackerHosts": [
+        "tracker.totheglory.im"
+      ],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0155",
+      "name": "MyAnonamouse",
+      "tag": "MyAnonamouse",
+      "siteHosts": [
+        "myanonamouse.net"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0156",
+      "name": "U2",
+      "tag": "U2",
+      "siteHosts": [
+        "u2.dmhy.org"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0157",
+      "name": "BrokenStones",
+      "tag": "BrokenStones",
+      "siteHosts": [
+        "brokenstones.is"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0158",
+      "name": "HDChina-瓷器",
+      "tag": "瓷器",
+      "siteHosts": [
+        "hdchina.org"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0159",
+      "name": "HD-Torrents",
+      "tag": "Torrents",
+      "siteHosts": [
+        "hd-torrents.org"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0160",
+      "name": "FileList",
+      "tag": "FileList",
+      "siteHosts": [
+        "filelist.io"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0161",
+      "name": "ExoticaZ-EXO",
+      "tag": "EXO",
+      "siteHosts": [
+        "exoticaz.to"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0162",
+      "name": "TorrentLeech",
+      "tag": "TorrentLeech",
+      "siteHosts": [
+        "torrentleech.cc"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0163",
+      "name": "IPTorrents",
+      "tag": "IPTorrents",
+      "siteHosts": [
+        "iptorrents.com"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0164",
+      "name": "BYR-北邮人",
+      "tag": "北邮人",
+      "siteHosts": [
+        "bt.byr.cn"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0165",
+      "name": "SportsCult",
+      "tag": "SportsCult",
+      "siteHosts": [
+        "sportscult.org"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0166",
+      "name": "BeyondHD",
+      "tag": "BeyondHD",
+      "siteHosts": [
+        "beyond-hd.me"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    },
+    {
+      "id": "0167",
+      "name": "PTNeko-超科学PT喵",
+      "tag": "超科学PT喵",
+      "siteHosts": [
+        "ptneko.com"
+      ],
+      "trackerHosts": [],
+      "vertexNames": [],
+      "enabled": true
+    }
+  ]
+}

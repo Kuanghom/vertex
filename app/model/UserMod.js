@@ -57,6 +57,10 @@ class UserMod {
           title: '通知工具',
           path: '/base/notification',
           icon: ['fas', 'bell']
+        }, {
+          title: '站点标签',
+          path: '/base/siteTag',
+          icon: ['fas', 'tags']
         }]
       }, {
         title: '规则组件',

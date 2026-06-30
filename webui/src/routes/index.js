@@ -10,6 +10,7 @@ import BaseServer from '@/pages/base/Server';
 import BaseDownloader from '@/pages/base/Downloader';
 import BaseSite from '@/pages/base/Site';
 import BaseNotification from '@/pages/base/Notification';
+import BaseSiteTag from '@/pages/base/SiteTag';
 
 import MetricServer from '@/pages/metric/Server';
 import MetricDownloader from '@/pages/metric/Downloader';
@@ -185,6 +186,12 @@ const base = {
       component: BaseNotification,
       meta: {
         title: '通知工具 - 基础组件'
+      }
+    }, {
+      path: 'siteTag',
+      component: BaseSiteTag,
+      meta: {
+        title: '站点标签 - 基础组件'
       }
     }
   ]

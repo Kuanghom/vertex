@@ -8,6 +8,7 @@ const bencode = require('bencode');
 const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
+const siteTag = require('../libs/siteTag');
 
 class Site {
   constructor (site) {
@@ -185,10 +186,25 @@ class Site {
       }
     }
     const { filepath, hash, size, name } = torrentInfo;
+    const tagContext = {
+      site: this.site,
+      link: torrentLink,
+      name,
+      size,
+      filepath
+    };
+    const tagsToApply = siteTag.resolveTagsToApply(tagContext, { autoSiteTag: true });
     tryCount = 0;
     while (true) {
       try {
-        await global.runningClient[client].addTorrentByTorrentFile(filepath, hash, false, 0, 0, savePath, category, autoTMM);
+        const addTags = await global.runningClient[client].supportsAddTimeTags() ? tagsToApply : null;
+        await global.runningClient[client].addTorrentByTorrentFile(filepath, hash, false, 0, 0, savePath, category, autoTMM, undefined, addTags);
+        const addedWithTags = !!(addTags && addTags.length);
+        if (addedWithTags) {
+          logger.info('下载器', global.runningClient[client].alias, '添加种子时已设置标签:', tagsToApply.join(','), hash.substring(0, 8));
+        } else if (tagsToApply.length) {
+          await siteTag.applySiteTagToClient(global.runningClient[client], hash, tagContext);
+        }
         break;
       } catch (e) {
         tryCount += 1;

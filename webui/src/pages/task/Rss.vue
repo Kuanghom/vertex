@@ -250,6 +250,18 @@
           <a-input size="small" v-model:value="rss.category"/>
         </a-form-item>
         <a-form-item
+          label="标签"
+          name="tags"
+          extra="推送至 qBittorrent 时附加的标签，多个用英文逗号分隔">
+          <a-input size="small" v-model:value="rss.tags"/>
+        </a-form-item>
+        <a-form-item
+          label="自动打标签"
+          name="autoSiteTag"
+          extra="勾选后按「基础组件 → 站点标签」中的规则自动匹配站点标签；未匹配则不添加">
+          <a-checkbox v-model:checked="rss.autoSiteTag">自动打标签</a-checkbox>
+        </a-form-item>
+        <a-form-item
           label="每小时上限"
           name="addCountPerHour"
           extra="每小时向客户端推送种子数量上限, 留空为 20, 编辑 Rss 或重启后重置计数">
@@ -521,6 +533,8 @@ export default {
         scrapePromo: [],
         scrapeHr: false,
         categorySuffixHr: false,
+        autoSiteTag: true,
+        tags: '',
         autoReseed: false,
         onlyReseed: false,
         maxSleepTime: 600,
@@ -720,7 +734,9 @@ export default {
       this.rss = {
         ...row,
         scrapePromo: row.scrapePromo || (row.scrapeFree ? ['free'] : []),
-        categorySuffixHr: row.categorySuffixHr || false
+        categorySuffixHr: row.categorySuffixHr || false,
+        autoSiteTag: row.autoSiteTag !== false,
+        tags: row.tags || ''
       };
       this.refreshPromoSupport();
     },

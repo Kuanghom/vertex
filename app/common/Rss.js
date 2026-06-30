@@ -9,6 +9,7 @@ const fs = require('fs');
 const path = require('path');
 const moment = require('moment');
 const Push = require('./Push');
+const siteTag = require('../libs/siteTag');
 
 class Rss {
   constructor (rss) {
@@ -33,6 +34,8 @@ class Rss {
     this.cookie = rss.cookie;
     this.savePath = rss.savePath;
     this.category = rss.category;
+    this.tags = rss.tags || '';
+    this.autoSiteTag = rss.autoSiteTag !== false;
     this.paused = rss.paused;
     this.autoTMM = rss.autoTMM;
     this.useCustomRegex = rss.useCustomRegex;
@@ -235,6 +238,53 @@ class Rss {
     };
   }
 
+  async _applyTorrentTags (client, hash, torrent, torrentFilepath = '', addedWithTags = false) {
+    if (addedWithTags) return;
+    await siteTag.applyTorrentTagsToClient(client, hash, {
+      link: torrent.link,
+      url: torrent.url,
+      name: torrent.name,
+      size: torrent.size,
+      filepath: torrentFilepath
+    }, {
+      customTags: this.tags,
+      autoSiteTag: this.autoSiteTag
+    });
+  }
+
+  _buildTorrentTagContext (torrent, torrentFilepath = '') {
+    return {
+      link: torrent.link,
+      url: torrent.url,
+      name: torrent.name,
+      size: torrent.size,
+      filepath: torrentFilepath
+    };
+  }
+
+  async _resolveAddTimeTags (client, torrent, torrentFilepath = '') {
+    const tagContext = this._buildTorrentTagContext(torrent, torrentFilepath);
+    const tagsToApply = siteTag.resolveTagsToApply(tagContext, {
+      customTags: this.tags,
+      autoSiteTag: this.autoSiteTag
+    });
+    if (!tagsToApply.length) {
+      return { tags: null, tagsToApply, tagContext };
+    }
+    const useAddTimeTags = await client.supportsAddTimeTags();
+    return {
+      tags: useAddTimeTags ? tagsToApply : null,
+      tagsToApply,
+      tagContext
+    };
+  }
+
+  async _logAddTimeTags (client, tagsToApply, hash) {
+    if (!tagsToApply.length) return;
+    const hashHint = hash && String(hash).length >= 8 ? String(hash).substring(0, 8) : '';
+    logger.info('下载器', client.alias, '添加种子时已设置标签:', tagsToApply.join(','), hashHint);
+  }
+
   async _pushTorrent (torrent, _client) {
     if (this.autoReseed && torrent.hash.indexOf('fakehash') === -1) {
       for (const key of this.reseedClients) {
@@ -249,7 +299,13 @@ class Rss {
             if (_torrent.name === bencodeInfo.name && _torrent.hash !== bencodeInfo.hash) {
               try {
                 this.addCount += 1;
-                await client.addTorrent(torrent.url, torrent.hash, true, this.uploadLimit, this.downloadLimit, _torrent.savePath, this.category);
+                const { tags, tagsToApply } = await this._resolveAddTimeTags(client, torrent);
+                await client.addTorrent(torrent.url, torrent.hash, true, this.uploadLimit, this.downloadLimit, _torrent.savePath, this.category, undefined, undefined, tags);
+                const addedWithTags = !!(tags && tags.length);
+                if (addedWithTags) {
+                  await this._logAddTimeTags(client, tagsToApply, torrent.hash);
+                }
+                await this._applyTorrentTags(client, torrent.hash, torrent, '', addedWithTags);
                 await this._insertTorrentRecord(torrent, 1, '辅种', { client, category: this.category, addTime: moment().unix() });
                 await this.ntf.addTorrent(this._rss, client, torrent);
                 return;
@@ -384,23 +440,31 @@ class Rss {
       const client = fitRule.client ? global.runningClient[fitRule.client] : _client;
       try {
         let truehash = '';
+        let torrentFilepath = '';
         this.addCount += 1;
+        const { tags, tagsToApply } = await this._resolveAddTimeTags(client, torrent);
         if (this.pushTorrentFile) {
           const { filepath, hash } = await this._downloadTorrent(torrent.url, torrent.hash);
           truehash = hash;
-          await client.addTorrentByTorrentFile(filepath, hash, false, this.uploadLimit, this.downloadLimit, savePath, category, this.autoTMM, this.paused);
+          torrentFilepath = filepath;
+          await client.addTorrentByTorrentFile(filepath, hash, false, this.uploadLimit, this.downloadLimit, savePath, category, this.autoTMM, this.paused, tags);
         } else {
           if (this.useCustomRegex) {
             const match = this.regexStr.match(/^\/(.*)\/([gimuy]*)$/);
             if (match) {
               const [, pattern, flags] = match;
               const regex = new RegExp(pattern, flags);
-              await client.addTorrent(torrent.url.replace(regex, this.replaceStr), torrent.hash, false, this.uploadLimit, this.downloadLimit, savePath, category, this.autoTMM, this.paused);
+              await client.addTorrent(torrent.url.replace(regex, this.replaceStr), torrent.hash, false, this.uploadLimit, this.downloadLimit, savePath, category, this.autoTMM, this.paused, tags);
             }
           } else {
-            await client.addTorrent(torrent.url, torrent.hash, false, this.uploadLimit, this.downloadLimit, savePath, category, this.autoTMM, this.paused);
+            await client.addTorrent(torrent.url, torrent.hash, false, this.uploadLimit, this.downloadLimit, savePath, category, this.autoTMM, this.paused, tags);
           }
         }
+        const addedWithTags = !!(tags && tags.length);
+        if (addedWithTags) {
+          await this._logAddTimeTags(client, tagsToApply, truehash || torrent.hash);
+        }
+        await this._applyTorrentTags(client, truehash || torrent.hash, torrent, torrentFilepath, addedWithTags);
         try {
           await this.ntf.addTorrent(this._rss, client, torrent);
         } catch (e) {

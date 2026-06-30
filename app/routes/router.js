@@ -161,6 +161,13 @@ module.exports = function (app, express, router) {
   router.post('/notification/modify', ctrl.Push.modify);
   router.post('/notification/delete', ctrl.Push.delete);
 
+  router.get('/siteTag/list', ctrl.SiteTag.list);
+  router.post('/siteTag/modifySetting', ctrl.SiteTag.modifySetting);
+  router.post('/siteTag/add', ctrl.SiteTag.add);
+  router.post('/siteTag/modify', ctrl.SiteTag.modify);
+  router.post('/siteTag/delete', ctrl.SiteTag.delete);
+  router.post('/siteTag/resetDefault', ctrl.SiteTag.resetDefault);
+
   router.post('/site/add', ctrl.Site.add);
   router.get('/site/list', ctrl.Site.list);
   router.get('/site/listRecord', ctrl.Site.listRecord);

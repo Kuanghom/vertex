@@ -47,6 +47,8 @@ class RssMod {
       rss.rejectRules = rss.rejectRules || [];
       rss.scrapePromo = rss.scrapePromo || (rss.scrapeFree ? ['free'] : []);
       rss.categorySuffixHr = rss.categorySuffixHr || false;
+      rss.autoSiteTag = rss.autoSiteTag !== false;
+      rss.tags = rss.tags || '';
     }
     return rssList;
   };
