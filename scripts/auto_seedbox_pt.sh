@@ -597,7 +597,7 @@ uninstall() {
         case "${VX_PURGE:-Y}" in
           [Yy])
             docker rm -f vertex 2>/dev/null || true
-            docker rmi kuanghom/vertex:stable 2>/dev/null || true
+            docker rmi kuanghom/vertex 2>/dev/null || true
             ;;
         esac
     
@@ -1718,8 +1718,8 @@ EOF
 find "$HB/vertex/data" -type f -exec chmod 664 {} \; 2>/dev/null || true
 find "$HB/vertex/data/script" -type f \( -name "*.sh" -o -name "*.py" \) -exec chmod 775 {} \; 2>/dev/null || true
 
-        execute_with_spinner "拉取 Vertex 镜像" docker pull kuanghom/vertex:stable
-        execute_with_spinner "启动 Vertex 容器" docker run -d --name vertex --restart unless-stopped -p $VX_PORT:3000 -v "$HB/vertex":/vertex -e TZ=Asia/Shanghai kuanghom/vertex:stable
+        execute_with_spinner "拉取 Vertex 镜像" docker pull kuanghom/vertex
+        execute_with_spinner "启动 Vertex 容器" docker run -d --name vertex --restart unless-stopped -p $VX_PORT:3000 -v "$HB/vertex":/vertex -e TZ=Asia/Shanghai kuanghom/vertex
         open_port "$VX_PORT"
     fi
 
