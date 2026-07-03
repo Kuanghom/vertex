@@ -355,8 +355,8 @@
           :wrapperCol="isMobile() ? { span:24 } : { span: 21, offset: 3 }">
           <a-button type="primary" html-type="submit" style="margin-top: 24px; margin-bottom: 48px;">应用 | 完成</a-button>
           <a-button style="margin-left: 12px; margin-top: 24px; margin-bottom: 48px;" @click="clearRss()">清空</a-button>
-          <a-button type="primary" style="margin-left: 12px; margin-top: 24px; margin-bottom: 48px;" @click="dryrun()">试运行</a-button>
-          <a-button type="primary" :loading="dryrunLoading" style="margin-left: 12px; margin-top: 24px; margin-bottom: 48px;" @click="scrapeDryrun()">检测促销/HR</a-button>
+          <a-button type="primary" :loading="ruleDryrunLoading" :disabled="scrapeDryrunLoading" style="margin-left: 12px; margin-top: 24px; margin-bottom: 48px;" @click="dryrun()">试运行</a-button>
+          <a-button type="primary" :loading="scrapeDryrunLoading" :disabled="ruleDryrunLoading" style="margin-left: 12px; margin-top: 24px; margin-bottom: 48px;" @click="scrapeDryrun()">检测促销/HR</a-button>
         </a-form-item>
       </a-form>
     </div>
@@ -521,7 +521,8 @@ export default {
       dryrunMode: 'rule',
       modalVisible: false,
       dryrunResult: [],
-      dryrunLoading: false,
+      ruleDryrunLoading: false,
+      scrapeDryrunLoading: false,
       rssList: [],
       downloaders: [],
       notifications: [],
@@ -658,27 +659,40 @@ export default {
         this.$message().error(e.message);
       }
     },
+    getValidRssUrls () {
+      return (this.rss.rssUrls || []).map(url => (url || '').trim()).filter(Boolean);
+    },
     async dryrun () {
+      const rssUrls = this.getValidRssUrls();
+      if (rssUrls.length === 0) {
+        this.$message().error('请先填写有效的 RSS 链接');
+        return;
+      }
       try {
-        this.dryrunLoading = true;
-        const res = await this.$api().rss.dryrun({ ...this.rss });
+        this.ruleDryrunLoading = true;
+        const res = await this.$api().rss.dryrun({ ...this.rss, rssUrls });
         this.dryrunResult = res.data;
         this.dryrunMode = 'rule';
         this.modalVisible = true;
       } catch (e) {
         this.$message().error(e.message);
       } finally {
-        this.dryrunLoading = false;
+        this.ruleDryrunLoading = false;
       }
     },
     async scrapeDryrun () {
+      const rssUrls = this.getValidRssUrls();
+      if (rssUrls.length === 0) {
+        this.$message().error('请先填写有效的 RSS 链接');
+        return;
+      }
       try {
         if (!this.rss.cookie) {
           this.$message().error('检测促销/HR 需要填写 Cookie');
           return;
         }
-        this.dryrunLoading = true;
-        const res = await this.$api().rss.scrapeDryrun({ ...this.rss });
+        this.scrapeDryrunLoading = true;
+        const res = await this.$api().rss.scrapeDryrun({ ...this.rss, rssUrls });
         this.dryrunResult = res.data.map(item => ({
           ...item,
           promo: '未检测',
@@ -690,7 +704,7 @@ export default {
       } catch (e) {
         this.$message().error(e.message);
       } finally {
-        this.dryrunLoading = false;
+        this.scrapeDryrunLoading = false;
       }
     },
     async scrapeTorrent (record) {

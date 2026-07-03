@@ -113,6 +113,10 @@ if [ ! -f '/vertex/data/setting/proxy.json' ]; then
   cp /app/vertex/app/config_backup/proxy.json /vertex/data/setting/
 fi
 
+if [ ! -f '/vertex/data/site-tag.json' ]; then
+  cp /app/vertex/app/config_backup/site-tag-default.json /vertex/data/site-tag.json
+fi
+
 if [ -f '/tmp/.X99-lock' ]; then
   rm /tmp/.X99-lock
 fi
