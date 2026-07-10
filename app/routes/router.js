@@ -180,6 +180,7 @@ module.exports = function (app, express, router) {
   router.get('/site/overview', ctrl.Site.overview);
 
   router.get('/downloader/list', ctrl.Client.list);
+  router.get('/downloader/references', ctrl.Client.references);
   router.get('/downloader/listTop10', ctrl.Client.listTop10);
   router.get('/downloader/listMainInfo', ctrl.Client.listMainInfo);
   router.get('/downloader/getSpeedPerTracker', ctrl.Client.getSpeedPerTracker);

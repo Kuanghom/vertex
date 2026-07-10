@@ -16,6 +16,98 @@ const LOGIN_CHECK = [
   '}'
 ].join('\n');
 
+const UNIT3D_LOGIN_CHECK = [
+  '  const loggedIn = document.querySelector(\'.top-nav__username, .top-nav__username--highresolution\');',
+  '  if (loggedIn) return;',
+  '  const title = document.title || \'\';',
+  '  const onLoginPage = /login/i.test(title) || /登录/.test(title) ||',
+  '    (document.querySelector(\'.Jackett\') && !document.querySelector(\'#torrent-page\')) ||',
+  '    document.querySelector(\'form[action*="/login"], form[action*="login"]\');',
+  '  if (onLoginPage || !document.querySelector(\'#torrent-page\')) {',
+  '    throw new Error(\'疑似登录状态失效, 请检查 Cookie\');',
+  '  }'
+].join('\n');
+
+const UNIT3D_PROMO_PARSE = [
+  '  const freeSelectors = [',
+  '    \'.torrent-discounts .torrent-flag__freeleech\',',
+  '    \'.torrent-flag__freeleech\',',
+  '    \'.torrent-icons__freeleech\',',
+  '    \'i[title*="100% Free"]\',',
+  '    \'i[title*="100%"]\',',
+  '    \'span[title*="100% Free"]\',',
+  '    \'span[title*="100%"]\'',
+  '  ];',
+  '  const doubleSelectors = [',
+  '    \'.torrent-discounts .torrent-flag__double-upload\',',
+  '    \'.torrent-flag__double-upload\',',
+  '    \'.torrent-icons__double-upload\',',
+  '    \'i[title*="Double Upload"]\',',
+  '    \'i[title*="2 倍上传"]\',',
+  '    \'i[title*="双倍上传"]\',',
+  '    \'i.fa-angle-double-up.text-green\',',
+  '    \'i.fa-chevron-double-up\'',
+  '  ];',
+  '  const queryFirst = (root, selectors) => {',
+  '    if (!root) return null;',
+  '    for (const selector of selectors) {',
+  '      const el = root.querySelector(selector);',
+  '      if (el) return el;',
+  '    }',
+  '    return null;',
+  '  };',
+  '  const resolveType = (freeEl, doubleEl, noPromo, discountText) => {',
+  '    const freeText = [',
+  '      freeEl?.textContent,',
+  '      freeEl?.getAttribute(\'title\'),',
+  '      freeEl?.getAttribute(\'data-original-title\'),',
+  '      discountText',
+  '    ].filter(Boolean).join(\' \').replace(/\\s+/g, \' \').trim();',
+  '    const hasDouble = !!doubleEl;',
+  '    if (/100%/i.test(freeText) && hasDouble) return \'2xfree\';',
+  '    if (/50%/i.test(freeText) && hasDouble) return \'2x50%\';',
+  '    if (/100%/i.test(freeText)) return \'free\';',
+  '    if (/50%/i.test(freeText)) return \'50%\';',
+  '    if (/25%/i.test(freeText)) return \'30%\';',
+  '    if (/75%/i.test(freeText)) return \'50%\';',
+  '    if (hasDouble) return \'2x\';',
+  '    if (noPromo || (!freeEl && !doubleEl)) return \'normal\';',
+  '    return \'normal\';',
+  '  };',
+  '  const parseScope = (scope, allowGlobalNoPromo) => {',
+  '    if (!scope) return null;',
+  '    const discountBox = scope.querySelector(\'.torrent-discounts\');',
+  '    const discountRow = scope.querySelector(\'tr.torrent-discounts td:last-child\');',
+  '    const discountText = [discountBox?.textContent, discountRow?.textContent].filter(Boolean).join(\' \');',
+  '    const freeEl = queryFirst(scope, freeSelectors);',
+  '    const doubleEl = queryFirst(scope, doubleSelectors);',
+  '    const noPromoIcon = scope.querySelector(\'.torrent-discounts .fa-frown, .torrent-discounts .fa-face-frown\') ||',
+  '      (allowGlobalNoPromo ? scope.querySelector(\'.fa-frown, .fa-face-frown\') : null);',
+  '    const noPromo = !!noPromoIcon || /当前无优惠/.test(discountText);',
+  '    if (!freeEl && !doubleEl && !noPromo) return null;',
+  '    return resolveType(freeEl, doubleEl, noPromo, discountText);',
+  '  };',
+  '  const scopes = [',
+  '    document.querySelector(\'#torrent-page .meta-general\'),',
+  '    document.querySelector(\'#torrent-page .torrent-general\'),',
+  '    document.querySelector(\'#torrent-page\'),',
+  '    document.querySelector(\'main article\'),',
+  '    document.body',
+  '  ].filter(Boolean);',
+  '  const seen = new Set();',
+  '  let type = \'normal\';',
+  '  for (const scope of scopes) {',
+  '    if (seen.has(scope)) continue;',
+  '    seen.add(scope);',
+  '    const result = parseScope(scope, scope !== document.body);',
+  '    if (result && result !== \'normal\') {',
+  '      type = result;',
+  '      break;',
+  '    }',
+  '    if (result === \'normal\') type = \'normal\';',
+  '  }'
+].join('\n');
+
 const U2_FIND_CELL = [
   '  let cell = null;',
   '  const promoImg = document.querySelector(',
@@ -342,6 +434,15 @@ const TEMPLATES = {
     '}'
   ].join('\n'),
 
+  unit3d: [
+    'async ({ document, console }) => {',
+    UNIT3D_LOGIN_CHECK,
+    UNIT3D_PROMO_PARSE,
+    '  console.log(\'promo type:\', type);',
+    '  return type;',
+    '}'
+  ].join('\n'),
+
   custom: CUSTOM_STUB
 };
 
@@ -583,6 +684,16 @@ const FREE_TEMPLATES = {
     '}'
   ].join('\n'),
 
+  unit3d: [
+    'async ({ document, console }) => {',
+    UNIT3D_LOGIN_CHECK,
+    UNIT3D_PROMO_PARSE,
+    '  const result = type === \'free\' || type === \'2xfree\';',
+    '  console.log(\'promo type:\', type, \'free:\', result);',
+    '  return result;',
+    '}'
+  ].join('\n'),
+
   custom: FREE_CUSTOM_STUB
 };
 
@@ -621,6 +732,7 @@ const HR_TEMPLATES = {
     '  return !!hrEl;',
     '}'
   ].join('\n'),
+  unit3d: NO_HR_STUB,
   custom: HR_CUSTOM_STUB
 };
 
@@ -678,4 +790,24 @@ export function getDefaultPromoTemplate () {
 
 export function getDefaultPromoScript () {
   return TEMPLATES.dstudio;
+}
+
+const UNIT3D_HOSTS = ['monikadesign.uk', 'anime-no-index.com'];
+
+export function resolvePromoTemplateByHost (siteHost) {
+  if (!siteHost) return null;
+  const hosts = String(siteHost).split(',').map(item => item.trim().toLowerCase()).filter(Boolean);
+  if (hosts.some(host => UNIT3D_HOSTS.includes(host.replace(/^www\./, '')))) {
+    return 'unit3d';
+  }
+  return null;
+}
+
+export function getScrapePresetByHost (siteHost) {
+  const template = resolvePromoTemplateByHost(siteHost);
+  if (!template) return null;
+  return {
+    promoTemplate: template,
+    ...getScrapeScriptTemplates(template)
+  };
 }

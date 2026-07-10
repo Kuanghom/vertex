@@ -70,7 +70,7 @@
           name="siteHost"
           extra="例如 dstudio.me。多个 host 使用英文逗号分隔"
           :rules="[{ required: true, message: '${label}不可为空! ' }]">
-          <a-input size="small" v-model:value="script.siteHost"/>
+          <a-input size="small" v-model:value="script.siteHost" @change="onSiteHostChange"/>
         </a-form-item>
         <a-form-item
           label="优惠模板"
@@ -176,7 +176,8 @@ import {
   getDefaultPromoTemplate,
   getDefaultPromoScript,
   getDefaultFreeScript,
-  getDefaultHrScript
+  getDefaultHrScript,
+  getScrapePresetByHost
 } from '../../util/promoScriptTemplates';
 
 export default {
@@ -221,6 +222,7 @@ export default {
       { value: 'hdcity', label: 'HDCity' },
       { value: 'luminance', label: 'Gazelle / Luminance' },
       { value: 'dstudio', label: 'Depth Studio' },
+      { value: 'unit3d', label: 'Unit3D 系 (MonikaDesign 等)' },
       { value: 'custom', label: '自定义脚本' }
     ];
     return {
@@ -277,6 +279,13 @@ export default {
       }
     },
     onPromoTemplateChange (template) {
+      this.applyScrapeScriptTemplates(this.script, false);
+    },
+    onSiteHostChange () {
+      if (this.script.id) return;
+      const preset = getScrapePresetByHost(this.script.siteHost);
+      if (!preset) return;
+      this.script.promoTemplate = preset.promoTemplate;
       this.applyScrapeScriptTemplates(this.script, false);
     },
     applyScrapeScriptTemplates (script = this.script, onlyIfEmpty = false) {

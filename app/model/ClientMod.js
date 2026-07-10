@@ -1,8 +1,12 @@
 const fs = require('fs');
 const path = require('path');
 const Client = require('../common/Client');
+const Rss = require('../common/Rss');
+const Douban = require('../common/Douban');
+const Watch = require('../common/Watch');
 
 const util = require('../libs/util');
+
 class ClientMod {
   add (options) {
     const id = util.uuid.v4().split('-')[0];
@@ -17,10 +21,155 @@ class ClientMod {
     return '添加下载器成功';
   };
 
+  _reloadRss (rssSet) {
+    fs.writeFileSync(path.join(__dirname, '../data/rss/', rssSet.id + '.json'), JSON.stringify(rssSet, null, 2));
+    if (global.runningRss[rssSet.id]) global.runningRss[rssSet.id].destroy();
+    if (rssSet.enable) global.runningRss[rssSet.id] = new Rss(rssSet);
+  }
+
+  _reloadDouban (doubanSet) {
+    fs.writeFileSync(path.join(__dirname, '../data/douban/', doubanSet.id + '.json'), JSON.stringify(doubanSet, null, 2));
+    if (global.runningDouban[doubanSet.id]) global.runningDouban[doubanSet.id].destroy();
+    if (doubanSet.enable) global.runningDouban[doubanSet.id] = new Douban(doubanSet);
+  }
+
+  _reloadWatch (watchSet) {
+    fs.writeFileSync(path.join(__dirname, '../data/watch/', watchSet.id + '.json'), JSON.stringify(watchSet, null, 2));
+    if (global.runningWatch[watchSet.id]) global.runningWatch[watchSet.id].destroy();
+    if (watchSet.enable) global.runningWatch[watchSet.id] = new Watch(watchSet);
+  }
+
+  _reloadClient (clientSet) {
+    fs.writeFileSync(path.join(__dirname, '../data/client/', clientSet.id + '.json'), JSON.stringify(clientSet, null, 2));
+    if (global.runningClient[clientSet.id]) global.runningClient[clientSet.id].destroy();
+    if (clientSet.enable) global.runningClient[clientSet.id] = new Client(clientSet);
+  }
+
+  _reloadRssRulesForRule (ruleId) {
+    Object.keys(global.runningRss).forEach(rssId => {
+      const rss = global.runningRss[rssId];
+      const usesRule = rss._acceptRules.some(id => id === ruleId) ||
+        rss._rejectRules.some(id => id === ruleId);
+      if (usesRule) rss.reloadRssRule();
+    });
+  }
+
+  getReferences (clientId) {
+    const rssList = util.listRss();
+    const doubanList = util.listDouban();
+    const watchList = util.listWatch();
+    const rssRuleList = util.listRssRule();
+    const clientList = util.listClient();
+
+    const rss = [];
+    const rssSeen = new Set();
+    for (const item of rssList) {
+      const clientArr = item.clientArr || (item.client ? [item.client] : []);
+      const reseedClients = item.reseedClients || [];
+      const inClientArr = clientArr.indexOf(clientId) !== -1;
+      const inReseed = reseedClients.indexOf(clientId) !== -1;
+      if (!inClientArr && !inReseed) continue;
+      if (rssSeen.has(item.id)) continue;
+      rssSeen.add(item.id);
+      const parts = [];
+      if (inClientArr) parts.push('下载器');
+      if (inReseed) parts.push('辅种下载器');
+      rss.push({
+        id: item.id,
+        alias: item.alias,
+        enable: !!item.enable,
+        detail: parts.join('、'),
+        emptyClientArr: inClientArr && clientArr.length === 1
+      });
+    }
+
+    const douban = doubanList
+      .filter(item => item.client === clientId)
+      .map(item => ({ id: item.id, alias: item.alias, enable: !!item.enable }));
+
+    const watch = watchList
+      .filter(item => item.downloader === clientId)
+      .map(item => ({ id: item.id, alias: item.alias, enable: !!item.enable }));
+
+    const rssRule = rssRuleList
+      .filter(item => item.client === clientId)
+      .map(item => ({ id: item.id, alias: item.alias }));
+
+    const client = clientList
+      .filter(item => item.id !== clientId && (item.sameServerClients || []).indexOf(clientId) !== -1)
+      .map(item => ({ id: item.id, alias: item.alias, enable: !!item.enable }));
+
+    const total = rss.length + douban.length + watch.length + rssRule.length + client.length;
+    return { rss, douban, watch, rssRule, client, total };
+  }
+
+  _removeReferences (clientId) {
+    const cleaned = { rss: 0, douban: 0, watch: 0, rssRule: 0, client: 0 };
+
+    for (const rssSet of util.listRss()) {
+      const clientArr = rssSet.clientArr || (rssSet.client ? [rssSet.client] : []);
+      const reseedClients = rssSet.reseedClients || [];
+      const nextClientArr = clientArr.filter(id => id !== clientId);
+      const nextReseed = reseedClients.filter(id => id !== clientId);
+      if (nextClientArr.length === clientArr.length && nextReseed.length === reseedClients.length) continue;
+      if (rssSet.client) delete rssSet.client;
+      rssSet.clientArr = nextClientArr;
+      rssSet.reseedClients = nextReseed;
+      this._reloadRss(rssSet);
+      cleaned.rss += 1;
+    }
+
+    for (const doubanSet of util.listDouban()) {
+      if (doubanSet.client !== clientId) continue;
+      delete doubanSet.client;
+      this._reloadDouban(doubanSet);
+      cleaned.douban += 1;
+    }
+
+    for (const watchSet of util.listWatch()) {
+      if (watchSet.downloader !== clientId) continue;
+      delete watchSet.downloader;
+      this._reloadWatch(watchSet);
+      cleaned.watch += 1;
+    }
+
+    const affectedRuleIds = [];
+    for (const rssRule of util.listRssRule()) {
+      if (rssRule.client !== clientId) continue;
+      const nextRule = { ...rssRule };
+      delete nextRule.client;
+      fs.writeFileSync(path.join(__dirname, '../data/rule/rss/', rssRule.id + '.json'), JSON.stringify(nextRule, null, 2));
+      affectedRuleIds.push(rssRule.id);
+      cleaned.rssRule += 1;
+    }
+    for (const ruleId of affectedRuleIds) {
+      this._reloadRssRulesForRule(ruleId);
+    }
+
+    for (const clientSet of util.listClient()) {
+      if (clientSet.id === clientId) continue;
+      const sameServerClients = clientSet.sameServerClients || [];
+      if (sameServerClients.indexOf(clientId) === -1) continue;
+      clientSet.sameServerClients = sameServerClients.filter(id => id !== clientId);
+      this._reloadClient(clientSet);
+      cleaned.client += 1;
+    }
+
+    return cleaned;
+  }
+
   delete (options) {
+    const cleaned = this._removeReferences(options.id);
     fs.unlinkSync(path.join(__dirname, '../data/client/', options.id + '.json'));
     if (global.runningClient[options.id]) global.runningClient[options.id].destroy();
-    return '删除下载器成功';
+    const parts = [];
+    if (cleaned.rss) parts.push(`${cleaned.rss} 个 RSS 任务`);
+    if (cleaned.douban) parts.push(`${cleaned.douban} 个豆瓣订阅`);
+    if (cleaned.watch) parts.push(`${cleaned.watch} 个监控分类`);
+    if (cleaned.rssRule) parts.push(`${cleaned.rssRule} 条 RSS 规则`);
+    if (cleaned.client) parts.push(`${cleaned.client} 个下载器同服配置`);
+    const detail = parts.length ? `，已从 ${parts.join('、')} 中移除引用` : '';
+    return `删除下载器成功${detail}`;
   };
 
   modify (options) {
@@ -34,15 +183,10 @@ class ClientMod {
   };
 
   list () {
-    const rssList = util.listRss();
-    const doubanList = util.listDouban();
     const clientList = util.listClient();
-    const watchList = util.listWatch();
     for (const client of clientList) {
-      client.used = !global.ignoreDependCheck && (rssList.some(item => (item.clientArr || [item.client]).indexOf(client.id) !== -1) ||
-        rssList.some(item => item.reseedClients.indexOf(client.id) !== -1) ||
-        doubanList.some(item => item.client === client.id) ||
-        watchList.some(item => item.downloader === client.id));
+      client.references = this.getReferences(client.id);
+      client.used = client.references.total > 0;
       client.status = !!(client.enable && global.runningClient[client.id] && global.runningClient[client.id].status && global.runningClient[client.id].maindata);
       if (client.status) {
         client.allTimeUpload = global.runningClient[client.id].maindata.allTimeUpload;

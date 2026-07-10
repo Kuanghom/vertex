@@ -75,7 +75,12 @@
           <a-checkbox-group style="width: 100%;" v-model:value="rss.clientArr">
             <a-row>
               <a-col v-for="downloader of downloaders" :span="8" :key="downloader.id">
-                <a-checkbox :disabled="!downloader.enable && !rss.clientArr.includes(downloader.id)" v-model:value="downloader.id">{{ downloader.alias }}</a-checkbox>
+                <a-checkbox
+                  :disabled="!downloader.enable && !rss.clientArr.includes(downloader.id)"
+                  v-model:value="downloader.id">
+                  {{ downloader.alias }}
+                  <span v-if="!downloader.enable" style="color: #999;">(已禁用)</span>
+                </a-checkbox>
               </a-col>
             </a-row>
           </a-checkbox-group>

@@ -217,7 +217,15 @@ const _getTorrentsBeyondHD = async function (rssUrl) {
 const _getTorrentsUnit3D2 = async function (rssUrl) {
   const rss = await parseXml(await _getRssContent(rssUrl));
   const torrents = [];
-  const items = rss.rss.channel[0].item;
+  const channel = rss.rss.channel[0];
+  const items = channel.item;
+  const rssHost = new URL(rssUrl).host.toLowerCase();
+  const isMnkDetailLink = rssHost === 'anime-no-index.com' || rssHost === 'monikadesign.uk';
+  let mnkSiteOrigin = `https://${rssHost}`;
+  if (rssHost === 'anime-no-index.com') {
+    const channelLink = channel.link?.[0] || '';
+    mnkSiteOrigin = channelLink ? channelLink.replace(/\/$/, '') : 'https://monikadesign.uk';
+  }
   for (let i = 0; i < items.length; ++i) {
     const torrent = {
       size: 0,
@@ -241,7 +249,11 @@ const _getTorrentsUnit3D2 = async function (rssUrl) {
     torrent.id = link.match(/download\/(\d*)\./)[1];
     torrent.hash = 'fakehash' + torrent.id + 'fakehash';
     torrent.url = link;
-    torrent.link = link.replace(/download\//, '').replace(/(\d+)\..*/, '$1');
+    if (isMnkDetailLink) {
+      torrent.link = `${mnkSiteOrigin}/torrents/${torrent.id}`;
+    } else {
+      torrent.link = link.replace(/download\//, '').replace(/(\d+)\..*/, '$1');
+    }
     torrents.push(torrent);
   }
   return torrents;

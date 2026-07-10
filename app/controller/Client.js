@@ -71,6 +71,26 @@ class Client {
     }
   };
 
+  async references (req, res) {
+    try {
+      const id = req.query.id;
+      if (!id) {
+        throw new Error('缺少下载器 ID');
+      }
+      const r = clientMod.getReferences(id);
+      res.send({
+        success: true,
+        data: r
+      });
+    } catch (e) {
+      logger.error(e);
+      res.send({
+        success: false,
+        message: e.message
+      });
+    }
+  };
+
   async listMainInfo (req, res) {
     try {
       const r = clientMod.listMainInfo();

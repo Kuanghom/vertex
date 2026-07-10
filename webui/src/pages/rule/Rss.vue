@@ -18,8 +18,9 @@
           <a-select size="small" :allowClear="true" v-model:value="record.client" style="width: 100%;" @change="modifyRssRuleDownloader(record)">
             <template v-for="downloader of downloaders" :key="downloader.id">
               <a-select-option
+                :disabled="!downloader.enable"
                 :value="downloader.id">
-                {{ downloader.alias }}
+                {{ downloader.alias }}<span v-if="!downloader.enable"> (已禁用)</span>
               </a-select-option>
             </template>
           </a-select>
@@ -79,8 +80,9 @@
           <a-select size="small" :allowClear="true" v-model:value="rssRule.client">
             <template v-for="downloader of downloaders" :key="downloader.id">
               <a-select-option
+                :disabled="!downloader.enable"
                 :value="downloader.id">
-                {{ downloader.alias }}
+                {{ downloader.alias }}<span v-if="!downloader.enable"> (已禁用)</span>
               </a-select-option>
             </template>
           </a-select>

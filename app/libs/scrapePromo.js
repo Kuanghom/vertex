@@ -34,6 +34,7 @@ const TEMPLATE_SUPPORT = {
   hdcity: ['free', '2xfree', '2x', '50%', '30%', '2x50%'],
   luminance: ['free', '2xfree', '2x', '50%', '30%', '2x50%'],
   dstudio: ['free', '2xfree', '2x', '50%', '30%', '2x50%'],
+  unit3d: ['free', '2xfree', '2x', '50%', '30%', '2x50%'],
   custom: PROMO_TYPES
 };
 
@@ -84,7 +85,9 @@ const HOST_TEMPLATE = {
   'www.pixelcove.me': 'luminance',
   'www.cathode-ray.tube': 'luminance',
   'dstudio.me': 'dstudio',
-  'club.hares.top': 'hares'
+  'club.hares.top': 'hares',
+  'monikadesign.uk': 'unit3d',
+  'anime-no-index.com': 'unit3d'
 };
 
 const NEXUSPHP_CLASS_MAP = {
@@ -104,6 +107,20 @@ const normalizeScrapeCookie = function (url, cookie) {
     return `nexusphp_u2=${cookie}`;
   }
   return cookie;
+};
+
+const normalizeScrapeUrl = function (url) {
+  try {
+    const u = new URL(url);
+    if (u.host === 'anime-no-index.com' && /^\/torrents\/\d+\/?$/.test(u.pathname)) {
+      u.host = 'monikadesign.uk';
+      u.protocol = 'https:';
+      return u.toString();
+    }
+  } catch (e) {
+    // ignore invalid url
+  }
+  return url;
 };
 
 const getU2PromoCell = function (d) {
@@ -167,6 +184,7 @@ const parseU2PromoFromCell = function (cell) {
 };
 
 const getBody = async function (url, cookie) {
+  url = normalizeScrapeUrl(url);
   const _cookie = normalizeScrapeCookie(url, cookie);
   let body;
   const cache = await redis.get(`vertex:scrape:${url}`);
@@ -391,6 +409,113 @@ const detectDepthStudio = async function (url, cookie) {
   return 'normal';
 };
 
+const assertUnit3DLoggedIn = function (d) {
+  const loggedIn = d.querySelector('.top-nav__username, .top-nav__username--highresolution');
+  if (loggedIn) return;
+
+  const title = d.title || '';
+  const onLoginPage = /login/i.test(title) || /登录/.test(title) ||
+    (d.querySelector('.Jackett') && !d.querySelector('#torrent-page')) ||
+    d.querySelector('form[action*="/login"], form[action*="login"]');
+
+  if (onLoginPage || !d.querySelector('#torrent-page')) {
+    throw new Error('疑似登录状态失效, 请检查 Cookie');
+  }
+};
+
+const getUnit3DPromoText = function (el, extraText) {
+  return [
+    el?.textContent,
+    el?.getAttribute('title'),
+    el?.getAttribute('data-original-title'),
+    extraText
+  ].filter(Boolean).join(' ').replace(/\s+/g, ' ').trim();
+};
+
+const UNIT3D_FREE_SELECTORS = [
+  '.torrent-discounts .torrent-flag__freeleech',
+  '.torrent-flag__freeleech',
+  '.torrent-icons__freeleech',
+  'i[title*="100% Free"]',
+  'i[title*="100%"]',
+  'span[title*="100% Free"]',
+  'span[title*="100%"]'
+];
+
+const UNIT3D_DOUBLE_SELECTORS = [
+  '.torrent-discounts .torrent-flag__double-upload',
+  '.torrent-flag__double-upload',
+  '.torrent-icons__double-upload',
+  'i[title*="Double Upload"]',
+  'i[title*="2 倍上传"]',
+  'i[title*="双倍上传"]',
+  'i.fa-angle-double-up.text-green',
+  'i.fa-chevron-double-up'
+];
+
+const queryFirstUnit3D = function (root, selectors) {
+  if (!root) return null;
+  for (const selector of selectors) {
+    const el = root.querySelector(selector);
+    if (el) return el;
+  }
+  return null;
+};
+
+const resolveUnit3DPromoType = function (freeEl, doubleEl, noPromo, discountText) {
+  const freeText = getUnit3DPromoText(freeEl, discountText);
+  const hasDouble = !!doubleEl;
+  if (/100%/i.test(freeText) && hasDouble) return '2xfree';
+  if (/50%/i.test(freeText) && hasDouble) return '2x50%';
+  if (/100%/i.test(freeText)) return 'free';
+  if (/50%/i.test(freeText)) return '50%';
+  if (/25%/i.test(freeText)) return '30%';
+  if (/75%/i.test(freeText)) return '50%';
+  if (hasDouble) return '2x';
+  if (noPromo || (!freeEl && !doubleEl)) return 'normal';
+  return 'normal';
+};
+
+const parseUnit3DPromoFromScope = function (scope, options = {}) {
+  if (!scope) return null;
+  const discountBox = scope.querySelector('.torrent-discounts');
+  const discountRow = scope.querySelector('tr.torrent-discounts td:last-child');
+  const discountText = [discountBox?.textContent, discountRow?.textContent].filter(Boolean).join(' ');
+  const freeEl = queryFirstUnit3D(scope, UNIT3D_FREE_SELECTORS);
+  const doubleEl = queryFirstUnit3D(scope, UNIT3D_DOUBLE_SELECTORS);
+  const noPromoIcon = scope.querySelector('.torrent-discounts .fa-frown, .torrent-discounts .fa-face-frown') ||
+    (options.allowGlobalNoPromo ? scope.querySelector('.fa-frown, .fa-face-frown') : null);
+  const noPromo = !!noPromoIcon || /当前无优惠/.test(discountText);
+  if (!freeEl && !doubleEl && !noPromo) return null;
+  return resolveUnit3DPromoType(freeEl, doubleEl, noPromo, discountText);
+};
+
+const parseUnit3DPromoFromDocument = function (d) {
+  const scopes = [
+    d.querySelector('#torrent-page .meta-general'),
+    d.querySelector('#torrent-page .torrent-general'),
+    d.querySelector('#torrent-page'),
+    d.querySelector('main article'),
+    d.body
+  ].filter(Boolean);
+  const seen = new Set();
+  let normalResult = null;
+  for (const scope of scopes) {
+    if (seen.has(scope)) continue;
+    seen.add(scope);
+    const result = parseUnit3DPromoFromScope(scope, { allowGlobalNoPromo: scope !== d.body });
+    if (result && result !== 'normal') return result;
+    if (result === 'normal') normalResult = 'normal';
+  }
+  return normalResult || 'normal';
+};
+
+const detectUnit3D = async function (url, cookie) {
+  const d = await getDocument(url, cookie);
+  assertUnit3DLoggedIn(d);
+  return parseUnit3DPromoFromDocument(d);
+};
+
 const TEMPLATE_DETECTORS = {
   nexusphp: (url, cookie) => detectNexusPHP(url, cookie, '#top font[class], #top span[class]'),
   mteam: detectMTeam,
@@ -414,7 +539,8 @@ const TEMPLATE_DETECTORS = {
     return 'normal';
   },
   luminance: detectLuminance,
-  dstudio: detectDepthStudio
+  dstudio: detectDepthStudio,
+  unit3d: detectUnit3D
 };
 
 const resolveHostTemplate = function (host) {
@@ -506,6 +632,9 @@ exports.matchTypes = function (promoType, types) {
 };
 
 exports.normalizeScrapeCookie = normalizeScrapeCookie;
+exports.normalizeScrapeUrl = normalizeScrapeUrl;
+exports.normalizePromoType = normalizePromoType;
 exports.getU2PromoCell = getU2PromoCell;
 exports.parseU2PromoFromCell = parseU2PromoFromCell;
 exports.getDocument = getDocument;
+exports.parseUnit3DPromoFromDocument = parseUnit3DPromoFromDocument;

@@ -7,6 +7,7 @@ const fs = require('fs');
 const path = require('path');
 
 const getBody = async function (url, cookie) {
+  url = scrapePromo.normalizeScrapeUrl(url);
   const _cookie = scrapePromo.normalizeScrapeCookie(url, cookie);
   let body;
   const cache = await redis.get(`vertex:scrape:${url}`);
@@ -548,6 +549,15 @@ const _freeDepthStudio = async function (url, cookie) {
   return state || globalFree;
 };
 
+const _freeUnit3D = async function (url, cookie) {
+  const type = await scrapePromo.detectByTemplate('unit3d', url, cookie);
+  return type === 'free' || type === '2xfree';
+};
+
+const _hrUnit3D = async function () {
+  return false;
+};
+
 const freeWrapper = {
   'pt.btschool.club': _free,
   'club.hares.top': _freeHaresClub,
@@ -595,7 +605,9 @@ const freeWrapper = {
   'www.empornium.sx': _freeLuminance,
   'www.pixelcove.me': _freeLuminance,
   'www.cathode-ray.tube': _freeLuminance,
-  'dstudio.me': _freeDepthStudio
+  'dstudio.me': _freeDepthStudio,
+  'monikadesign.uk': _freeUnit3D,
+  'anime-no-index.com': _freeUnit3D
 };
 
 const _hr = async function (url, cookie) {
@@ -645,7 +657,9 @@ const hrWrapper = {
   'ptchdbits.co': _hrCHDBits,
   'audiences.me': _hr,
   'dstudio.me': _hrDepthStudio,
-  'u2.dmhy.org': _hrU2
+  'u2.dmhy.org': _hrU2,
+  'monikadesign.uk': _hrUnit3D,
+  'anime-no-index.com': _hrUnit3D
 };
 
 exports.free = async (url, cookie) => {

@@ -127,7 +127,13 @@
           name="client"
           extra="选择下载器, 仅可选择已经启用的下载器">
           <a-select size="small" v-model:value="subscribe.client">
-            <a-select-option v-for="downloader of downloaders" v-model:value="downloader.id" :key="downloader.id">{{ downloader.alias }}</a-select-option>
+            <a-select-option
+              v-for="downloader of downloaders"
+              :disabled="!downloader.enable"
+              v-model:value="downloader.id"
+              :key="downloader.id">
+              {{ downloader.alias }}<span v-if="!downloader.enable"> (已禁用)</span>
+            </a-select-option>
           </a-select>
         </a-form-item>
         <a-form-item

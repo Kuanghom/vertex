@@ -5,6 +5,10 @@ export default {
     const url = '/api/downloader/list';
     return await get(url);
   },
+  references: async (id) => {
+    const url = '/api/downloader/references?id=' + encodeURIComponent(id);
+    return await get(url);
+  },
   listMainInfo: async () => {
     const url = '/api/downloader/listMainInfo?_=' + Math.random();
     return await get(url);

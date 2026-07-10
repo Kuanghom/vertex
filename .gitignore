@@ -11,3 +11,6 @@ u2.cookie
 develop
 /.idea/*
 
+/cookies.txt
+/u2.txt
+/ttg.txt

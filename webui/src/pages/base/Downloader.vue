@@ -15,7 +15,8 @@
       </template>
       <template #bodyCell="{ column, record }">
         <template v-if="column.dataIndex === 'enable'">
-          <a-switch @change="enableDownloader(record)" :disabled="record.used" v-model:checked="record.enable" checked-children="启用" un-checked-children="禁用"/>
+          <a-switch @change="enableDownloader(record)" v-model:checked="record.enable" checked-children="启用" un-checked-children="禁用"/>
+          <a-tag v-if="record.used" color="processing" style="margin-left: 8px;">{{ record.references.total }} 处引用</a-tag>
         </template>
         <template v-if="column.dataIndex === 'autoDelete'">
           <a-tag color="success" v-if="record.autoDelete">启用</a-tag>
@@ -48,7 +49,7 @@
                   <a-menu-item danger>
                     <a-popover title="删除?" trigger="click" :overlayStyle="{ width: '84px', overflow: 'hidden' }">
                       <template #content>
-                        <a-button type="primary" danger @click="deleteDownloader(record)" size="small">删除</a-button>
+                        <a-button type="primary" danger @click="confirmDeleteDownloader(record)" size="small">删除</a-button>
                       </template>
                       <a>删除</a>
                     </a-popover>
@@ -85,7 +86,7 @@
           name="enable"
           extra="选择是否启用下载器"
           :rules="[{ required: true, message: '${label}不可为空! ' }]">
-          <a-checkbox :disabled="downloader.used" v-model:checked="downloader.enable">启用</a-checkbox>
+          <a-checkbox v-model:checked="downloader.enable">启用</a-checkbox>
         </a-form-item>
         <a-form-item
           label="下载器类型"
@@ -296,6 +297,9 @@
   </div>
 </template>
 <script>
+import { Modal } from 'ant-design-vue';
+import { h } from 'vue';
+
 export default {
   data () {
     const columns = [
@@ -361,6 +365,19 @@ export default {
     };
   },
   methods: {
+    stripClientPayload (client) {
+      const payload = { ...client };
+      delete payload.references;
+      delete payload.used;
+      delete payload.status;
+      delete payload.allTimeUpload;
+      delete payload.allTimeDownload;
+      delete payload.uploadSpeed;
+      delete payload.downloadSpeed;
+      delete payload.leechingCount;
+      delete payload.seedingCount;
+      return payload;
+    },
     isMobile () {
       if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
         return true;
@@ -394,7 +411,7 @@ export default {
     },
     async modifyDownloader () {
       try {
-        await this.$api().downloader.modify({ ...this.downloader });
+        await this.$api().downloader.modify(this.stripClientPayload(this.downloader));
         this.$message().success((this.downloader.id ? '编辑' : '新增') + '成功, 列表正在刷新...');
         setTimeout(() => this.listDownloader(), 1000);
         this.clearDownloader();
@@ -410,22 +427,63 @@ export default {
       this.downloader.id = null;
       this.downloader.alias = this.downloader.alias + '-克隆';
     },
-    async deleteDownloader (row) {
-      if (row.used) {
-        this.$message().error('组件被占用, 取消占用后删除');
-        return;
-      }
+    async confirmDeleteDownloader (row) {
       try {
-        await this.$api().downloader.delete(row.id);
-        this.$message().success('删除成功, 列表正在刷新...');
-        await this.listDownloader();
+        const res = await this.$api().downloader.references(row.id);
+        const refs = res.data;
+        const lines = this.formatReferenceLines(refs);
+        const hasRefs = refs.total > 0;
+        const emptyRss = (refs.rss || []).filter(item => item.emptyClientArr);
+        let content = hasRefs
+          ? `以下任务引用了下载器「${row.alias}」:\n\n${lines.join('\n')}\n\n删除后将从上述任务中移除该下载器配置。`
+          : `确定删除下载器「${row.alias}」吗？`;
+        if (emptyRss.length) {
+          content += `\n\n注意: ${emptyRss.map(item => `「${item.alias}」`).join('、')} 将不再有可用下载器，RSS 推送会失败直至重新配置。`;
+        }
+        Modal.confirm({
+          title: hasRefs ? '删除下载器并清理引用' : '删除下载器',
+          content: h('div', { style: 'white-space: pre-wrap;' }, content),
+          okText: '确认删除',
+          okType: 'danger',
+          cancelText: '取消',
+          onOk: async () => {
+            const deleteRes = await this.$api().downloader.delete(row.id);
+            this.$message().success(deleteRes.message || '删除成功, 列表正在刷新...');
+            await this.listDownloader();
+            if (this.downloader.id === row.id) {
+              this.clearDownloader();
+            }
+          }
+        });
       } catch (e) {
         this.$message().error(e.message);
       }
     },
+    formatReferenceLines (refs) {
+      const lines = [];
+      for (const item of refs.rss || []) {
+        lines.push(`RSS 任务「${item.alias}」(${item.detail}${item.enable ? '' : '，任务已禁用'})`);
+      }
+      for (const item of refs.douban || []) {
+        lines.push(`豆瓣订阅「${item.alias}」${item.enable ? '' : '(任务已禁用)'}`);
+      }
+      for (const item of refs.watch || []) {
+        lines.push(`监控分类「${item.alias}」${item.enable ? '' : '(任务已禁用)'}`);
+      }
+      for (const item of refs.rssRule || []) {
+        lines.push(`RSS 规则「${item.alias}」`);
+      }
+      for (const item of refs.client || []) {
+        lines.push(`下载器「${item.alias}」同服配置`);
+      }
+      return lines;
+    },
+    async deleteDownloader (row) {
+      await this.confirmDeleteDownloader(row);
+    },
     async enableDownloader (record) {
       try {
-        await this.$api().downloader.modify({ ...record });
+        await this.$api().downloader.modify(this.stripClientPayload(record));
         this.$message().success('修改成功, 列表正在刷新...');
         setTimeout(() => this.listDownloader(), 1000);
         this.clearDownloader();
