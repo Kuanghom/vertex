@@ -147,6 +147,8 @@
   </div>
 </template>
 <script>
+import { scrollToTop } from '../../util/scroll';
+
 export default {
   data () {
     const columns = [
@@ -281,6 +283,8 @@ export default {
         await this.$api().selectRule.modify({ ...this.selectRule });
         this.$message().success((this.selectRule.id ? '编辑' : '新增') + '成功, 列表正在刷新...');
         setTimeout(() => this.listSelectRule(), 1000);
+        this.clearSelectRule();
+        scrollToTop();
       } catch (e) {
         this.$message().error(e.message);
       }
@@ -302,7 +306,7 @@ export default {
       }
     },
     clearSelectRule () {
-      this.selectRule = { ...this.SelectRule, conditions: [{ ...this.condition }] };
+      this.selectRule = { ...this.defaultSelectRule, conditions: [{ ...this.condition }] };
     }
   },
   async mounted () {

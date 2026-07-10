@@ -13,14 +13,53 @@
       :scroll="{ x: 1200 }"
     >
       <template #title>
-        <span style="font-size: 16px; font-weight: bold;">RSS 历史</span>
-        <span style="font-size: 14px; font-weight: bold; color: red; margin-left: 12px;">遇到问题先去看 Wiki，特别是 Wiki 里的常见问题, 实在找不到再去交流群问, 别 TM Wiki 不看直接在群里问。</span>
+        <div>
+          <span style="font-size: 16px; font-weight: bold;">RSS 历史</span>
+          <span style="font-size: 14px; font-weight: bold; color: red; margin-left: 12px;">遇到问题先去看 Wiki，特别是 Wiki 里的常见问题, 实在找不到再去交流群问, 别 TM Wiki 不看直接在群里问。</span>
+          <div class="filter-bar">
+            <a-select
+              mode="multiple"
+              show-search
+              allow-clear
+              placeholder="筛选 RSS"
+              v-model:value="filterRss"
+              style="width: 220px;"
+              size="small"
+              :filter-option="filterSelectOption"
+              :options="rssFilterOptions"
+            />
+            <a-select
+              mode="multiple"
+              show-search
+              allow-clear
+              placeholder="筛选种子状态"
+              v-model:value="filterStatus"
+              style="width: 220px;"
+              size="small"
+              :filter-option="filterSelectOption"
+              :options="statusFilterOptions"
+            />
+            <a-select
+              mode="multiple"
+              show-search
+              allow-clear
+              placeholder="筛选下载器"
+              v-model:value="filterClient"
+              style="width: 220px;"
+              size="small"
+              :filter-option="filterSelectOption"
+              :options="clientFilterOptions"
+            />
+            <a-button @click="applyFilter" size="small" type="primary">筛选</a-button>
+            <a-button @click="resetFilter" size="small">重置</a-button>
+          </div>
+        </div>
       </template>
       <template #headerCell="{ column }">
         <template v-if="column.dataIndex === 'name'">
           种子名称
           <a-input style="margin-left: 14px; width: 140px;" size="small" placeholder="筛选关键词" v-model:value="qs.key"></a-input>
-          <a-button @click="() => { qs.page = 1; listHistory(); }" style="margin-left: 4px;" size="small">筛选</a-button>
+          <a-button @click="applyFilter" style="margin-left: 4px;" size="small">筛选</a-button>
         </template>
       </template>
       <template #bodyCell="{ column, record }">
@@ -83,7 +122,6 @@ export default {
         title: 'RSS',
         dataIndex: 'rssId',
         width: 18,
-        filterMultiple: false,
         fixed: true
       }, {
         title: '种子名称',
@@ -132,6 +170,8 @@ export default {
       length: 20,
       type: 'rss',
       rss: '',
+      status: '',
+      client: '',
       key: ''
     };
     const pagination = {
@@ -146,8 +186,35 @@ export default {
       columns,
       qs,
       torrents: [],
-      rssList: []
+      rssList: [],
+      statusList: [],
+      clientList: [],
+      filterRss: [],
+      filterStatus: [],
+      filterClient: []
     };
+  },
+  computed: {
+    rssFilterOptions () {
+      const options = [...this.rssList]
+        .sort((a, b) => a.alias.localeCompare(b.alias, 'zh-CN'))
+        .map(item => ({ label: item.alias, value: item.id }));
+      options.push({ label: '已删除', value: 'deleted' });
+      return options;
+    },
+    statusFilterOptions () {
+      return this.statusList.map(status => ({
+        label: this.formatStatusLabel(status),
+        value: status
+      }));
+    },
+    clientFilterOptions () {
+      const options = [...this.clientList]
+        .sort((a, b) => a.alias.localeCompare(b.alias, 'zh-CN'))
+        .map(item => ({ label: item.alias, value: item.id }));
+      options.unshift({ label: '无', value: 'none' });
+      return options;
+    }
   },
   methods: {
     isMobile () {
@@ -157,14 +224,37 @@ export default {
         return false;
       }
     },
+    filterSelectOption (input, option) {
+      return (option.label || '').toLowerCase().indexOf(input.toLowerCase()) >= 0;
+    },
+    formatStatusLabel (status) {
+      return status.indexOf('wish') !== -1 ? '豆瓣' : status;
+    },
     formatRecordNote (record) {
-      return record.recordNote.indexOf('wish') !== -1 ? '豆瓣' : record.recordNote;
+      return this.formatStatusLabel(record.recordNote);
     },
     showRuleDetail (record) {
       return record.recordNote === '拒绝原因: 不符合所有规则' &&
         record.recordDetail &&
         record.recordDetail.failedRules &&
         record.recordDetail.failedRules.length;
+    },
+    syncFilterQuery () {
+      this.qs.rss = this.filterRss.join(',');
+      this.qs.status = this.filterStatus.join(',');
+      this.qs.client = this.filterClient.join(',');
+    },
+    applyFilter () {
+      this.qs.page = 1;
+      this.syncFilterQuery();
+      this.listHistory();
+    },
+    resetFilter () {
+      this.filterRss = [];
+      this.filterStatus = [];
+      this.filterClient = [];
+      this.qs.key = '';
+      this.applyFilter();
     },
     async listHistory () {
       this.loading = true;
@@ -180,8 +270,23 @@ export default {
     async listRss () {
       try {
         const res = await this.$api().rss.list();
-        this.rssList = res.data;
-        this.columns[0].filters = [...this.rssList.map(item => ({ text: item.alias, value: item.id })), { text: '已删除', value: 'deleted' }];
+        this.rssList = res.data.sort((a, b) => a.alias.localeCompare(b.alias, 'zh-CN'));
+      } catch (e) {
+        this.$message().error(e.message);
+      }
+    },
+    async listFilterOptions () {
+      try {
+        const res = (await this.$api().torrent.listHistoryFilterOptions('rss')).data;
+        this.statusList = res.statuses || [];
+      } catch (e) {
+        this.$message().error(e.message);
+      }
+    },
+    async listClient () {
+      try {
+        const res = await this.$api().downloader.list();
+        this.clientList = res.data.sort((a, b) => a.alias.localeCompare(b.alias, 'zh-CN'));
       } catch (e) {
         this.$message().error(e.message);
       }
@@ -193,13 +298,8 @@ export default {
       if (!record.link) return await this.$message().error('链接不存在');
       window.open(record.link);
     },
-    async handleChange (pagination, filters) {
+    async handleChange (pagination) {
       this.qs.page = pagination.current;
-      if (filters.rssId) {
-        this.qs.rss = filters.rssId[0];
-      } else {
-        this.qs.rss = '';
-      }
       this.listHistory();
     },
     async delRecord (record) {
@@ -207,6 +307,7 @@ export default {
         await this.$api().rss.delRecord({ id: record.id });
         this.$message().success('删除成功, 列表刷新中....');
         this.listHistory();
+        this.listFilterOptions();
       } catch (e) {
         await this.$message().error(e.message);
       }
@@ -215,6 +316,8 @@ export default {
   async mounted () {
     this.listHistory();
     this.listRss();
+    this.listFilterOptions();
+    this.listClient();
   }
 };
 </script>
@@ -224,6 +327,13 @@ export default {
   width: 100%;
   max-width: 1440px;
   margin: 0 auto;
+}
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+  align-items: center;
 }
 .torrent-name-link {
   color: inherit;

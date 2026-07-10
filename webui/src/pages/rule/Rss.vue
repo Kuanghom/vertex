@@ -166,6 +166,8 @@
   </div>
 </template>
 <script>
+import { scrollToTop } from '../../util/scroll';
+
 export default {
   data () {
     const columns = [
@@ -277,6 +279,7 @@ export default {
         this.$message().success((this.rssRule.id ? '编辑' : '新增') + '成功, 列表正在刷新...');
         setTimeout(() => this.listRssRule(), 1000);
         this.clearRssRule();
+        scrollToTop();
       } catch (e) {
         this.$message().error(e.message);
       }

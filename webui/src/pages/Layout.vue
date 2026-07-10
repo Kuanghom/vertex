@@ -99,6 +99,7 @@
         </div>
       </a-layout-header>
       <a-layout-content
+        class="vertex-main-content"
         :style="{ padding: '16px', 'overflow-y': 'auto', height: 'calc(var(--vh, 1vh) * 100 - 67px)' }">
         <router-view></router-view>
       </a-layout-content>

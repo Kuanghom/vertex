@@ -36,5 +36,4 @@ RUN \
   chown -R vt /vertex && \
   chmod +x /vertex
 EXPOSE 3000
-CMD \
-  bash /app/vertex/docker/start.sh
+CMD ["bash", "/app/vertex/docker/start.sh"]

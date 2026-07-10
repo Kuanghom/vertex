@@ -264,8 +264,15 @@ class ClientMod {
   };
 
   async getLogs (options) {
-    const clients = global.runningClient;
-    return await clients[options.client].getLogs();
+    const client = global.runningClient[options.client];
+    if (!client) {
+      const config = util.listClient().find(item => item.id === options.client);
+      if (config && !config.enable) {
+        throw new Error(`下载器「${config.alias}」已禁用, 请先启用后再查看日志`);
+      }
+      throw new Error('下载器未连接, 无法获取日志');
+    }
+    return await client.getLogs();
   };
 }
 

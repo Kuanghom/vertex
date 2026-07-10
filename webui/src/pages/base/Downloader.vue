@@ -43,7 +43,7 @@
                   <a-menu-item>
                     <a @click="cloneClick(record)">克隆</a>
                   </a-menu-item>
-                  <a-menu-item>
+                  <a-menu-item :disabled="!record.enable">
                     <a @click="gotoLog(record)">日志</a>
                   </a-menu-item>
                   <a-menu-item danger>
@@ -299,6 +299,7 @@
 <script>
 import { Modal } from 'ant-design-vue';
 import { h } from 'vue';
+import { scrollToTop } from '../../util/scroll';
 
 export default {
   data () {
@@ -415,6 +416,7 @@ export default {
         this.$message().success((this.downloader.id ? '编辑' : '新增') + '成功, 列表正在刷新...');
         setTimeout(() => this.listDownloader(), 1000);
         this.clearDownloader();
+        scrollToTop();
       } catch (e) {
         this.$message().error(e.message);
       }
@@ -495,6 +497,10 @@ export default {
       window.open(`/proxy/client/${record.id}/`);
     },
     gotoLog (record) {
+      if (!record.enable) {
+        this.$message().warning('该下载器已禁用, 无法查看日志');
+        return;
+      }
       window.open(`/tool/clientLog?id=${record.id}`);
     },
     clearDownloader () {

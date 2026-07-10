@@ -221,6 +221,8 @@
   </div>
 </template>
 <script>
+import { scrollToTop } from '../../util/scroll';
+
 export default {
   data () {
     const columns = [
@@ -400,6 +402,7 @@ export default {
         this.$message().success((this.deleteRule.id ? '编辑' : '新增') + '成功, 列表正在刷新...');
         setTimeout(() => this.listDeleteRule(), 1000);
         this.clearDeleteRule();
+        scrollToTop();
       } catch (e) {
         this.$message().error(e.message);
       }

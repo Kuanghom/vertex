@@ -6,12 +6,28 @@
       :style="`font-size: ${isMobile() ? '12px': '14px'};`"
       :columns="columns"
       size="small"
+      :loading="loading"
       :data-source="logs"
       :pagination="pagination"
       :scroll="{ x: 640 }"
     >
       <template #title>
-        <span style="font-size: 16px; font-weight: bold;">下载器日志</span>
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+          <span style="font-size: 16px; font-weight: bold;">下载器日志</span>
+          <a-select
+            v-model:value="clientId"
+            placeholder="选择下载器"
+            style="width: 240px;"
+            size="small"
+            allowClear
+            :loading="loading"
+            :disabled="loading"
+            @change="onClientChange">
+            <a-select-option v-for="item of downloaders" :key="item.id" :value="item.id">
+              {{ item.alias }}
+            </a-select-option>
+          </a-select>
+        </div>
       </template>
       <template #bodyCell="{ column, record }">
         <template v-if="column.dataIndex === 'timestamp'">
@@ -48,8 +64,18 @@ export default {
     return {
       pagination,
       columns,
-      logs: []
+      logs: [],
+      downloaders: [],
+      clientId: undefined,
+      loading: false
     };
+  },
+  watch: {
+    '$route.query.id' (id) {
+      if (id !== this.clientId) {
+        this.applyClientId(id || undefined);
+      }
+    }
   },
   methods: {
     isMobile () {
@@ -59,22 +85,66 @@ export default {
         return false;
       }
     },
-    async getLog () {
+    async listDownloader () {
       try {
-        const res = await this.$api().downloader.getLogs(this.$route.query.id);
+        const res = await this.$api().downloader.list();
+        this.downloaders = res.data
+          .filter(item => item.enable)
+          .sort((a, b) => a.alias.localeCompare(b.alias));
+      } catch (e) {
+        this.$message().error(e.message);
+      }
+    },
+    isEnabledClient (id) {
+      return this.downloaders.some(item => item.id === id);
+    },
+    async applyClientId (id) {
+      if (!id) {
+        this.clientId = undefined;
+        await this.getLog();
+        return;
+      }
+      if (!this.isEnabledClient(id)) {
+        this.clientId = undefined;
+        this.logs = [];
+        this.pagination.total = 0;
+        this.$message().warning('该下载器已禁用, 无法查看日志');
+        if (this.$route.query.id) {
+          this.$router.replace({ query: {} });
+        }
+        return;
+      }
+      this.clientId = id;
+      await this.getLog();
+    },
+    async getLog () {
+      if (!this.clientId) {
+        this.logs = [];
+        this.pagination.total = 0;
+        this.loading = false;
+        return;
+      }
+      this.loading = true;
+      try {
+        const res = await this.$api().downloader.getLogs(this.clientId);
         this.logs = res.data.reverse();
         this.pagination.total = this.logs.length;
       } catch (e) {
         this.$message().error(e.message);
+      } finally {
+        this.loading = false;
       }
+    },
+    onClientChange (id) {
+      this.$router.replace({ query: id ? { id } : {} });
+      this.applyClientId(id);
     }
   },
   async mounted () {
-    if (!this.$route.query.id) {
-      await this.$message().error('当前页面需要从下载器页面进入!');
-      return;
+    await this.listDownloader();
+    if (this.$route.query.id) {
+      await this.applyClientId(this.$route.query.id);
     }
-    await this.getLog();
   }
 };
 </script>

@@ -89,6 +89,23 @@ class Torrent {
     }
   };
 
+  async listHistoryFilterOptions (req, res) {
+    const options = req.query;
+    try {
+      const r = await torrentMod.listHistoryFilterOptions(options);
+      res.send({
+        success: true,
+        data: r
+      });
+    } catch (e) {
+      logger.error(e);
+      res.send({
+        success: false,
+        message: e.message
+      });
+    }
+  };
+
   async link (req, res) {
     const options = req.body;
     try {

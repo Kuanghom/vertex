@@ -264,6 +264,7 @@ module.exports = function (app, express, router) {
 
   router.get('/torrent/list', ctrl.Torrent.list);
   router.get('/torrent/listHistory', ctrl.Torrent.listHistory);
+  router.get('/torrent/listHistoryFilterOptions', ctrl.Torrent.listHistoryFilterOptions);
   router.get('/torrent/info', ctrl.Torrent.info);
   router.get('/torrent/getBulkLinkList', ctrl.Torrent.getBulkLinkList);
   router.get('/torrent/scrapeName', ctrl.Torrent.scrapeName);

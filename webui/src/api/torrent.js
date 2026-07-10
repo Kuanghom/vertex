@@ -23,8 +23,12 @@ export default {
     return await get(url);
   },
   listHistory: async (qs) => {
-    const qsString = Object.keys(qs).map(item => `${item}=${encodeURIComponent(qs[item])}`).join('&');
+    const qsString = Object.keys(qs).filter(item => qs[item] !== '' && qs[item] !== undefined && qs[item] !== null).map(item => `${item}=${encodeURIComponent(qs[item])}`).join('&');
     const url = `/api/torrent/listHistory?${qsString}`;
+    return await get(url);
+  },
+  listHistoryFilterOptions: async (type) => {
+    const url = `/api/torrent/listHistoryFilterOptions?type=${encodeURIComponent(type || 'rss')}`;
     return await get(url);
   },
   getDelInfo: async (qs) => {

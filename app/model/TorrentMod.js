@@ -511,6 +511,82 @@ class TorrentMod {
     return '链接成功';
   }
 
+  _parseCsvParam (val) {
+    if (!val) return [];
+    return String(val).split(',').filter(Boolean);
+  }
+
+  _escapeSqlStr (val) {
+    return String(val).replace(/'/g, "''");
+  }
+
+  _appendRssFilter (where, rssParam) {
+    const rssIds = this._parseCsvParam(rssParam);
+    if (!rssIds.length) return where;
+    const currentRssIds = util.listRss().map(item => item.id);
+    const normalIds = rssIds.filter(id => id !== 'deleted');
+    const includeDeleted = rssIds.includes('deleted');
+    const parts = [];
+    if (normalIds.length) {
+      parts.push(`rss_id in ('${normalIds.map(id => this._escapeSqlStr(id)).join('\',\'')}')`);
+    }
+    if (includeDeleted) {
+      if (currentRssIds.length) {
+        parts.push(`rss_id not in ('${currentRssIds.map(id => this._escapeSqlStr(id)).join('\',\'')}')`);
+      } else {
+        parts.push('1 = 1');
+      }
+    }
+    if (parts.length === 1) {
+      where += ` and ${parts[0]}`;
+    } else if (parts.length > 1) {
+      where += ` and (${parts.join(' or ')})`;
+    }
+    return where;
+  }
+
+  _appendStatusFilter (where, statusParam) {
+    const statuses = this._parseCsvParam(statusParam);
+    if (!statuses.length) return where;
+    where += ` and record_note in ('${statuses.map(s => this._escapeSqlStr(s)).join('\',\'')}')`;
+    return where;
+  }
+
+  _appendClientFilter (where, clientParam) {
+    const clients = this._parseCsvParam(clientParam);
+    if (!clients.length) return where;
+    const hasNone = clients.includes('none');
+    const normalClients = clients.filter(id => id !== 'none');
+    const parts = [];
+    if (normalClients.length) {
+      parts.push(`client_id in ('${normalClients.map(id => this._escapeSqlStr(id)).join('\',\'')}')`);
+    }
+    if (hasNone) {
+      parts.push('(client_id is null or client_id = \'\')');
+    }
+    if (parts.length === 1) {
+      where += ` and ${parts[0]}`;
+    } else if (parts.length > 1) {
+      where += ` and (${parts.join(' or ')})`;
+    }
+    return where;
+  }
+
+  async listHistoryFilterOptions (options) {
+    let where = 'where 1 = 1';
+    if (options.type === 'rss') {
+      where += ' and record_type IN (1,2,3)';
+    } else if (options.type === 'bingewatching') {
+      where += ' and record_type IN (4,6,98,99)';
+    }
+    const statuses = await util.getRecords(
+      'select distinct record_note as recordNote from torrents ' + where + ' order by record_note asc'
+    );
+    return {
+      statuses: statuses.map(item => item.recordNote)
+    };
+  }
+
   async listHistory (options) {
     const index = options.length * (options.page - 1);
     let where = 'where 1 = 1';
@@ -519,13 +595,9 @@ class TorrentMod {
     } else if (options.type === 'bingewatching') {
       where += ' and record_type IN (4,6,98,99)';
     }
-    if (options.rss) {
-      if (options.rss === 'deleted') {
-        where += ` and rss_id not in ('${util.listRss().map(item => item.id).join('\',\'')}')`;
-      } else {
-        where += ` and rss_id = '${options.rss}'`;
-      }
-    }
+    where = this._appendRssFilter(where, options.rss);
+    where = this._appendStatusFilter(where, options.status);
+    where = this._appendClientFilter(where, options.client);
     if (options.key) {
       where += ` and (name like '%${options.key}%' or record_note like '%${options.key}%')`;
     }

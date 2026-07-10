@@ -446,6 +446,7 @@
 <script>
 import PromoTag from '../../components/PromoTag.vue';
 import { PROMO_OPTIONS } from '../../util/promoTag';
+import { scrollToTop } from '../../util/scroll';
 
 export default {
   components: {
@@ -660,6 +661,7 @@ export default {
         this.$message().success((this.rss.id ? '编辑' : '新增') + '成功, 列表正在刷新...');
         setTimeout(() => this.listRss(), 1000);
         this.clearRss();
+        scrollToTop();
       } catch (e) {
         this.$message().error(e.message);
       }
