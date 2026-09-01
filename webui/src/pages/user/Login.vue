@@ -14,14 +14,14 @@
         :labelWrap="true"
         :model="user"
         @finish="login"
-        :labelCol="{ span: 6 }"
-        :wrapperCol="{ span: 16 }"
+        :labelCol="formCol.label"
+        :wrapperCol="formCol.wrapper"
         autocomplete="off"
-        class="login-form login-layout">
-        <div style="margin: 12px auto 6px; font-size: 32px; width: fit-content; font-weight: bold;">
+        class="login-form">
+        <div class="login-title">
           <span>Vertex</span>
         </div>
-        <div style="margin: 6px auto 12px; font-size: 16px; width: fit-content; color: grey">
+        <div class="login-subtitle">
           <span>追剧刷流一体化工具</span>
         </div>
         <a-form-item
@@ -41,23 +41,22 @@
           name="otpPw">
           <a-input v-model:value="user.otpPw"/>
         </a-form-item>
-        <a-form-item
-          :wrapperCol="isMobile() ? { span: 22 } : { offset: 2, span: 20 }">
-          <a-button type="primary" html-type="submit" block style="width: 100%; margin-top: 24px;">登录</a-button>
+        <a-form-item :wrapperCol="formCol.action">
+          <a-button type="primary" html-type="submit" block class="login-submit">登录</a-button>
         </a-form-item>
         <a-form-item
           name="checked"
           :rules="[{ validator: async (rule, value) => { if (value) return; throw '需勾选我已阅读使用须知!' } }]"
-          :wrapperCol="isMobile() ? { span: 22 } : { offset: 2, span: 20 }">
+          :wrapperCol="formCol.action">
           <a-checkbox v-model:checked="user.checked">
             我已阅读
-            <a color="warning" @click="openRegulation">《使用须知》</a>
+            <a class="login-link" @click="openRegulation">《使用须知》</a>
             <br>
             并且知道遇到问题先去看
-            <a color="warning" @click="openWiki">Wiki</a>
+            <a class="login-link" @click="openWiki">Wiki</a>
             <br>
             否则在交流群提问可能被
-            <span style="color: red">禁言</span>
+            <span class="login-warn">禁言</span>
           </a-checkbox>
         </a-form-item>
       </a-form>
@@ -68,21 +67,52 @@
 <script>
 export default {
   data () {
-    const user = {
-      username: '',
-      password: '',
-      otpPw: ''
-    };
     return {
-      user
+      user: {
+        username: '',
+        password: '',
+        otpPw: '',
+        checked: false
+      },
+      narrow: false
     };
   },
+  computed: {
+    formCol () {
+      if (this.narrow) {
+        return {
+          label: { span: 24 },
+          wrapper: { span: 24 },
+          action: { span: 24 }
+        };
+      }
+      return {
+        label: { span: 6 },
+        wrapper: { span: 16 },
+        action: { offset: 6, span: 16 }
+      };
+    }
+  },
+  mounted () {
+    this.updateNarrow();
+    window.addEventListener('resize', this.updateNarrow);
+    this.syncPageBackground();
+  },
+  beforeUnmount () {
+    window.removeEventListener('resize', this.updateNarrow);
+    document.body.style.backgroundColor = '';
+  },
   methods: {
-    isMobile () {
-      if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-        return true;
-      } else {
-        return false;
+    updateNarrow () {
+      this.narrow = window.innerWidth <= 800;
+    },
+    syncPageBackground () {
+      const theme = document.querySelector('meta[name=vertex-theme]');
+      const name = theme ? theme.content : '';
+      const systemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const useDark = name === 'dark' || (name === 'follow' && systemDark);
+      if (name !== 'cyber') {
+        document.body.style.backgroundColor = useDark ? '#141414' : '#fff';
       }
     },
     async login (ee) {
@@ -104,81 +134,97 @@ export default {
 </script>
 
 <style scoped>
-.login-form {
-  width: min(100vw, 360px);
-  border-radius: 4px;
-  padding: 6px;
-  margin: 0 auto;
-  height: 460px;
-  transition: all 0.5s;
+.login {
+  display: flex;
+  min-height: 100vh;
+  min-height: calc(var(--vh, 1vh) * 100);
+  background: #fff;
+  overflow: auto;
 }
 
 .left-rect {
-  float: left;
-  transition: all 0.5s;
+  flex: 0 0 300px;
+  background: #e18dac;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.left-rect > .logo {
+  width: 180px;
 }
 
 .right-rect {
-  float: left;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+  background: #fff;
 }
 
-.logo {
-  transition: all 0.5s;
+.right-rect > .logo {
+  display: none;
+  width: 120px;
+  margin: 0 auto 8px;
 }
 
-@media screen and (min-width:800px) {
-  .login-form {
-    margin-top: calc(50vh - 360px);
-  }
+.login-form {
+  width: min(100%, 360px);
+}
+
+.login-title {
+  margin: 12px auto 6px;
+  font-size: 32px;
+  width: fit-content;
+  font-weight: bold;
+}
+
+.login-subtitle {
+  margin: 6px auto 12px;
+  font-size: 16px;
+  width: fit-content;
+  color: grey;
+}
+
+.login-submit {
+  width: 100%;
+  margin-top: 24px;
+}
+
+.login-link {
+  color: #faad14;
+}
+
+.login-warn {
+  color: red;
+}
+
+@media screen and (max-width: 800px) {
   .left-rect {
-    width: 300px;
-    background: #e18dac;
-    height: 100vh;
+    display: none;
   }
+
   .right-rect {
-    width: calc(100vw - 320px);
-    height: 100vh;
+    justify-content: flex-start;
+    padding-top: 24px;
   }
-  .left-rect > .logo {
-    margin: 0 auto;
-    width: 180px;
-    padding-top: calc(50vh - 180px);
-    border-radius: 32px;
-  }
+
   .right-rect > .logo {
-    overflow: hidden;
-    height: 0;
-    margin: 0 auto;
-    width: 160px;
-    padding-top: 64px;
-    border-radius: 32px;
+    display: block;
   }
 }
 
-@media screen and (max-width:800px) {
-  .left-rect {
-    width: 0;
-    background: #e18dac;
-    height: 100vh;
-    overflow: hidden;
-  }
+@media (prefers-color-scheme: dark) {
+  .login,
   .right-rect {
-    width: 100vw;
-    height: 100vh;
-    transition: all 0.5s;
+    background: #141414;
+    color: rgba(255, 255, 255, 0.85);
   }
-  .left-rect > .logo {
-    overflow: hidden;
-    margin: 0 auto;
-    width: 0;
-    border-radius: 32px;
-    padding-top: calc(50vh - 180px);
-  }
-  .right-rect > .logo {
-    margin: 0 auto;
-    width: 120px;
-    padding-top: 6px;
-    border-radius: 32px;
+
+  .login-subtitle {
+    color: rgba(255, 255, 255, 0.45);
   }
 }
 </style>

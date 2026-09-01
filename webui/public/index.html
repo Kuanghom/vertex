@@ -26,40 +26,32 @@
         customVH + 'px',
       )
     });
-    if (document.querySelector('meta[name=vertex-theme]').content === 'follow') {
-      const themeMedia = window.matchMedia('(prefers-color-scheme: light)');
-      if (themeMedia.matches) {
-        document.querySelector('meta[name=theme-color]').content = '#0099E3';
-      } else {
-        document.querySelector('meta[name=theme-color]').content = '#000000';
+    (function () {
+      const themeMeta = document.querySelector('meta[name=vertex-theme]');
+      const theme = themeMeta ? themeMeta.content : 'light';
+      const themeColor = document.querySelector('meta[name=theme-color]');
+      const statusBar = document.querySelector('meta[name=apple-mobile-web-app-status-bar-style]');
+      const isLogin = window.location.pathname === '/user/login';
+      const prefersLight = window.matchMedia('(prefers-color-scheme: light)');
+      const setLoginBg = function (light) {
+        if (!isLogin) return;
+        document.body.style.backgroundColor = light ? '#fff' : '#000';
+      };
+      if (theme === 'follow') {
+        if (themeColor) themeColor.content = prefersLight.matches ? '#0099E3' : '#000000';
+        setLoginBg(prefersLight.matches);
+        prefersLight.addListener(function (e) {
+          if (themeColor) themeColor.content = e.matches ? '#0099E3' : '#000000';
+          setLoginBg(e.matches);
+        });
+      } else if (theme === 'dark') {
+        setLoginBg(false);
+      } else if (theme !== 'cyber') {
+        setLoginBg(true);
       }
-      themeMedia.addListener(e => {
-        if (e.matches) {
-          document.querySelector('meta[name=theme-color]').content = '#0099E3';
-          if (window.location.pathname === '/user/login') {
-            document.querySelector('body').style.backgroundColor = '#fff';
-          }
-        } else {
-          document.querySelector('meta[name=theme-color]').content = '#000000';
-          if (window.location.pathname === '/user/login') {
-            document.querySelector('body').style.backgroundColor = '#000';
-          }
-        }
-      });
-      if (
-        document.querySelector('meta[name=theme-color]').content === '#0099E3' &&
-        window.location.pathname === '/user/login'
-      ) {
-        document.querySelector('body').style.backgroundColor = !themeMedia.matches ? '#000' : '#fff';
+      if (theme === 'cyber' && statusBar) {
+        statusBar.content = 'default';
       }
-    }
-    if (document.querySelector('meta[name=vertex-theme]').content === 'light') {
-      if (['/user/login'].indexOf(window.location.pathname) !== -1) {
-        document.querySelector('body').style.backgroundColor = '#fff';
-      }
-    }
-    if (document.querySelector('meta[name=vertex-theme]').content === 'cyber') {
-      document.querySelector('meta[name=apple-mobile-web-app-status-bar-style]').content='default'
-    }
+    })();
   </script>
 </html>
