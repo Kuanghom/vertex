@@ -1,23 +1,29 @@
 <template>
   <div class="subscribe fn-page">
-    <div class="fn-toolbar">
-      <a-button type="primary" @click="openCreate">新增</a-button>
-      <fn-column-settings
-        :items="columnSettingItems"
-        @toggle="toggleColumnVisible"
-        @move="moveColumn"
-        @dragstart="onColumnDragStart"
-        @drop="onColumnDrop"
-        @reset="resetColumnPrefs"/>
-
-    </div>
+    <fn-filter :active="listSearchActive" title="搜索">
+      <fn-list-search
+        v-model:query="listQuery"
+        v-model:enable="listEnable"
+        placeholder="别名 / ID"
+        @reset="resetListSearch"/>
+      <template #toolbar>
+        <a-button type="primary" @click="openCreate">新增</a-button>
+        <fn-column-settings
+          :items="columnSettingItems"
+          @toggle="toggleColumnVisible"
+          @move="moveColumn"
+          @dragstart="onColumnDragStart"
+          @drop="onColumnDrop"
+          @reset="resetColumnPrefs"/>
+      </template>
+    </fn-filter>
     <a-table
       :style="`font-size: ${isMobile() ? '12px': '14px'};`"
       :columns="tableColumns"
       :loading="loading"
       :locale="tableLocale"
       size="small"
-      :data-source="subscribes"
+      :data-source="filterAdminList(subscribes, ['alias', 'id'])"
       :pagination="listPagination"
       :scroll="tableScroll"
       :customRow="listCustomRow"
@@ -136,12 +142,13 @@
           :rules="[{ required: true, message: '${label}不可为空! ' }]">
           <a-form-item-rest>
             <a-table
+              class="fn-edit-table"
               :style="`font-size: ${isMobile() ? '12px': '14px'};`"
               :columns="asCardColumns(categoriesColumns)"
               size="small"
               :data-source="subscribe.categories"
               :pagination="{ pageSize: 20, hideOnSinglePage: true }"
-              :scroll="boundScroll(980)"
+              :scroll="cardScroll(categoriesColumns)"
             >
               <template #bodyCell="{ column, record }">
                 <template v-if="column.dataIndex === 'doubanTag'">

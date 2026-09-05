@@ -119,7 +119,7 @@
         size="small"
         :data-source="fileList.filter(item => item.episode !== -999)"
         :pagination="false"
-        :scroll="boundScroll(linkInfo.type === 'series' ? 1200 : 640)"
+        :scroll="cardScroll(linkInfo.type === 'series' ? seriesColumns : movieColumns)"
       >
         <template #title>
           <span style="font-size: 16px; font-weight: bold;">链接文件列表</span>

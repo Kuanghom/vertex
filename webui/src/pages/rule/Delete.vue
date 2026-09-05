@@ -1,23 +1,29 @@
 <template>
   <div class="delete-rule fn-page">
-    <div class="fn-toolbar">
-      <a-button type="primary" @click="openCreate">新增</a-button>
-      <fn-column-settings
-        :items="columnSettingItems"
-        @toggle="toggleColumnVisible"
-        @move="moveColumn"
-        @dragstart="onColumnDragStart"
-        @drop="onColumnDrop"
-        @reset="resetColumnPrefs"/>
-
-    </div>
+    <fn-filter :active="listSearchActive" title="搜索">
+      <fn-list-search
+        v-model:query="listQuery"
+        :enableable="false"
+        placeholder="别名 / ID"
+        @reset="resetListSearch"/>
+      <template #toolbar>
+        <a-button type="primary" @click="openCreate">新增</a-button>
+        <fn-column-settings
+          :items="columnSettingItems"
+          @toggle="toggleColumnVisible"
+          @move="moveColumn"
+          @dragstart="onColumnDragStart"
+          @drop="onColumnDrop"
+          @reset="resetColumnPrefs"/>
+      </template>
+    </fn-filter>
     <a-table
       :style="`font-size: ${isMobile() ? '12px': '14px'};`"
       :columns="tableColumns"
       :loading="loading"
       :locale="tableLocale"
       size="small"
-      :data-source="deleteRuleList"
+      :data-source="filterAdminList(deleteRuleList, ['alias', 'id'])"
       :pagination="listPagination"
       :scroll="tableScroll"
       :customRow="listCustomRow"
@@ -125,7 +131,7 @@
             size="small"
             :data-source="deleteRule.conditions"
             :pagination="{ pageSize: 20, hideOnSinglePage: true }"
-            :scroll="boundScroll(540)"
+            :scroll="cardScroll(conditionColumns)"
           >
             <template #bodyCell="{ column, record }">
               <template v-if="column.dataIndex === 'key'">
@@ -293,6 +299,7 @@ export default {
       }
     ];
     return {
+      crudModalWidth: 880,
       columns,
       conditionColumns,
       conditionKeys: [{

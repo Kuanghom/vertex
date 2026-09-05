@@ -145,7 +145,7 @@
       :data-source="previewItems"
       size="small"
       :pagination="false"
-      :scroll="boundScroll(960)">
+      :scroll="cardScroll(previewColumns)">
       <template #bodyCell="{ column, record }">
         <template v-if="column.dataIndex === 'torrentName'">
           <a class="torrent-name-link" @click.prevent="openLink(record.link)">{{ record.torrentName }}</a>

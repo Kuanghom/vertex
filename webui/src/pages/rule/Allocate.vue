@@ -1,23 +1,29 @@
 <template>
   <div class="allocate-rule fn-page">
-    <div class="fn-toolbar">
-      <a-button type="primary" @click="openCreate">新增</a-button>
-      <fn-column-settings
-        :items="columnSettingItems"
-        @toggle="toggleColumnVisible"
-        @move="moveColumn"
-        @dragstart="onColumnDragStart"
-        @drop="onColumnDrop"
-        @reset="resetColumnPrefs"/>
-
-    </div>
+    <fn-filter :active="listSearchActive" title="搜索">
+      <fn-list-search
+        v-model:query="listQuery"
+        :enableable="false"
+        placeholder="别名 / ID"
+        @reset="resetListSearch"/>
+      <template #toolbar>
+        <a-button type="primary" @click="openCreate">新增</a-button>
+        <fn-column-settings
+          :items="columnSettingItems"
+          @toggle="toggleColumnVisible"
+          @move="moveColumn"
+          @dragstart="onColumnDragStart"
+          @drop="onColumnDrop"
+          @reset="resetColumnPrefs"/>
+      </template>
+    </fn-filter>
     <a-table
       :style="`font-size: ${isMobile() ? '12px': '14px'};`"
       :columns="tableColumns"
       :loading="loading"
       :locale="tableLocale"
       size="small"
-      :data-source="allocateRuleList"
+      :data-source="filterAdminList(allocateRuleList, ['alias', 'id'])"
       :pagination="listPagination"
       :scroll="tableScroll"
       :customRow="listCustomRow"
@@ -100,7 +106,7 @@
             :pagination="{ pageSize: 20, hideOnSinglePage: true }"
             :columns="asCardColumns(metricTableColumns)"
             :data-source="allocateRule.metrics"
-            :scroll="boundScroll(760)"
+            :scroll="cardScroll(metricTableColumns)"
           >
             <template #bodyCell="{ column, record, index }">
               <template v-if="column.dataIndex === 'field'">
@@ -224,7 +230,7 @@
             :pagination="{ pageSize: 20, hideOnSinglePage: true }"
             :columns="asCardColumns(debugRoundColumns)"
             :data-source="debugResult.rounds"
-            :scroll="boundScroll(480)"
+            :scroll="cardScroll(debugRoundColumns)"
           />
         </a-form-item>
         <a-form-item v-if="debugRanking.length" label="决策快照">
@@ -234,7 +240,7 @@
             :pagination="{ pageSize: 20, hideOnSinglePage: true }"
             :columns="asCardColumns(debugRankTableColumns)"
             :data-source="debugRanking"
-            :scroll="boundScroll(720)"
+            :scroll="cardScroll(debugRankTableColumns)"
           >
             <template #bodyCell="{ column, record }">
               <template v-if="column.dataIndex === 'picked'">

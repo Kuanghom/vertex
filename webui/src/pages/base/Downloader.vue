@@ -1,22 +1,29 @@
 <template>
   <div class="downloader fn-page">
-    <div class="fn-toolbar">
-      <a-button type="primary" @click="openCreate">新增</a-button>
-      <fn-column-settings
-        :items="columnSettingItems"
-        @toggle="toggleColumnVisible"
-        @move="moveColumn"
-        @dragstart="onColumnDragStart"
-        @drop="onColumnDrop"
-        @reset="resetColumnPrefs"/>
-    </div>
+    <fn-filter :active="listSearchActive" title="搜索">
+      <fn-list-search
+        v-model:query="listQuery"
+        v-model:enable="listEnable"
+        placeholder="别名 / ID / URL"
+        @reset="resetListSearch"/>
+      <template #toolbar>
+        <a-button type="primary" @click="openCreate">新增</a-button>
+        <fn-column-settings
+          :items="columnSettingItems"
+          @toggle="toggleColumnVisible"
+          @move="moveColumn"
+          @dragstart="onColumnDragStart"
+          @drop="onColumnDrop"
+          @reset="resetColumnPrefs"/>
+      </template>
+    </fn-filter>
     <a-table
       :style="`font-size: ${isMobile() ? '12px': '14px'};`"
       :columns="tableColumns"
       :loading="loading"
       :locale="tableLocale"
       size="middle"
-      :data-source="downloaders"
+      :data-source="visibleDownloaders"
       :pagination="listPagination"
       :scroll="tableScroll"
       :customRow="listCustomRow"
@@ -437,6 +444,9 @@ export default {
     };
   },
   computed: {
+    visibleDownloaders () {
+      return this.filterAdminList(this.downloaders, ['alias', 'id', 'clientUrl']);
+    },
     filteredBindRss () {
       const keyword = (this.bindKeyword || '').trim().toLowerCase();
       if (!keyword) return this.rssList;

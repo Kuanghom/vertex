@@ -10,7 +10,9 @@ export default {
       crudEntity: '',
       crudModalWidth: 720,
       listPageCurrent: 1,
-      listPageSize: 20
+      listPageSize: 20,
+      listQuery: '',
+      listEnable: undefined
     };
   },
   created () {
@@ -42,6 +44,9 @@ export default {
     formModalWrapClass () {
       return (this.isNarrow ? 'fn-dialog-full ' : '') + 'fn-form-roomy';
     },
+    listSearchActive () {
+      return !!(this.listQuery || this.listEnable);
+    },
     listPagination () {
       return this.mergeListPagination({
         current: this.listPageCurrent,
@@ -55,6 +60,24 @@ export default {
     }
   },
   methods: {
+    filterAdminList (list, keys) {
+      const q = (this.listQuery || '').trim().toLowerCase();
+      const en = this.listEnable;
+      const fields = keys && keys.length
+        ? keys
+        : ['alias', 'name', 'id', 'clientUrl', 'host', 'url', 'type'];
+      return (list || []).filter((row) => {
+        if (en === 'on' && !row.enable) return false;
+        if (en === 'off' && row.enable) return false;
+        if (!q) return true;
+        return fields.some((key) => String(row[key] || '').toLowerCase().indexOf(q) !== -1);
+      });
+    },
+    resetListSearch () {
+      this.listQuery = '';
+      this.listEnable = undefined;
+      this.listPageCurrent = 1;
+    },
     applyListPagination (page, pageSize) {
       const nextSize = Number(pageSize) || this.listPageSize;
       const sizeChanged = nextSize !== this.listPageSize;
@@ -69,6 +92,14 @@ export default {
     closeForm () {
       this.formVisible = false;
       this._formEditing = false;
+    }
+  },
+  watch: {
+    listQuery () {
+      this.listPageCurrent = 1;
+    },
+    listEnable () {
+      this.listPageCurrent = 1;
     }
   }
 };

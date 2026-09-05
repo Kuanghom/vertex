@@ -1,6 +1,6 @@
 <template>
   <div class="site-tag fn-page">
-    <div class="fn-filter">
+    <fn-filter :active="!!keyword" title="搜索">
       <div class="fn-filter-item">
         <span>搜索</span>
         <a-input
@@ -15,19 +15,18 @@
         <span>自动打标签</span>
         <a-switch v-model:checked="setting.enabled" checked-children="启用" un-checked-children="禁用" @change="saveSetting" />
       </div>
-    </div>
-    <div class="fn-toolbar">
-      <a-button type="primary" @click="openCreate">新增</a-button>
-      <a-button danger @click="resetDefault">恢复默认</a-button>
-      <fn-column-settings
-        :items="columnSettingItems"
-        @toggle="toggleColumnVisible"
-        @move="moveColumn"
-        @dragstart="onColumnDragStart"
-        @drop="onColumnDrop"
-        @reset="resetColumnPrefs"/>
-
-    </div>
+      <template #toolbar>
+        <a-button type="primary" @click="openCreate">新增</a-button>
+        <a-button danger @click="resetDefault">恢复默认</a-button>
+        <fn-column-settings
+          :items="columnSettingItems"
+          @toggle="toggleColumnVisible"
+          @move="moveColumn"
+          @dragstart="onColumnDragStart"
+          @drop="onColumnDrop"
+          @reset="resetColumnPrefs"/>
+      </template>
+    </fn-filter>
     <p class="fn-toolbar-hint">
       添加 qBittorrent 下载时，按网站域名、Tracker 域名或 Vertex 站点名匹配标签；匹配失败不打标签。
     </p>

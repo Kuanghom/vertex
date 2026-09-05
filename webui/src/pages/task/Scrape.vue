@@ -6,24 +6,30 @@
       message="站点抓取扩展用于 RSS 任务的促销筛选、排除 HR 及分类后缀判断。开启 RSS 任务中的对应开关后，会优先使用这里配置的站点脚本或模板。"
       style="margin-bottom: 12px;"
     />
-    <div class="fn-toolbar">
-      <a-button type="primary" @click="openCreate">新增</a-button>
-      <fn-column-settings
-        :items="columnSettingItems"
-        @toggle="toggleColumnVisible"
-        @move="moveColumn"
-        @dragstart="onColumnDragStart"
-        @drop="onColumnDrop"
-        @reset="resetColumnPrefs"/>
-
-    </div>
+    <fn-filter :active="listSearchActive" title="搜索">
+      <fn-list-search
+        v-model:query="listQuery"
+        v-model:enable="listEnable"
+        placeholder="别名 / ID"
+        @reset="resetListSearch"/>
+      <template #toolbar>
+        <a-button type="primary" @click="openCreate">新增</a-button>
+        <fn-column-settings
+          :items="columnSettingItems"
+          @toggle="toggleColumnVisible"
+          @move="moveColumn"
+          @dragstart="onColumnDragStart"
+          @drop="onColumnDrop"
+          @reset="resetColumnPrefs"/>
+      </template>
+    </fn-filter>
     <a-table
       :style="`font-size: ${isMobile() ? '12px': '14px'};`"
       :columns="tableColumns"
       :loading="loading"
       :locale="tableLocale"
       size="small"
-      :data-source="scripts"
+      :data-source="filterAdminList(scripts, ['alias', 'id'])"
       :pagination="listPagination"
       :scroll="tableScroll"
       :customRow="listCustomRow"

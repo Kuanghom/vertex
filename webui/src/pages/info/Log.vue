@@ -1,28 +1,8 @@
 <template>
   <div class="log-page">
-    <div class="log-head">
-      <span class="log-title">日志</span>
-    </div>
-    <div class="log-toolbar">
-      <span class="log-label">日志等级</span>
-      <a-select v-model:value="type" style="width: 200px;" @change="getLog">
-        <a-select-option value="info">信息</a-select-option>
-        <a-select-option value="binge">豆瓣</a-select-option>
-        <a-select-option value="binge-debug">豆瓣调试</a-select-option>
-        <a-select-option value="advanced">超级模式</a-select-option>
-        <a-select-option value="advanced-debug">超级模式调试</a-select-option>
-        <a-select-option value="watch">监控分类</a-select-option>
-        <a-select-option value="watch-debug">监控分类调试</a-select-option>
-        <a-select-option value="sc">定时脚本</a-select-option>
-        <a-select-option value="sc-debug">定时脚本调试</a-select-option>
-        <a-select-option value="error">错误</a-select-option>
-        <a-select-option value="debug">调试</a-select-option>
-        <a-select-option value="access">跟踪</a-select-option>
-      </a-select>
-      <a-button type="primary" @click="getLog">查询</a-button>
-    </div>
-    <div class="log-label-row">
-      <span>日志</span>
+    <div class="fn-log-head">
+      <fa class="fn-log-head-ico" :icon="['fas', 'file-lines']"/>
+      <h1>日志</h1>
       <a-tooltip placement="right" overlay-class-name="fn-log-tip">
         <template #title>
           <div class="tip-body">
@@ -34,33 +14,69 @@
         <button type="button" class="log-help" aria-label="日志说明">?</button>
       </a-tooltip>
     </div>
-    <a-textarea class="log-box" v-model:value="log" :auto-size="false"/>
+    <fn-log-feed
+      v-model:live="live"
+      :entries="entries"
+      :loading="loading"
+      empty-hint="暂无日志"
+    >
+      <template #tools>
+        <a-select v-model:value="type" class="fn-log-cat" @change="() => refreshLog(false)">
+          <a-select-option value="info">信息</a-select-option>
+          <a-select-option value="binge">豆瓣</a-select-option>
+          <a-select-option value="binge-debug">豆瓣调试</a-select-option>
+          <a-select-option value="advanced">超级模式</a-select-option>
+          <a-select-option value="advanced-debug">超级模式调试</a-select-option>
+          <a-select-option value="watch">监控分类</a-select-option>
+          <a-select-option value="watch-debug">监控分类调试</a-select-option>
+          <a-select-option value="sc">定时脚本</a-select-option>
+          <a-select-option value="sc-debug">定时脚本调试</a-select-option>
+          <a-select-option value="error">错误</a-select-option>
+          <a-select-option value="debug">调试</a-select-option>
+          <a-select-option value="access">跟踪</a-select-option>
+        </a-select>
+      </template>
+      <template #actions>
+        <a-button type="primary" @click="refreshLog(false)">查询</a-button>
+      </template>
+    </fn-log-feed>
   </div>
 </template>
 <script>
+import { parseVertexLog } from '../../util/logFeed';
+import logLive from '../../mixins/logLive';
+
 export default {
+  mixins: [logLive],
   data () {
     return {
       type: 'error',
-      log: '',
-      version: {}
+      raw: '',
+      version: {},
+      loading: false
     };
   },
+  computed: {
+    entries () {
+      return parseVertexLog(this.raw);
+    }
+  },
   methods: {
-    async getLog () {
+    async refreshLog (silent) {
+      if (!silent || !this.raw) this.loading = true;
       try {
         const res = await this.$api().log.get(this.type);
-        this.log = res.data;
-        this.log = res ? '[202' + res.data.split('[202').reverse().join('[202') : '';
-        this.log = this.log.replace(new RegExp(`\\[${this.$moment().format('YYYY')}-`, 'g'), '[').replace(/\[[^\d]*? console\] \d*/g, '').replace(/\[202/g, '');
+        this.raw = res && res.data ? res.data : '';
       } catch (e) {
-        await this.$message().error(e.message);
+        if (!silent) await this.$message().error(e.message);
+      } finally {
+        this.loading = false;
       }
     }
   },
   async mounted () {
     this.version = process.env.version;
-    this.getLog();
+    this.refreshLog(false);
   }
 };
 </script>
@@ -68,33 +84,27 @@ export default {
 .log-page {
   display: flex;
   flex-direction: column;
-  height: calc(var(--vh, 1vh) * 100 - 88px);
-  min-height: 480px;
+  min-height: 0;
+  height: calc(var(--vh, 1vh) * 100 - 120px);
 }
-.log-head {
-  margin-bottom: 12px;
-}
-.log-title {
-  font-size: 22px;
-  font-weight: 650;
-}
-.log-toolbar {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 16px;
-}
-.log-label {
-  color: var(--text-2);
-}
-.log-label-row {
+.fn-log-head {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 8px;
-  color: var(--text-2);
-  font-weight: 600;
+  margin-bottom: 14px;
+}
+.fn-log-head-ico {
+  color: var(--blue);
+  font-size: 16px;
+}
+.fn-log-head h1 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+}
+.fn-log-cat {
+  width: 180px;
+  max-width: 100%;
 }
 .log-help {
   width: 20px;
@@ -110,21 +120,18 @@ export default {
   padding: 0;
 }
 .log-help:hover {
-  color: #00a0e9;
-  border-color: #00a0e9;
-}
-.log-box {
-  flex: 1;
-  min-height: 420px !important;
-  height: 100% !important;
-  font-family: var(--mono);
-  font-size: 13px;
-  line-height: 1.55;
+  color: var(--blue);
+  border-color: var(--blue);
 }
 .tip-body p {
   margin: 0 0 8px;
 }
 .tip-body p:last-child {
   margin: 0;
+}
+@media (max-width: 960px) {
+  .fn-log-cat {
+    width: 100%;
+  }
 }
 </style>

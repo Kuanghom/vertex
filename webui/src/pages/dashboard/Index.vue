@@ -1,8 +1,7 @@
 <template>
   <div class="index">
-    <a-row type="flex" justify="center" align="middle" style="min-height: 100%;">
-      <a-col :span="isMobile() ? 24 : 24">
-        <div style="margin: 24px auto; text-align: center; max-width: none;">
+    <div class="dash">
+        <div class="dash-row">
           <div class="data-rect-1 highlight-1">
             <div style="font-size: 14px; font-weight: bold; color: inherit;">
               <div>今日上传</div>
@@ -32,7 +31,7 @@
             </div>
           </div>
         </div>
-        <div style="margin: 24px auto; text-align: center; max-width: none;">
+        <div class="dash-row">
           <div class="data-rect-1 highlight-2">
             <div style="font-size: 14px; font-weight: bold;">
               <div>累计上传</div>
@@ -62,117 +61,42 @@
             </div>
           </div>
         </div>
-        <!--
-        <div style="margin: 24px auto; text-align: center; max-width: none;">
-          <div :class="`data-rect-3-${isMobile() ? 'mobile': 'pc'}`">
+        <div
+          class="dash-row"
+          v-if="showDownloaders || showServers"
+          >
+          <div
+            v-for="(downloader, index) in (showDownloaders ? downloaders : [])"
+            :key="'dl-' + downloader.id"
+            class="data-rect-pointer data-rect-2"
+            :class="{ 'highlight-3': index === 0 }"
+            @click="gotoClient(`/proxy/client/${downloader.id}/`)">
+            <div class="data-rect-body">
+              <div>{{ downloader.alias }}</div>
+              <div class="data-rect-sub">累计数据: {{ $formatSize(downloader.allTimeUpload) }} ↑ / {{$formatSize(downloader.allTimeDownload)}} ↓</div>
+              <div class="data-rect-speed">{{ $formatSize(downloader.uploadSpeed) }}/s ↑ / {{$formatSize(downloader.downloadSpeed)}}/s ↓</div>
+            </div>
+          </div>
+          <div
+            v-for="(server, index) in (showServers ? servers : [])"
+            :key="'sv-' + server.id"
+            class="data-rect-2"
+            :class="{ 'highlight-4': index === 0 && !showDownloaders }">
+            <div class="data-rect-body">
+              <div>{{ server.alias }}</div>
+              <div class="data-rect-speed">{{ $formatSize(server.netSpeed.upload) }}/s ↑ / {{$formatSize(server.netSpeed.download)}}/s ↓</div>
+            </div>
           </div>
         </div>
-        -->
         <div
-          style="margin: 24px auto; text-align: center; max-width: none;"
-          v-if="runInfo.dashboardContent.filter(item => item === 'downloader')[0]"
-          >
-          <template v-for="(downloader, index ) in downloaders" :key="downloader.id">
-            <div
-              @click="gotoClient(`/proxy/client/${downloader.id}/`)"
-              v-if="index === 0"
-              class="data-rect-pointer data-rect-2 highlight-3"
-              :style="downloaders.length === 1 ? `width: ${isMobile() ? '336px' : '688px'}` : ''">
-              <!--
-              <div style="position: absolute; left: 0; top: 0; width: 100%; height: 100%;">
-                <v-chart :option="downloader.speedChart"/>
-              </div>
-              -->
-              <div style="font-size: 14px; font-weight: bold; padding: 16px 16px;">
-                <div>{{ downloader.alias }}</div>
-                <div style="margin: initial; font-size: 12px;">累计数据: {{ $formatSize(downloader.allTimeUpload) }} ↑ / {{$formatSize(downloader.allTimeDownload)}} ↓</div>
-                <div style="margin: initial; font-size: 16px;">{{ $formatSize(downloader.uploadSpeed) }}/s ↑ / {{$formatSize(downloader.downloadSpeed)}}/s ↓</div>
-              </div>
-            </div>
-            <div
-              @click="gotoClient(`/proxy/client/${downloader.id}/`)"
-              v-if="index !== 0"
-              class="data-rect-pointer data-rect-2"
-              :style="(downloaders.length === index + 1 && downloaders.length % 2 === 1) ? `width: ${isMobile() ? '336px' : '688px'}` : ''">
-              <!--
-              <div style="position: absolute; left: 0; top: 0; width: 100%; height: 100%;">
-                <v-chart :option="downloader.speedChart"/>
-              </div>
-              -->
-              <div style="font-size: 14px; font-weight: bold; padding: 16px 16px;">
-                <div>{{ downloader.alias }}</div>
-                <div style="margin: initial; font-size: 12px;">累计数据: {{ $formatSize(downloader.allTimeUpload) }} ↑ / {{$formatSize(downloader.allTimeDownload)}} ↓</div>
-                <div style="margin: initial; font-size: 16px;">{{ $formatSize(downloader.uploadSpeed) }}/s ↑ / {{$formatSize(downloader.downloadSpeed)}}/s ↓</div>
-              </div>
-            </div>
-          </template>
-        </div>
-        <div
-          style="margin: 24px auto; text-align: center; max-width: none;"
-          v-if="runInfo.dashboardContent.filter(item => item === 'server')[0]"
-          >
-          <template v-for="(server, index ) in servers" :key="server.id">
-            <div
-              v-if="index === 0"
-              class="data-rect-2 highlight-4"
-              :style="servers.length === 1 ? `width: ${isMobile() ? '336px' : '688px'}` : ''">
-              <!--
-              <div style="position: absolute; left: 0; top: 0; width: 100%; height: 100%;">
-                <v-chart :option="server.speedChart"/>
-              </div>
-              -->
-              <div style="font-size: 14px; font-weight: bold; padding: 16px 16px;">
-                <div>{{ server.alias }}</div>
-                <div style="margin: initial; font-size: 12px;"></div>
-                <div style="margin: initial; font-size: 16px;">{{ $formatSize(server.netSpeed.upload) }}/s ↑ / {{$formatSize(server.netSpeed.download)}}/s ↓</div>
-              </div>
-            </div>
-            <div
-              v-if="index !== 0"
-              class="data-rect-2"
-              :style="servers.length === index + 1 && servers.length % 2 === 1 ? `width: ${isMobile() ? '336px' : '688px'}` : ''">
-              <!--
-              <div style="position: absolute; left: 0; top: 0; width: 100%; height: 100%;">
-                <v-chart :option="server.speedChart" :init-options="{renderer: 'svg'}"/>
-              </div>
-              -->
-              <div style="font-size: 14px; font-weight: bold; padding: 16px 16px;">
-                <div>{{ server.alias }}</div>
-                <div style="margin: initial; font-size: 12px;"></div>
-                <div style="margin: initial; font-size: 16px;">{{ $formatSize(server.netSpeed.upload) }}/s ↑ / {{$formatSize(server.netSpeed.download)}}/s ↓</div>
-              </div>
-            </div>
-          </template>
-        </div>
-        <div
-          style="margin: 24px auto; text-align: center; max-width: none;"
+          class="dash-chart-wrap"
           v-if="runInfo.dashboardContent.filter(item => item === 'tracker')[0]"
           >
-          <div :class="`data-rect-3-${isMobile() ? 'mobile': 'pc'}`" style="height: 400px;">
-            <v-chart :option="trackerChart" autoresize/>
+          <div class="data-rect-3">
+            <v-chart class="tracker-chart" :option="trackerChart" autoresize/>
           </div>
         </div>
-      </a-col>
-      <!--
-      <a-col :span="isMobile() ? 24 : 6">
-        <div style="margin: 24px auto; width: fit-content; text-align: center;">
-          <div style="background: #fff; width: 344px; height: 200px;">
-            <v-chart :option="torrents" class="torrent-chart" style="height: 200px;" autoresize></v-chart>
-          </div>
-        </div>
-        <div style="margin: 24px auto; width: fit-content; text-align: center;">
-          <div style="background: #fff; width: 344px; height: 344px;">
-            <v-chart :option="torrents" class="torrent-chart" autoresize></v-chart>
-          </div>
-        </div>
-        <div style="margin: 24px auto; width: fit-content; text-align: center;">
-          <div style="background: #fff; width: 240px; height: 240px;">
-            <v-chart :option="trackerFlow" class="torrent-chart" style="height: 240px;" autoresize></v-chart>
-          </div>
-        </div>
-      </a-col>
-      -->
-    </a-row>
+    </div>
   </div>
 </template>
 <script>
@@ -313,6 +237,14 @@ export default {
       downloaders: [],
       loading: true
     };
+  },
+  computed: {
+    showDownloaders () {
+      return (this.runInfo.dashboardContent || []).includes('downloader');
+    },
+    showServers () {
+      return (this.runInfo.dashboardContent || []).includes('server');
+    }
   },
   methods: {
     async listTrackerHistory () {
@@ -489,26 +421,40 @@ export default {
 <style scoped>
 .index {
   width: 100%;
-  max-width: none;
   margin: 0;
-  height: 100%;
+  min-height: 100%;
+}
+.dash {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 16px 12px 32px;
+  box-sizing: border-box;
+}
+.dash-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+  margin: 0 0 24px;
+}
+.dash-chart-wrap {
+  display: flex;
+  justify-content: center;
 }
 
 .highlight-1 {
   background: var(--blue-soft);
   color: var(--blue-deep);
 }
-
 .highlight-2 {
   background: var(--ok-soft);
   color: var(--ok);
 }
-
 .highlight-3 {
   background: var(--blue-soft);
   color: var(--blue-deep);
 }
-
 .highlight-4 {
   background: var(--ok-soft);
   color: var(--ok);
@@ -516,18 +462,16 @@ export default {
 
 .data-rect-1 {
   text-align: left;
-  vertical-align: top;
   width: 160px;
+  flex: 0 0 160px;
   min-height: 104px;
-  transition: transform 0.2s, box-shadow 0.2s;
-  padding: 16px 16px;
+  padding: 16px;
   color: var(--text-2);
-  display: inline-block;
-  margin: 8px;
   border-radius: 14px;
   background: var(--panel);
   border: 1px solid var(--line);
   box-shadow: var(--shadow);
+  box-sizing: border-box;
 }
 .data-rect-1:nth-child(1) { background: var(--blue-soft); color: var(--blue-deep); }
 .data-rect-1:nth-child(2) { background: var(--ok-soft); color: var(--ok); }
@@ -536,75 +480,68 @@ export default {
 
 .data-rect-2 {
   text-align: left;
-  vertical-align: top;
   width: 336px;
+  flex: 0 0 336px;
+  max-width: 100%;
   min-height: 104px;
-  transition: all 0.2s;
   color: var(--text-2);
-  position: relative;
-  display: inline-block;
-  margin: 8px;
   border-radius: 14px;
   background: var(--ok-soft);
   border: 1px solid var(--line);
   box-shadow: var(--shadow);
+  box-sizing: border-box;
+}
+.data-rect-body {
+  padding: 16px;
+  font-size: 14px;
+  font-weight: 700;
+}
+.data-rect-sub {
+  margin-top: 4px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.data-rect-speed {
+  margin-top: 4px;
+  font-size: 16px;
 }
 
-.data-rect-3-pc {
-  text-align: left;
-  vertical-align: top;
-  width: 688px;
-  min-height: 104px;
-  transition: all 0.2s;
-  padding: 16px 16px;
-  color: var(--text-2);
-  display: inline-block;
-  margin: 8px;
-  border-radius: 8px;
+.data-rect-3 {
+  width: 100%;
+  max-width: 688px;
+  height: 400px;
+  padding: 16px;
+  border-radius: 14px;
   background: var(--panel);
   border: 1px solid var(--line);
   box-shadow: var(--shadow);
+  box-sizing: border-box;
 }
-
-.data-rect-3-mobile {
-  text-align: left;
-  vertical-align: top;
-  width: 336px;
-  min-height: 104px;
-  transition: all 0.2s;
-  padding: 16px 16px;
-  color: var(--text-2);
-  display: inline-block;
-  margin: 8px;
-  border-radius: 8px;
-  background: var(--panel);
-  border: 1px solid var(--line);
-  box-shadow: var(--shadow);
+.tracker-chart {
+  width: 100%;
+  height: 100%;
 }
 
 .data-rect-pointer {
   cursor: pointer;
 }
 
-.tracker-chart {
-  height: 400px;
-  color: inherit;
-}
-
-.torrent-chart {
-  height: 320px;
-  color: inherit;
-}
-
 @media (max-width: 960px) {
-  .data-rect-1 {
-    width: calc(50% - 16px);
+  .dash {
+    max-width: none;
+    padding: 8px 12px 24px;
   }
-  .data-rect-2,
-  .data-rect-3-pc,
-  .data-rect-3-mobile {
-    width: calc(100% - 16px) !important;
+  .dash-row {
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .data-rect-1 {
+    width: calc(50% - 6px);
+    flex: 1 1 calc(50% - 6px);
+  }
+  .data-rect-2 {
+    width: 100%;
+    flex: 1 1 100%;
   }
 }
-
 </style>

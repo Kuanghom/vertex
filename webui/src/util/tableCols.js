@@ -64,23 +64,49 @@ export function normalizeTableColumns (cols, opts) {
       width = Math.round(raw * 8);
     }
     if (ops) {
-      width = Math.max(width, 168);
-      next.align = 'right';
+      next.align = 'center';
+      if (next.dataIndex === 'option') {
+        width = Math.min(Math.max(width, 72), 96);
+      } else {
+        width = Math.max(width, 248);
+      }
     }
     if (key === 'id') width = Math.max(width, 120);
     if (key === 'alias' || key === 'name') width = Math.max(width, 200);
     if (key === 'clientUrl' || key === 'host' || key === 'url') width = Math.max(width, 240);
+    if (key === 'compareType' || title === '比较类型') width = Math.max(width, 140);
+    if ((key === 'key' && title === '选项') || title === '选项') width = Math.max(width, 168);
+    if (key === 'uploaded' || key === 'downloaded' || title === '上传' || title === '下载') {
+      width = Math.max(width, 120);
+    }
+    if (key === 'allTimeUpload' || title === '累计数据') width = Math.max(width, 180);
+    if (key === 'speed' || title === '实时速度') width = Math.max(width, 180);
+    if (key === 'seedingCount' || title === '当前任务') width = Math.max(width, 120);
     if (title === '启用' || key === 'enable' || key === 'status' || title === '状态') {
       width = Math.max(width, 100);
     }
     if (title === '方案') width = Math.max(width, 160);
+    if (key === 'timestamp' || title === '时间') width = Math.max(width, 180);
     if (next.fixed && width < 120) width = 120;
+    if (key === 'value' || title === '值' || key === 'tracker' || key === 'message' || title === '信息') {
+      next.ellipsis = key !== 'message' && title !== '信息';
+      if (raw < 160 || key === 'message' || title === '信息') {
+        delete next.width;
+        next.showSorterTooltip = false;
+        return attachCardCell(next);
+      }
+    }
     next.width = width;
     next.showSorterTooltip = false;
     return attachCardCell(next);
   });
 
   if (!narrow) {
+    const grow = mapped.some((col) => {
+      const key = colIndex(col);
+      return key === 'value' || key === 'tracker' || key === 'message';
+    });
+    if (grow) return mapped;
     const flex = {
       title: '',
       key: '_flex',

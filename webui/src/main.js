@@ -37,7 +37,10 @@ import './styles/fnos.css';
 import responsive, { initViewport } from './mixins/responsive';
 import FnColumnSettings from './components/FnColumnSettings.vue';
 import FnEntity from './components/FnEntity.vue';
+import FnFilter from './components/FnFilter.vue';
+import FnListSearch from './components/FnListSearch.vue';
 import FnOps from './components/FnOps.vue';
+import FnLogFeed from './components/FnLogFeed.vue';
 
 library.add(fas);
 library.add(fab);
@@ -83,7 +86,10 @@ app.component('v-nodes', (_, {
 app.component('fa', FontAwesomeIcon);
 app.component('fn-column-settings', FnColumnSettings);
 app.component('fn-entity', FnEntity);
+app.component('fn-filter', FnFilter);
+app.component('fn-list-search', FnListSearch);
 app.component('fn-ops', FnOps);
+app.component('fn-log-feed', FnLogFeed);
 
 router.beforeEach((to, from) => {
   if (to.meta.title) {

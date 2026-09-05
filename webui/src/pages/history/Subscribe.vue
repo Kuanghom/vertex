@@ -1,21 +1,24 @@
 <template>
   <div class="rss fn-page">
-    <div class="fn-filter">
+    <fn-filter
+      :active="!!qs.key"
+      title="搜索"
+      toolbar-class="fn-toolbar-plain">
       <div class="fn-filter-item">
         <span>关键词</span>
         <a-input v-model:value="qs.key" allowClear placeholder="请输入" style="width: 220px;"/>
       </div>
       <a-button type="primary" @click="() => { qs.page = 1; listHistory(); }">查询</a-button>
-    </div>
-    <div class="fn-toolbar fn-toolbar-plain">
-      <fn-column-settings
-        :items="columnSettingItems"
-        @toggle="toggleColumnVisible"
-        @move="moveColumn"
-        @dragstart="onColumnDragStart"
-        @drop="onColumnDrop"
-        @reset="resetColumnPrefs"/>
-    </div>
+      <template #toolbar>
+        <fn-column-settings
+          :items="columnSettingItems"
+          @toggle="toggleColumnVisible"
+          @move="moveColumn"
+          @dragstart="onColumnDragStart"
+          @drop="onColumnDrop"
+          @reset="resetColumnPrefs"/>
+      </template>
+    </fn-filter>
     <a-table
       :columns="displayColumns"
       size="middle"

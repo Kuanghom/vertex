@@ -1,9 +1,14 @@
 <template>
   <div style="font-size: 24px; font-weight: bold;">批量链接</div>
-  <a-divider></a-divider>
+  <a-divider v-if="!isNarrow"></a-divider>
   <div class="bulkLink">
     <div style="text-align: left; ">
       <div style="font-size: 16px; font-weight: bold; padding-left: 8px;">批量链接</div>
+      <fn-filter
+        variant="form"
+        title="搜索"
+        :active="!!(bulkLinkInfo.keyword || bulkLinkInfo.client || bulkLinkInfo.linkRule)"
+        toolbar-class="fn-toolbar-plain">
       <a-form
         labelAlign="right"
         :labelWrap="true"
@@ -78,6 +83,7 @@
           </div>
         </a-form-item>
       </a-form>
+      </fn-filter>
       <a-divider></a-divider>
       <div style="font-size: 16px; font-weight: bold; padding-left: 8px;">选择文件</div>
       <a-form
@@ -114,7 +120,7 @@
         size="small"
         :data-source="torrentList.filter(item => item.visible)"
         :pagination="false"
-        :scroll="boundScroll(640)"
+        :scroll="cardScroll(columns)"
       >
         <template #title>
           <span style="font-size: 16px; font-weight: bold;">批量链接列表</span>

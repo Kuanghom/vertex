@@ -1,87 +1,62 @@
 <template>
-  <div class="fn-page">
-  <div style="font-size: 24px; font-weight: bold;">下载器日志</div>
-  <a-divider></a-divider>
-  <div class="client-log">
-    <a-table
-      :style="`font-size: ${isMobile() ? '12px': '14px'};`"
-      :columns="displayColumns"
-      size="small"
+  <div class="fn-page client-log-page">
+    <div class="fn-log-head">
+      <fa class="fn-log-head-ico" :icon="['fas', 'file-lines']"/>
+      <h1>下载器日志</h1>
+    </div>
+    <fn-log-feed
+      v-model:live="live"
+      :entries="entries"
       :loading="loading"
-      :data-source="logs"
-      :pagination="mergeListPagination(pagination)"
-      :scroll="tableScroll"
+      :empty-hint="emptyHint"
+      :live-disabled="!clientId"
     >
-      <template #title>
-        <div class="fn-table-title">
-          <span style="font-size: 16px; font-weight: bold;">下载器日志</span>
-          <div class="fn-title-actions">
-            <a-select
-              v-model:value="clientId"
-              placeholder="选择下载器"
-              class="fn-title-select"
-              allowClear
-              :loading="loading"
-              :disabled="loading"
-              @change="onClientChange">
-              <a-select-option v-for="item of downloaders" :key="item.id" :value="item.id">
-                {{ item.alias }}
-              </a-select-option>
-            </a-select>
-            <fn-column-settings
-              :items="columnSettingItems"
-              @toggle="toggleColumnVisible"
-              @move="moveColumn"
-              @dragstart="onColumnDragStart"
-              @drop="onColumnDrop"
-              @reset="resetColumnPrefs"/>
-          </div>
-        </div>
+      <template #tools>
+        <a-select
+          v-model:value="clientId"
+          placeholder="选择下载器"
+          class="fn-log-client"
+          allowClear
+          :loading="loading"
+          :disabled="loading"
+          @change="onClientChange"
+        >
+          <a-select-option v-for="item of downloaders" :key="item.id" :value="item.id">
+            {{ item.alias }}
+          </a-select-option>
+        </a-select>
       </template>
-      <template #bodyCell="{ column, record }">
-        <template v-if="column.dataIndex === 'timestamp'">
-          {{ $moment(record.timestamp > 1e11 ? record.timestamp : record.timestamp * 1e3).format('YYYY-MM-DD HH:mm:ss') }}
-        </template>
-        <template v-if="column.dataIndex === 'message'">
-          <span :style="`${record.type === 4 ? 'color: red' : ''}`">{{ record.message }}</span>
-        </template>
+      <template #actions>
+        <button type="button" class="fn-log-refresh" :disabled="!clientId || loading" @click="refreshLog(false)">
+          <fa :icon="['fas', 'rotate']"/>
+          刷新
+        </button>
       </template>
-    </a-table>
-  </div>
+    </fn-log-feed>
   </div>
 </template>
 <script>
-import columnPrefs from '../../mixins/columnPrefs';
+import { fromClientLogs } from '../../util/logFeed';
+import logLive from '../../mixins/logLive';
 
 export default {
-  mixins: [columnPrefs],
+  mixins: [logLive],
   data () {
-    const columns = [
-      {
-        title: '时间',
-        dataIndex: 'timestamp',
-        width: 16,
-        fixed: true
-      }, {
-        title: '信息',
-        dataIndex: 'message',
-        width: 96
-      }
-    ];
-    const pagination = {
-      position: ['topRight', 'bottomRight'],
-      total: 0,
-      pageSize: 100,
-      showSizeChanger: false
-    };
     return {
-      pagination,
-      columns,
       logs: [],
       downloaders: [],
       clientId: undefined,
       loading: false
     };
+  },
+  computed: {
+    entries () {
+      return fromClientLogs(this.logs);
+    },
+    emptyHint () {
+      if (!this.clientId) return '选择下载器查看日志';
+      return '暂无日志';
+    }
   },
   watch: {
     '$route.query.id' (id) {
@@ -107,13 +82,12 @@ export default {
     async applyClientId (id) {
       if (!id) {
         this.clientId = undefined;
-        await this.getLog();
+        this.logs = [];
         return;
       }
       if (!this.isEnabledClient(id)) {
         this.clientId = undefined;
         this.logs = [];
-        this.pagination.total = 0;
         this.$message().warning('该下载器已禁用, 无法查看日志');
         if (this.$route.query.id) {
           this.$router.replace({ query: {} });
@@ -121,22 +95,23 @@ export default {
         return;
       }
       this.clientId = id;
-      await this.getLog();
+      await this.refreshLog(false);
     },
-    async getLog () {
+    canPollLog () {
+      return !!this.clientId;
+    },
+    async refreshLog (silent) {
       if (!this.clientId) {
         this.logs = [];
-        this.pagination.total = 0;
         this.loading = false;
         return;
       }
-      this.loading = true;
+      if (!silent || !this.logs.length) this.loading = true;
       try {
         const res = await this.$api().downloader.getLogs(this.clientId);
-        this.logs = res.data.reverse();
-        this.pagination.total = this.logs.length;
+        this.logs = (res.data || []).slice().reverse();
       } catch (e) {
-        this.$message().error(e.message);
+        if (!silent) this.$message().error(e.message);
       } finally {
         this.loading = false;
       }
@@ -155,9 +130,54 @@ export default {
 };
 </script>
 <style scoped>
-.client-log {
-  width: 100%;
-  max-width: none;
-  margin: 0 auto;
+.client-log-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: calc(var(--vh, 1vh) * 100 - 120px);
+}
+.fn-log-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.fn-log-head-ico {
+  color: var(--blue);
+  font-size: 16px;
+}
+.fn-log-head h1 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+}
+.fn-log-client {
+  width: 220px;
+  max-width: 100%;
+}
+.fn-log-refresh {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--blue-soft);
+  color: var(--blue);
+  cursor: pointer;
+}
+.fn-log-refresh:hover:not(:disabled) {
+  background: var(--blue);
+  color: #fff;
+}
+.fn-log-refresh:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+@media (max-width: 960px) {
+  .fn-log-client {
+    width: 100%;
+  }
 }
 </style>

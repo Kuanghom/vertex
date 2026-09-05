@@ -45,12 +45,15 @@
       size="small"
       :loading="loading"
       :data-source="runInfo.perTrackerToday.filter(item => item.tracker)"
-      :scroll="boundScroll(320)"
+      :scroll="cardScroll(trackerColumns)"
     >
       <template #title>
         <span style="font-size: 16px; font-weight: bold;">今日数据</span>
       </template>
       <template #bodyCell="{ column, record }">
+        <template v-if="column.dataIndex === 'tracker'">
+          <span class="fn-track" :title="record.tracker">{{ record.tracker }}</span>
+        </template>
         <template v-if="['uploaded', 'downloaded'].indexOf(column.dataIndex) !== -1">
           {{ $formatSize(record[column.dataIndex]) }}
         </template>
@@ -63,12 +66,15 @@
       size="small"
       :loading="loading"
       :data-source="runInfo.perTracker.filter(item => item.tracker)"
-      :scroll="boundScroll(320)"
+      :scroll="cardScroll(trackerColumns)"
     >
       <template #title>
         <span style="font-size: 16px; font-weight: bold;">累计统计</span>
       </template>
       <template #bodyCell="{ column, record }">
+        <template v-if="column.dataIndex === 'tracker'">
+          <span class="fn-track" :title="record.tracker">{{ record.tracker }}</span>
+        </template>
         <template v-if="['uploaded', 'downloaded'].indexOf(column.dataIndex) !== -1">
           {{ $formatSize(record[column.dataIndex]) }}
         </template>
@@ -113,7 +119,7 @@ export default {
         title: 'tracker',
         dataIndex: 'tracker',
         width: 140,
-        fixed: true,
+        ellipsis: true,
         sorter: (a, b) => a.tracker.localeCompare(b.tracker)
       }, {
         title: '上传',
@@ -174,5 +180,11 @@ export default {
   width: 100%;
   max-width: none;
   margin: 0 auto;
+}
+.fn-track {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>

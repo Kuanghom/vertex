@@ -1,8 +1,13 @@
 <template>
   <div class="fn-page">
   <div style="font-size: 24px; font-weight: bold;">种子搜索</div>
-  <a-divider></a-divider>
+  <a-divider v-if="!isNarrow"></a-divider>
   <div class="mix-search" >
+    <fn-filter
+      variant="form"
+      title="搜索"
+      :active="!!(qs.keyword || filterKey || (qs.sites && qs.sites.length))"
+      toolbar-class="fn-toolbar-plain">
     <div style="text-align: left; ">
       <a-form
         labelAlign="right"
@@ -42,6 +47,7 @@
         </a-form-item>
       </a-form>
     </div>
+    </fn-filter>
     <a-divider></a-divider>
     <a-table
       :style="`font-size: ${isMobile() ? '12px': '14px'};`"

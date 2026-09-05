@@ -1,7 +1,7 @@
 <template>
   <div style="font-size: 24px; font-weight: bold;">订阅列表</div>
   <a-divider></a-divider>
-  <div class="fn-filter">
+  <fn-filter :active="type !== 'all' || status !== 'all'" title="筛选">
     <div class="fn-filter-item">
       <span>类型</span>
       <a-select v-model:value="type" @change="doFilte">
@@ -18,7 +18,7 @@
         <a-select-option value="uncomplete">未完成</a-select-option>
       </a-select>
     </div>
-  </div>
+  </fn-filter>
   <a-divider></a-divider>
   <div class="subscribe-list">
     <div

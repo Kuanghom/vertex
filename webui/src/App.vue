@@ -1,5 +1,5 @@
 <template>
-  <a-config-provider :locale="zhCN">
+  <a-config-provider :locale="zhCN" :getPopupContainer="popupContainer">
     <router-view></router-view>
   </a-config-provider>
 </template>
@@ -27,7 +27,10 @@ export default {
     }
   },
   methods: {
-    applyTheme
+    applyTheme,
+    popupContainer () {
+      return document.body;
+    }
   }
 };
 </script>

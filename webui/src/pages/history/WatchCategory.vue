@@ -1,6 +1,6 @@
 <template>
   <div class="rss fn-page">
-    <div class="fn-filter">
+    <fn-filter :active="!!(qs.name || qs.task)" title="搜索">
       <div class="fn-filter-item">
         <span>种子名称</span>
         <a-input v-model:value="qs.name" allowClear placeholder="请输入" style="width: 200px;"/>
@@ -10,14 +10,16 @@
         <a-input v-model:value="qs.task" allowClear placeholder="请输入" style="width: 200px;"/>
       </div>
       <a-button type="primary" @click="() => { qs.page = 1; listHistory(); }">查询</a-button>
-      <fn-column-settings
-        :items="columnSettingItems"
-        @toggle="toggleColumnVisible"
-        @move="moveColumn"
-        @dragstart="onColumnDragStart"
-        @drop="onColumnDrop"
-        @reset="resetColumnPrefs"/>
-    </div>
+      <template #toolbar>
+        <fn-column-settings
+          :items="columnSettingItems"
+          @toggle="toggleColumnVisible"
+          @move="moveColumn"
+          @dragstart="onColumnDragStart"
+          @drop="onColumnDrop"
+          @reset="resetColumnPrefs"/>
+      </template>
+    </fn-filter>
     <a-table
       :columns="displayColumns"
       size="middle"

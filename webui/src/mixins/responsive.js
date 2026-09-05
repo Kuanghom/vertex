@@ -54,7 +54,7 @@ export default {
         showSizeChanger: !this.isNarrow && !!base.showSizeChanger,
         showQuickJumper: !this.isNarrow,
         showTotal: base.showTotal || (total => `共 ${total} 条`),
-        position: base.position || ['bottomCenter'],
+        position: ['bottomCenter'],
         onChange: (page, pageSize) => {
           if (typeof userOnChange === 'function') userOnChange(page, pageSize);
           this.scrollListToTop();
@@ -84,7 +84,19 @@ export default {
       return next;
     },
     asCardColumns (cols) {
-      return normalizeTableColumns(cols || [], { narrow: this.isNarrow });
+      const source = (cols || []).map((col) => {
+        if (typeof this.decorateTableColumn === 'function') {
+          return this.decorateTableColumn(col);
+        }
+        return col;
+      });
+      return normalizeTableColumns(source, { narrow: this.isNarrow });
+    },
+    cardScroll (cols, y) {
+      if (this.isNarrow) return {};
+      const next = scrollForColumns(this.asCardColumns(cols), { narrow: false });
+      if (y != null) next.y = y;
+      return next;
     }
   }
 };

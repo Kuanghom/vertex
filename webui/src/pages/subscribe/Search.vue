@@ -1,7 +1,12 @@
 <template>
   <div style="font-size: 24px; font-weight: bold;">影视搜索</div>
-  <a-divider></a-divider>
+  <a-divider v-if="!isNarrow"></a-divider>
   <div class="subscribe-search" >
+    <fn-filter
+      variant="form"
+      title="搜索"
+      :active="!!(qs.keyword || qs.subscribe || qs.tag)"
+      toolbar-class="fn-toolbar-plain">
     <div style="text-align: left; ">
       <a-form
         labelAlign="right"
@@ -45,6 +50,7 @@
         </a-form-item>
       </a-form>
     </div>
+    </fn-filter>
     <a-divider></a-divider>
     <div style="font-size: 16px; font-weight: bold; text-align: left;">搜索结果</div>
     <div

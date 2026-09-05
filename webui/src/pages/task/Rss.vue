@@ -1,6 +1,50 @@
 <template>
   <div class="rss fn-page">
-    <div class="fn-toolbar">
+    <fn-filter :active="rssFilterActive" title="筛选">
+      <div class="fn-filter-item">
+        <span>别名</span>
+        <a-input
+          class="fn-search"
+          v-model:value="filterAlias"
+          allowClear
+          placeholder="搜索别名 / ID"
+        />
+      </div>
+      <div class="fn-filter-item">
+        <span>启用</span>
+        <a-select
+          v-model:value="filterEnable"
+          allowClear
+          placeholder="全部"
+        >
+          <a-select-option value="on">启用</a-select-option>
+          <a-select-option value="off">禁用</a-select-option>
+        </a-select>
+      </div>
+      <div class="fn-filter-item">
+        <span>分配方案</span>
+        <a-select
+          v-model:value="filterAllocate"
+          allowClear
+          show-search
+          placeholder="全部"
+          :filter-option="filterSelectOption"
+          :options="allocateFilterOptions"
+        />
+      </div>
+      <div class="fn-filter-item">
+        <span>下载器</span>
+        <a-select
+          v-model:value="filterClient"
+          allowClear
+          show-search
+          placeholder="全部"
+          :filter-option="filterSelectOption"
+          :options="clientFilterOptions"
+        />
+      </div>
+      <a-button @click="resetRssFilter">重置</a-button>
+      <template #toolbar>
       <a-button type="primary" @click="openCreate">新增</a-button>
       <a-popover
         v-if="!isNarrow"
@@ -50,7 +94,8 @@
         @dragstart="onColumnDragStart"
         @drop="onColumnDrop"
         @reset="resetColumnPrefs"/>
-    </div>
+      </template>
+    </fn-filter>
     <teleport to="body">
       <div v-if="isNarrow && batchOpen" class="fn-ops-mask" @click.self="batchOpen = false">
         <div class="fn-ops-sheet fn-batch-sheet" @click.stop>
@@ -91,7 +136,7 @@
       :loading="loading"
       :locale="tableLocale"
       size="middle"
-      :data-source="rssList"
+      :data-source="filteredRssList"
       :pagination="listPagination"
       :scroll="tableScroll"
       :customRow="listCustomRow"
@@ -678,10 +723,54 @@ export default {
       selectedRssIds: [],
       batchOpen: false,
       batchAction: 'addClient',
-      batchValue: undefined
+      batchValue: undefined,
+      filterAlias: '',
+      filterEnable: undefined,
+      filterAllocate: undefined,
+      filterClient: undefined
     };
   },
   computed: {
+    allocateFilterOptions () {
+      return (this.allocateRules || []).map(rule => ({
+        value: rule.id,
+        label: rule.alias + (rule.builtin ? ' (内置)' : '')
+      }));
+    },
+    clientFilterOptions () {
+      return (this.downloaders || []).map(item => ({
+        value: item.id,
+        label: item.alias
+      }));
+    },
+    rssFilterActive () {
+      return !!(this.filterAlias || this.filterEnable || this.filterAllocate || this.filterClient);
+    },
+    filteredRssList () {
+      const keyword = (this.filterAlias || '').trim().toLowerCase();
+      const enable = this.filterEnable;
+      const allocate = this.filterAllocate;
+      const client = this.filterClient;
+      if (!keyword && !enable && !allocate && !client) return this.rssList;
+      return (this.rssList || []).filter(record => {
+        if (keyword) {
+          const alias = String(record.alias || '').toLowerCase();
+          const id = String(record.id || '').toLowerCase();
+          if (alias.indexOf(keyword) === -1 && id.indexOf(keyword) === -1) return false;
+        }
+        if (enable === 'on' && !record.enable) return false;
+        if (enable === 'off' && record.enable) return false;
+        if (allocate) {
+          const ruleId = record.allocateRule || 'builtin:original';
+          if (ruleId !== allocate) return false;
+        }
+        if (client) {
+          const clients = record.clientArr || [];
+          if (clients.indexOf(client) === -1) return false;
+        }
+        return true;
+      });
+    },
     rssRowSelection () {
       return {
         selectedRowKeys: this.selectedRssIds,
@@ -747,7 +836,7 @@ export default {
         cols.push(
           { title: '促销', dataIndex: 'promo', width: 140 },
           { title: 'HR', dataIndex: 'hr', width: 88 },
-          { title: '操作', key: 'option', width: 88, align: 'right' }
+          { title: '操作', key: 'option', width: 88, align: 'center' }
         );
       }
       return cols;
@@ -773,6 +862,18 @@ export default {
     },
     batchOpen (open) {
       document.body.classList.toggle('fn-ops-open', !!open && this.isNarrow);
+    },
+    filterAlias () {
+      this.listPageCurrent = 1;
+    },
+    filterEnable () {
+      this.listPageCurrent = 1;
+    },
+    filterAllocate () {
+      this.listPageCurrent = 1;
+    },
+    filterClient () {
+      this.listPageCurrent = 1;
     }
   },
   beforeUnmount () {
@@ -816,6 +917,19 @@ export default {
     },
     onRssSelectChange (keys) {
       this.selectedRssIds = keys;
+    },
+    filterSelectOption (input, option) {
+      const keyword = String(input || '').toLowerCase();
+      const label = String((option && option.label) || '').toLowerCase();
+      const value = String((option && option.value) || '').toLowerCase();
+      return label.indexOf(keyword) >= 0 || value.indexOf(keyword) >= 0;
+    },
+    resetRssFilter () {
+      this.filterAlias = '';
+      this.filterEnable = undefined;
+      this.filterAllocate = undefined;
+      this.filterClient = undefined;
+      this.listPageCurrent = 1;
     },
     allocateRuleAlias (id) {
       const rule = this.allocateRules.find(item => item.id === (id || 'builtin:original'));

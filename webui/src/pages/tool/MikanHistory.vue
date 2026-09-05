@@ -1,8 +1,13 @@
 <template>
   <div class="fn-page">
   <div style="font-size: 24px; font-weight: bold;">蜜柑番剧历史下载</div>
-  <a-divider></a-divider>
+  <a-divider v-if="!isNarrow"></a-divider>
   <div class="mikan-history">
+    <fn-filter
+      variant="form"
+      title="搜索"
+      :active="!!(info.rss || info.name)"
+      toolbar-class="fn-toolbar-plain">
     <div style="text-align: left; ">
       <a-form
         labelAlign="right"
@@ -37,6 +42,7 @@
         </a-form-item>
       </a-form>
     </div>
+    </fn-filter>
   </div>
   <a-divider></a-divider>
   <div class="mikan-history" style="text-align: left; ">
@@ -47,7 +53,7 @@
           :loading="loading"
           :data-source="filteredTorrents"
           :pagination="false"
-          :scroll="boundScroll(960)"
+          :scroll="cardScroll(listColumns)"
         >
           <template #title>
             <div class="fn-table-title">

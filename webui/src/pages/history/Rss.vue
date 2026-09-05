@@ -1,6 +1,9 @@
 <template>
   <div class="rss fn-page">
-    <div class="fn-filter">
+    <fn-filter
+      :active="rssHistoryFilterActive"
+      title="筛选"
+      toolbar-class="fn-toolbar-plain">
       <div class="fn-filter-item">
         <span>关键词</span>
         <a-input v-model:value="qs.key" allowClear placeholder="请输入" style="width: 200px;"/>
@@ -46,17 +49,16 @@
       </div>
       <a-button type="primary" @click="applyFilter">查询</a-button>
       <a-button @click="resetFilter">重置</a-button>
-    </div>
-    <div class="fn-toolbar fn-toolbar-plain">
-      <p class="fn-toolbar-hint">遇到问题先去看 Wiki，特别是常见问题；找不到再去交流群问。</p>
-      <fn-column-settings
-        :items="columnSettingItems"
-        @toggle="toggleColumnVisible"
-        @move="moveColumn"
-        @dragstart="onColumnDragStart"
-        @drop="onColumnDrop"
-        @reset="resetColumnPrefs"/>
-    </div>
+      <template #toolbar>
+        <fn-column-settings
+          :items="columnSettingItems"
+          @toggle="toggleColumnVisible"
+          @move="moveColumn"
+          @dragstart="onColumnDragStart"
+          @drop="onColumnDrop"
+          @reset="resetColumnPrefs"/>
+      </template>
+    </fn-filter>
     <a-table
       :columns="displayColumns"
       size="middle"
@@ -186,7 +188,7 @@ export default {
       key: ''
     };
     const pagination = {
-      position: ['topRight', 'bottomRight'],
+      position: ['bottomCenter'],
       total: 0,
       pageSize: qs.length,
       showSizeChanger: false
@@ -218,6 +220,11 @@ export default {
         label: this.formatStatusLabel(status),
         value: status
       }));
+    },
+    rssHistoryFilterActive () {
+      return !!(this.qs.key || (this.filterRss && this.filterRss.length) ||
+        (this.filterStatus && this.filterStatus.length) ||
+        (this.filterClient && this.filterClient.length));
     },
     clientFilterOptions () {
       const options = [...this.clientList]

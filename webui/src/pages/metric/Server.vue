@@ -44,7 +44,7 @@
       :pagination="false"
       v-if="vnstatData[period]"
       :data-source="vnstatData[period]"
-      :scroll="boundScroll(88)"
+      :scroll="cardScroll(vnstatColumns)"
     >
       <template #title>
         <span style="font-size: 16px; font-weight: bold;">历史数据统计</span>
