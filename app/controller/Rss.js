@@ -72,6 +72,23 @@ class Rss {
     }
   };
 
+  async batchUpdate (req, res) {
+    const options = req.body;
+    try {
+      const r = rssMod.batchUpdate(options);
+      res.send({
+        success: true,
+        message: r
+      });
+    } catch (e) {
+      logger.error(e);
+      res.send({
+        success: false,
+        message: e.message
+      });
+    }
+  };
+
   async list (req, res) {
     try {
       const r = rssMod.list();

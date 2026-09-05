@@ -40,5 +40,9 @@ export default {
   mikanPush: async (body) => {
     const url = '/api/rss/mikanPush';
     return await post(url, body);
+  },
+  batchUpdate: async (body) => {
+    const url = '/api/rss/batchUpdate';
+    return await post(url, body);
   }
 };

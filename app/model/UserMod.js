@@ -82,6 +82,10 @@ class UserMod {
           title: '链接规则',
           path: '/rule/link',
           icon: ['fas', 'link']
+        }, {
+          title: '分配规则',
+          path: '/rule/allocate',
+          icon: ['fas', 'scale-balanced']
         }]
       }, {
         title: '任务配置',

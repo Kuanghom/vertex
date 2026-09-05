@@ -344,6 +344,21 @@ exports.listRss = function () {
   return rssList;
 };
 
+exports.listAllocateRule = function () {
+  const dir = path.join(__dirname, '../data/rule/allocate');
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+  const files = fs.readdirSync(dir);
+  const allocateRuleList = [];
+  for (const file of files) {
+    if (path.extname(file) === '.json') {
+      allocateRuleList.push(_importJson(path.join(dir, file)));
+    }
+  }
+  return allocateRuleList;
+};
+
 exports.listDeleteRule = function () {
   const files = fs.readdirSync(path.join(__dirname, '../data/rule/delete'));
   const deleteRuleList = [];

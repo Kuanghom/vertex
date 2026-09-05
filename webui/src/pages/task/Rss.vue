@@ -8,10 +8,50 @@
       size="small"
       :data-source="rssList"
       :pagination="false"
-      :scroll="{ x: 640 }"
+      :scroll="{ x: 880 }"
+      :row-selection="rssRowSelection"
+      row-key="id"
     >
       <template #title>
-        <span style="font-size: 16px; font-weight: bold;">RSS 任务列表</span>
+        <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px;">
+          <span style="font-size: 16px; font-weight: bold;">RSS 任务列表</span>
+          <span v-if="selectedRssIds.length" style="font-size: 13px; font-weight: normal;">
+            已选 {{ selectedRssIds.length }}
+          </span>
+          <a-select
+            size="small"
+            v-model:value="batchClientId"
+            placeholder="批量添加下载器"
+            style="width: 180px"
+            :disabled="!selectedRssIds.length"
+            @change="batchAddClient">
+            <a-select-option v-for="item of downloaders" :key="item.id" :value="item.id">
+              {{ item.alias }}
+            </a-select-option>
+          </a-select>
+          <a-select
+            size="small"
+            v-model:value="batchRemoveClientId"
+            placeholder="批量移除下载器"
+            style="width: 180px"
+            :disabled="!selectedRssIds.length"
+            @change="batchRemoveClient">
+            <a-select-option v-for="item of downloaders" :key="'rm-' + item.id" :value="item.id">
+              {{ item.alias }}
+            </a-select-option>
+          </a-select>
+          <a-select
+            size="small"
+            v-model:value="batchAllocateRule"
+            placeholder="批量设置分配方案"
+            style="width: 200px"
+            :disabled="!selectedRssIds.length"
+            @change="batchSetAllocate">
+            <a-select-option v-for="rule of allocateRules" :key="rule.id" :value="rule.id">
+              {{ rule.alias }}{{ rule.builtin ? ' (内置)' : '' }}
+            </a-select-option>
+          </a-select>
+        </div>
       </template>
       <template #bodyCell="{ column, record }">
         <template v-if="column.dataIndex === 'enable'">
@@ -19,6 +59,9 @@
         </template>
         <template v-if="column.dataIndex === 'clientArr'">
           {{ downloaders.filter(item => record.clientArr.indexOf(item.id) !== -1).map(item => item.alias).join(' / ') }}
+        </template>
+        <template v-if="column.dataIndex === 'allocateRule'">
+          {{ allocateRuleAlias(record.allocateRule) }}
         </template>
         <template v-if="column.dataIndex === 'pushNotify'">
           <a-tag color="success" v-if="record.pushNotify">启用</a-tag>
@@ -86,8 +129,22 @@
           </a-checkbox-group>
         </a-form-item>
         <a-form-item
+          label="分配方案"
+          name="allocateRule"
+          extra="多下载器时按此方案选台；可在「规则组件 - 分配规则」里扩展">
+          <a-select size="small" v-model:value="rss.allocateRule">
+            <a-select-option
+              v-for="rule of allocateRules"
+              :key="rule.id"
+              :value="rule.id">
+              {{ rule.alias }}{{ rule.builtin ? ' (内置)' : '' }}
+            </a-select-option>
+          </a-select>
+        </a-form-item>
+        <a-form-item
           label="排序规则"
           name="clientSortBy"
+          extra="仅「原规则」分配方案使用此项；其他方案忽略"
           :rules="[{ required: true, message: '${label}不可为空! ' }]">
           <a-select size="small" v-model:value="rss.clientSortBy">
             <a-select-option value="leechingCount">下载种子数量</a-select-option>
@@ -472,11 +529,15 @@ export default {
       }, {
         title: '下载器',
         dataIndex: 'clientArr',
-        width: 40
+        width: 36
+      }, {
+        title: '分配方案',
+        dataIndex: 'allocateRule',
+        width: 22
       }, {
         title: '推送消息',
         dataIndex: 'pushNotify',
-        width: 20
+        width: 16
       }, {
         title: '操作',
         width: 28
@@ -531,11 +592,14 @@ export default {
       scrapeDryrunLoading: false,
       rssList: [],
       downloaders: [],
+      allocateRules: [],
       notifications: [],
       rssRules: [],
       rss: {},
       defaultRss: {
         clientArr: [],
+        allocateRule: 'builtin:original',
+        clientSortBy: 'leechingCount',
         enable: false,
         scrapePromo: [],
         scrapeHr: false,
@@ -556,10 +620,21 @@ export default {
         rssUrls: ['']
       },
       loading: true,
-      registCode: []
+      registCode: [],
+      selectedRssIds: [],
+      batchClientId: undefined,
+      batchRemoveClientId: undefined,
+      batchAllocateRule: undefined
     };
   },
   computed: {
+    rssRowSelection () {
+      return {
+        selectedRowKeys: this.selectedRssIds,
+        onChange: this.onRssSelectChange,
+        columnWidth: '1%'
+      };
+    },
     needScrapeCookie () {
       return this.rss.scrapeHr ||
         (this.rss.scrapePromo && this.rss.scrapePromo.length > 0) ||
@@ -614,6 +689,44 @@ export default {
         this.$message().error(e.message);
       }
     },
+    onRssSelectChange (keys) {
+      this.selectedRssIds = keys;
+    },
+    allocateRuleAlias (id) {
+      const rule = this.allocateRules.find(item => item.id === (id || 'builtin:original'));
+      return rule ? rule.alias : (id || '原规则');
+    },
+    async batchUpdateRss (payload) {
+      if (!this.selectedRssIds.length) {
+        this.$message().error('请先勾选 RSS 任务');
+        return;
+      }
+      try {
+        const res = await this.$api().rss.batchUpdate({
+          ...payload,
+          rssIds: this.selectedRssIds
+        });
+        this.$message().success(res.message || '批量更新成功');
+        await this.listRss();
+      } catch (e) {
+        this.$message().error(e.message);
+      }
+    },
+    async batchAddClient (clientId) {
+      if (!clientId) return;
+      this.batchClientId = undefined;
+      await this.batchUpdateRss({ action: 'addClient', clientId });
+    },
+    async batchRemoveClient (clientId) {
+      if (!clientId) return;
+      this.batchRemoveClientId = undefined;
+      await this.batchUpdateRss({ action: 'removeClient', clientId });
+    },
+    async batchSetAllocate (allocateRule) {
+      if (!allocateRule) return;
+      this.batchAllocateRule = undefined;
+      await this.batchUpdateRss({ action: 'setAllocate', allocateRule });
+    },
     async listNotification () {
       try {
         const res = await this.$api().notification.list();
@@ -635,6 +748,17 @@ export default {
         const res = await this.$api().downloader.list();
         this.downloaders = res.data.sort((a, b) => a.alias.localeCompare(b.alias));
       } catch (e) {
+        this.$message().error(e.message);
+      }
+    },
+    async listAllocateRule () {
+      try {
+        const res = await this.$api().allocateRule.list();
+        this.allocateRules = (res && res.data && res.data.length)
+          ? res.data
+          : [{ id: 'builtin:original', alias: '原规则', builtin: true }];
+      } catch (e) {
+        this.allocateRules = [{ id: 'builtin:original', alias: '原规则', builtin: true }];
         this.$message().error(e.message);
       }
     },
@@ -793,6 +917,7 @@ export default {
     this.clearRss();
     this.listNotification();
     this.listDownloader();
+    this.listAllocateRule();
     this.listRssRule();
     this.listRss();
   }
@@ -803,6 +928,13 @@ export default {
   width: 100%;
   max-width: 1440px;
   margin: 0 auto;
+}
+.rss :deep(col.ant-table-selection-col),
+.rss :deep(.ant-table-selection-column) {
+  width: 1% !important;
+  min-width: 36px;
+  padding-left: 8px !important;
+  padding-right: 8px !important;
 }
 .torrent-name-link {
   color: inherit;

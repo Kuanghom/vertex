@@ -41,6 +41,9 @@
                     <a @click="modifyClick(record)">编辑</a>
                   </a-menu-item>
                   <a-menu-item>
+                    <a @click="openBindRss(record)">绑定 RSS</a>
+                  </a-menu-item>
+                  <a-menu-item>
                     <a @click="cloneClick(record)">克隆</a>
                   </a-menu-item>
                   <a-menu-item :disabled="!record.enable">
@@ -290,10 +293,51 @@
         <a-form-item
           :wrapperCol="isMobile() ? { span:24 } : { span: 21, offset: 3 }">
           <a-button type="primary" html-type="submit" style="margin-top: 24px; margin-bottom: 48px;">应用 | 完成</a-button>
+          <a-button
+            v-if="downloader.id"
+            style="margin-left: 12px; margin-top: 24px; margin-bottom: 48px;"
+            @click="openBindRss(downloader)">
+            绑定 RSS
+          </a-button>
           <a-button style="margin-left: 12px; margin-top: 24px; margin-bottom: 48px;"  @click="clearDownloader()">清空</a-button>
         </a-form-item>
       </a-form>
     </div>
+    <a-modal
+      v-model:visible="bindVisible"
+      :title="bindClient.alias ? `绑定 RSS：${bindClient.alias}` : '绑定 RSS'"
+      ok-text="保存绑定"
+      :confirm-loading="bindLoading"
+      width="640px"
+      @ok="saveBindRss">
+      <div style="margin-bottom: 8px; color: #666;">
+        勾选要加入这台下载器的 RSS 任务，取消勾选即移除。只剩一台下载器的任务不会被移除。
+      </div>
+      <a-input
+        size="small"
+        v-model:value="bindKeyword"
+        placeholder="筛选任务名"
+        style="margin-bottom: 8px;"
+        allow-clear
+      />
+      <div style="margin-bottom: 8px;">
+        <a @click="mergeBindRss(filteredBindRss.map(item => item.id))">全选当前</a>
+        <a-divider type="vertical" />
+        <a @click="removeBindRss(filteredBindRss.map(item => item.id))">清空当前</a>
+        <a-divider type="vertical" />
+        <a @click="mergeBindRss(filteredBindRss.filter(item => item.enable).map(item => item.id))">只选启用</a>
+      </div>
+      <a-checkbox-group v-model:value="bindRssIds" style="width: 100%;">
+        <a-row>
+          <a-col v-for="item of filteredBindRss" :span="12" :key="item.id" style="margin-bottom: 6px;">
+            <a-checkbox :value="item.id">
+              {{ item.alias }}
+              <span v-if="!item.enable" style="color: #999;">(已禁用)</span>
+            </a-checkbox>
+          </a-col>
+        </a-row>
+      </a-checkbox-group>
+    </a-modal>
   </div>
 </template>
 <script>
@@ -362,8 +406,21 @@ export default {
         deleteRules: []
       },
       loading: true,
-      registCode: []
+      registCode: [],
+      rssList: [],
+      bindVisible: false,
+      bindLoading: false,
+      bindClient: {},
+      bindRssIds: [],
+      bindKeyword: ''
     };
+  },
+  computed: {
+    filteredBindRss () {
+      const keyword = (this.bindKeyword || '').trim().toLowerCase();
+      if (!keyword) return this.rssList;
+      return this.rssList.filter(item => (item.alias || '').toLowerCase().indexOf(keyword) !== -1);
+    }
   },
   methods: {
     stripClientPayload (client) {
@@ -508,6 +565,47 @@ export default {
         ...this.defaultDownloader,
         deleteRules: []
       };
+    },
+    async listRss () {
+      try {
+        const res = await this.$api().rss.list();
+        this.rssList = (res.data || []).sort((a, b) => a.alias.localeCompare(b.alias));
+      } catch (e) {
+        this.$message().error(e.message);
+      }
+    },
+    mergeBindRss (ids) {
+      this.bindRssIds = Array.from(new Set([...this.bindRssIds, ...ids]));
+    },
+    removeBindRss (ids) {
+      const drop = new Set(ids);
+      this.bindRssIds = this.bindRssIds.filter(item => !drop.has(item));
+    },
+    async openBindRss (row) {
+      this.bindClient = row;
+      this.bindKeyword = '';
+      await this.listRss();
+      this.bindRssIds = this.rssList
+        .filter(item => (item.clientArr || []).indexOf(row.id) !== -1)
+        .map(item => item.id);
+      this.bindVisible = true;
+    },
+    async saveBindRss () {
+      this.bindLoading = true;
+      try {
+        const res = await this.$api().rss.batchUpdate({
+          action: 'syncClient',
+          clientId: this.bindClient.id,
+          rssIds: this.bindRssIds
+        });
+        this.$message().success(res.message || '绑定成功');
+        this.bindVisible = false;
+        await this.listDownloader();
+      } catch (e) {
+        this.$message().error(e.message);
+      } finally {
+        this.bindLoading = false;
+      }
     }
   },
   async mounted () {

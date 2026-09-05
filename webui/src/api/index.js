@@ -6,6 +6,7 @@ import notification from './notification';
 import siteTag from './siteTag';
 import downloader from './downloader';
 import deleteRule from './deleteRule';
+import allocateRule from './allocateRule';
 import linkRule from './linkRule';
 import rssRule from './rssRule';
 import selectRule from './selectRule';
@@ -26,6 +27,7 @@ const api = {
   notification,
   siteTag,
   deleteRule,
+  allocateRule,
   linkRule,
   rssRule,
   selectRule,

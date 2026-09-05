@@ -35,6 +35,10 @@ if [ ! -d '/vertex/data/rule/link' ]; then
   mkdir /vertex/data/rule/link
 fi
 
+if [ ! -d '/vertex/data/rule/allocate' ]; then
+  mkdir /vertex/data/rule/allocate
+fi
+
 if [ ! -d '/vertex/data/site' ]; then
   mkdir /vertex/data/site
 fi

@@ -20,6 +20,7 @@ import RuleDelete from '@/pages/rule/Delete';
 import RuleLink from '@/pages/rule/Link';
 import RuleRss from '@/pages/rule/Rss';
 import RuleSelect from '@/pages/rule/Select';
+import RuleAllocate from '@/pages/rule/Allocate';
 
 import TaskRss from '@/pages/task/Rss';
 import TaskSubscribe from '@/pages/task/Subscribe';
@@ -148,11 +149,17 @@ const rule = {
       meta: {
         title: '选种规则 - 规则组件'
       }
-    }, {
+    },     {
       path: 'link',
       component: RuleLink,
       meta: {
         title: '链接规则 - 规则组件'
+      }
+    }, {
+      path: 'allocate',
+      component: RuleAllocate,
+      meta: {
+        title: '分配规则 - 规则组件'
       }
     }
   ]

@@ -210,6 +210,7 @@ module.exports = function (app, express, router) {
   router.post('/rss/scrapeTorrent', ctrl.Rss.scrapeTorrent);
   router.get('/rss/promoSupport', ctrl.Rss.promoSupport);
   router.post('/rss/modify', ctrl.Rss.modify);
+  router.post('/rss/batchUpdate', ctrl.Rss.batchUpdate);
   router.post('/rss/delete', ctrl.Rss.delete);
   router.post('/rss/deleteRecord', ctrl.Rss.deleteRecord);
   router.post('/rss/mikanSearch', ctrl.Rss.mikanSearch);
@@ -241,6 +242,12 @@ module.exports = function (app, express, router) {
   router.post('/deleteRule/add', ctrl.DeleteRule.add);
   router.post('/deleteRule/modify', ctrl.DeleteRule.modify);
   router.post('/deleteRule/delete', ctrl.DeleteRule.delete);
+
+  router.get('/allocateRule/list', ctrl.AllocateRule.list);
+  router.post('/allocateRule/add', ctrl.AllocateRule.add);
+  router.post('/allocateRule/modify', ctrl.AllocateRule.modify);
+  router.post('/allocateRule/delete', ctrl.AllocateRule.delete);
+  router.post('/allocateRule/debug', ctrl.AllocateRule.debug);
 
   router.get('/selectRule/list', ctrl.RaceRule.list);
   router.post('/selectRule/add', ctrl.RaceRule.add);

@@ -49,6 +49,7 @@ class RssMod {
       rss.categorySuffixHr = rss.categorySuffixHr || false;
       rss.autoSiteTag = rss.autoSiteTag !== false;
       rss.tags = rss.tags || '';
+      rss.allocateRule = rss.allocateRule || 'builtin:original';
     }
     return rssList;
   };
@@ -130,6 +131,95 @@ class RssMod {
       hosts: support,
       merged: Array.from(merged)
     };
+  };
+
+  batchUpdate (options) {
+    const action = options.action;
+    const clientId = options.clientId;
+    const allocateRule = options.allocateRule;
+    const rssIds = options.rssIds || [];
+    const want = new Set(rssIds);
+    if (!action) {
+      throw new Error('缺少批量操作类型');
+    }
+    if (['addClient', 'removeClient', 'syncClient'].indexOf(action) !== -1 && !clientId) {
+      throw new Error('请选择下载器');
+    }
+    if (['setAllocate', 'syncAllocate'].indexOf(action) !== -1 && !allocateRule) {
+      throw new Error('请选择分配方案');
+    }
+    if (['addClient', 'removeClient', 'setAllocate'].indexOf(action) !== -1 && !rssIds.length) {
+      throw new Error('请选择 RSS 任务');
+    }
+    const rssList = this.list();
+    let updated = 0;
+    let skipped = 0;
+    const apply = (rss) => {
+      this.modify(rss);
+      updated += 1;
+    };
+    if (action === 'addClient') {
+      for (const rss of rssList) {
+        if (!want.has(rss.id)) continue;
+        if ((rss.clientArr || []).indexOf(clientId) !== -1) continue;
+        rss.clientArr = [...(rss.clientArr || []), clientId];
+        apply(rss);
+      }
+    } else if (action === 'removeClient') {
+      for (const rss of rssList) {
+        if (!want.has(rss.id)) continue;
+        if ((rss.clientArr || []).indexOf(clientId) === -1) continue;
+        if ((rss.clientArr || []).length <= 1) {
+          skipped += 1;
+          continue;
+        }
+        rss.clientArr = rss.clientArr.filter(item => item !== clientId);
+        apply(rss);
+      }
+    } else if (action === 'setAllocate') {
+      for (const rss of rssList) {
+        if (!want.has(rss.id)) continue;
+        if ((rss.allocateRule || 'builtin:original') === allocateRule) continue;
+        rss.allocateRule = allocateRule;
+        apply(rss);
+      }
+    } else if (action === 'syncClient') {
+      for (const rss of rssList) {
+        const has = (rss.clientArr || []).indexOf(clientId) !== -1;
+        const should = want.has(rss.id);
+        if (should && !has) {
+          rss.clientArr = [...(rss.clientArr || []), clientId];
+          apply(rss);
+        } else if (!should && has) {
+          if ((rss.clientArr || []).length <= 1) {
+            skipped += 1;
+            continue;
+          }
+          rss.clientArr = rss.clientArr.filter(item => item !== clientId);
+          apply(rss);
+        }
+      }
+    } else if (action === 'syncAllocate') {
+      for (const rss of rssList) {
+        const current = rss.allocateRule || 'builtin:original';
+        const should = want.has(rss.id);
+        if (should && current !== allocateRule) {
+          rss.allocateRule = allocateRule;
+          apply(rss);
+        } else if (!should && current === allocateRule && allocateRule !== 'builtin:original') {
+          rss.allocateRule = 'builtin:original';
+          apply(rss);
+        }
+      }
+    } else {
+      throw new Error('不支持的批量操作');
+    }
+    let message = `已更新 ${updated} 个 RSS 任务`;
+    if (skipped) {
+      message += `；${skipped} 个因只剩一台下载器未移除`;
+    }
+    logger.info('[rss] 批量更新:', action, message);
+    return message;
   };
 
   async mikanSearch (options) {

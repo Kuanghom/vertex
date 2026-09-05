@@ -10,6 +10,7 @@ const path = require('path');
 const moment = require('moment');
 const Push = require('./Push');
 const siteTag = require('../libs/siteTag');
+const allocate = require('../libs/allocate');
 
 class Rss {
   constructor (rss) {
@@ -21,6 +22,7 @@ class Rss {
     this.urls = rss.rssUrls;
     this.clientArr = rss.clientArr || [rss.client];
     this.clientSortBy = rss.clientSortBy;
+    this.allocateRule = rss.allocateRule || 'builtin:original';
     this.autoReseed = rss.autoReseed;
     this.onlyReseed = rss.onlyReseed;
     this.reseedClients = rss.reseedClients;
@@ -493,6 +495,7 @@ class Rss {
     } else {
       torrents = (await Promise.all(this.urls.map(url => rss.getTorrents(url)))).flat();
     }
+    this._allocateCtx = { pending: {}, rrIndex: 0 };
     for (const torrent of torrents) {
       const availableClients = this.clientArr
         .map(item => global.runningClient[item])
@@ -502,16 +505,14 @@ class Rss {
             (!this.maxClientDownloadSpeed || this.maxClientDownloadSpeed > item.avgDownloadSpeed) &&
             (!this.maxClientDownloadCount || this.maxClientDownloadCount > item.maindata.leechingCount);
         });
-      const firstClient = availableClients
+      const limitOkClients = availableClients
         .filter(item => {
           return (!item.maxDownloadSpeed || item.maxDownloadSpeed > item.avgDownloadSpeed) &&
             (!item.maxUploadSpeed || item.maxUploadSpeed > item.avgUploadSpeed) &&
             (!item.maxLeechNum || item.maxLeechNum > item.maindata.leechingCount) &&
             (!item.minFreeSpace || item.minFreeSpace < item.maindata.freeSpaceOnDisk);
-        })
-        .sort((a, b) => (this.clientSortBy === 'freeSpaceOnDisk' ? -1 : 1) *
-          (a.maindata[this.clientSortBy] - b.maindata[this.clientSortBy])
-        )[0] || availableClients[0];
+        });
+      const pool = limitOkClients.length ? limitOkClients : availableClients;
       const sqlRes = await util.getRecord('SELECT * FROM torrents WHERE hash = ? AND rss_id = ?', [torrent.hash, this.id]);
       if (sqlRes && sqlRes.id) continue;
       if (torrent.name.indexOf('[FROZEN]') !== -1) continue;
@@ -525,7 +526,7 @@ class Rss {
         await this.ntf.rejectTorrent(this._rss, undefined, torrent, '拒绝原因: 最长休眠时间');
         continue;
       }
-      if (!firstClient) {
+      if (!pool.length) {
         await this._insertTorrentRecord(torrent, 2, '拒绝原因: 无可用下载器');
         await this.ntf.rejectTorrent(this._rss, undefined, torrent, '拒绝原因: 无可用下载器');
         logger.error(this.alias, '无可用下载器');
@@ -541,6 +542,18 @@ class Rss {
         }
       }
       if (!reject) {
+        const firstClient = allocate.pickClient(pool, torrent, {
+          ruleId: this.allocateRule,
+          clientSortBy: this.clientSortBy,
+          rssAlias: this.alias,
+          ctx: this._allocateCtx
+        });
+        if (!firstClient) {
+          await this._insertTorrentRecord(torrent, 2, '拒绝原因: 无可用下载器');
+          await this.ntf.rejectTorrent(this._rss, undefined, torrent, '拒绝原因: 无可用下载器');
+          logger.error(this.alias, '无可用下载器');
+          continue;
+        }
         await this._pushTorrent(torrent, firstClient);
       }
     }
