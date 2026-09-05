@@ -1557,7 +1557,7 @@ install_apps() {
 
         mkdir -p "$HB/vertex/data/"{client,douban,irc,push,race,rss,rule,script,server,site,watch}
         mkdir -p "$HB/vertex/data/douban/set" "$HB/vertex/data/watch/set"
-        mkdir -p "$HB/vertex/data/rule/"{delete,link,rss,race,raceSet}
+        mkdir -p "$HB/vertex/data/rule/"{delete,link,rss,race,raceSet,allocate}
 
         local vx_pass_md5
         vx_pass_md5=$(echo -n "$APP_PASS" | md5sum | awk '{print $1}')

@@ -339,7 +339,7 @@ prepare_dirs() {
     mkdir -p "$VX_DIR"
     mkdir -p "$VX_DATA_DIR"/{client,douban,irc,push,race,rss,rule,script,server,site,watch}
     mkdir -p "$VX_DATA_DIR/douban/set" "$VX_DATA_DIR/watch/set"
-    mkdir -p "$VX_DATA_DIR/rule"/{delete,link,rss,race,raceSet}
+    mkdir -p "$VX_DATA_DIR/rule"/{delete,link,rss,race,raceSet,allocate}
     chown -R "$APP_USER:$APP_USER" "$VX_DIR" || true
   fi
 
