@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>优惠类型检测规则 — Vertex</title>
+  <style>
+    :root {
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --text: #1f2328;
+      --muted: #656d76;
+      --border: #d0d7de;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --code-bg: #f6f8fa;
+      --tag-promo: #8250df;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      max-width: 1280px;
+      margin: 0 auto;
+      min-height: 100vh;
+    }
+    nav {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      padding: 24px 16px;
+      border-right: 1px solid var(--border);
+      background: var(--card);
+    }
+    nav h2 {
+      font-size: 14px;
+      margin: 0 0 12px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+    nav a {
+      display: block;
+      padding: 6px 10px;
+      margin: 2px 0;
+      color: var(--text);
+      text-decoration: none;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    nav a:hover { background: var(--bg); color: var(--accent); }
+    nav .sub { padding-left: 14px; font-size: 13px; color: var(--muted); }
+    main { padding: 32px 40px 64px; }
+    h1 { font-size: 28px; margin: 0 0 8px; }
+    .subtitle { color: var(--muted); margin-bottom: 28px; }
+    h2 {
+      font-size: 22px;
+      margin: 40px 0 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    h3 {
+      font-size: 17px;
+      margin: 32px 0 10px;
+      color: var(--accent);
+    }
+    h3 .fn { font-family: ui-monospace, Consolas, monospace; }
+    .sites-note { font-size: 13px; color: var(--muted); margin: 0 0 10px; }
+    code {
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+      font-size: 0.92em;
+      background: var(--code-bg);
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+    }
+    pre {
+      background: #0d1117;
+      color: #e6edf3;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 16px;
+      overflow-x: auto;
+      font-size: 12.5px;
+      line-height: 1.55;
+      margin: 10px 0 20px;
+    }
+    pre code { background: none; border: none; padding: 0; color: inherit; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0 20px;
+      font-size: 14px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    th, td {
+      border-bottom: 1px solid var(--border);
+      padding: 10px 14px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th { background: var(--bg); font-weight: 600; }
+    tr:last-child td { border-bottom: none; }
+    .tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .tag-promo { background: #fbefff; color: var(--tag-promo); }
+    .note {
+      background: var(--accent-soft);
+      border-left: 4px solid var(--accent);
+      padding: 12px 16px;
+      border-radius: 0 8px 8px 0;
+      margin: 16px 0;
+      font-size: 14px;
+    }
+    .warn {
+      background: #fff8c5;
+      border-left: 4px solid #9a6700;
+      padding: 12px 16px;
+      border-radius: 0 8px 8px 0;
+      margin: 16px 0;
+      font-size: 14px;
+    }
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      nav { position: static; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
+      main { padding: 24px 16px 48px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <nav>
+      <h2>目录</h2>
+      <a href="#intro">概述</a>
+      <a href="#nexus">NexusPHP 通用</a>
+      <a href="#promo-mteam">M-Team 馒头</a>
+      <a href="#promo-opencd">OpenCD</a>
+      <a href="#promo-ttg">TTG</a>
+      <a href="#promo-u2">U2</a>
+      <a href="#promo-hdbits">HDBits</a>
+      <a href="#promo-hdarea">HDArea</a>
+      <a href="#promo-byr">BYR</a>
+      <a href="#promo-hhan">HHanClub</a>
+      <a href="#promo-hudbt">HUDBT</a>
+      <a href="#promo-putao">葡萄 / Hares</a>
+      <a href="#promo-bitporn">BitPorn</a>
+      <a href="#promo-hdcity">HDCity</a>
+      <a href="#promo-gazelle">Gazelle 系</a>
+      <a href="#promo-dstudio">Depth Studio</a>
+      <a href="#promo-table">按站点汇总</a>
+      <a href="#related">相关文档</a>
+    </nav>
+    <main>
+      <h1 id="intro"><span class="tag tag-promo">优惠</span> 类型检测规则</h1>
+      <p class="subtitle">
+        30% / 50% / 2X / 2X50% / 2XFree — 基于 <code>cookies.txt</code> 实测 + <code>app/libs/scrape.js</code> 站点结构
+      </p>
+
+      <div class="note">
+        <strong>已单独整理（见 <a href="scrape-sites.html">scrape-sites.html</a>）</strong>：免费 <code>_free</code>、HR 等<br>
+        本文档含 <strong>M-Team 馒头</strong>、<strong>OpenCD</strong> 及全站优惠类型规则
+        探测日期：2026-06-24，请求各站 <code>details.php?id=...</code><br>
+        Vertex 当前仅内置免费/HR 检测；本文档供<strong>站点扩展脚本</strong>或后续内置开发参考。
+      </div>
+
+      <h2 id="nexus">NexusPHP 系通用 <span class="fn">_promoNexusPHP</span></h2>
+      <p>适用所有走 <code>_free</code> 的站点（hdhome、ourbits、discfan、hdfans、hdsky 等）。在 <strong>discfan.net</strong> 实测五种类型：</p>
+      <table>
+        <thead><tr><th>优惠</th><th>#top font/span class</th><th>页面文字</th><th>实测 id</th></tr></thead>
+        <tbody>
+          <tr><td>2XFree</td><td><code>twoupfree</code></td><td>2X免费 / 2X免費</td><td>2406</td></tr>
+          <tr><td>2X</td><td><code>twoup</code></td><td>2X</td><td>43149</td></tr>
+          <tr><td>50%</td><td><code>halfdown</code></td><td>50%</td><td>43145（hdhome #132940）</td></tr>
+          <tr><td>30%</td><td><code>thirtypercent</code> 或 <code>thirtiedown</code></td><td>30%</td><td>43127</td></tr>
+          <tr><td>2X50%</td><td><code>twouphalfdown</code></td><td>2X 50%</td><td>43144</td></tr>
+        </tbody>
+      </table>
+      <div class="warn">列表页常有 <code>pro_50pctdown</code> 等徽章，<strong>以详情页 #top 内 class 为准</strong>。</div>
+      <pre><code>const NEXUSPHP_PROMO = {
+  '2xfree': ['twoupfree'],
+  '2x': ['twoup'],
+  '50%': ['halfdown'],
+  '30%': ['thirtiedown', 'thirtypercent'],
+  '2x50%': ['twouphalfdown']
+};
+
+const _promoNexusPHP = (type) => async function (url, cookie) {
+  const d = await getDocument(url, cookie);
+  if (d.body.innerHTML.indexOf('userdetails') === -1) {
+    throw new Error('疑似登录状态失效, 请检查 Cookie');
+  }
+  const classes = NEXUSPHP_PROMO[type] || [];
+  const state = d.querySelector('#top font[class], #top span[class]');
+  return state &amp;&amp; classes.includes(state.className);
+};</code></pre>
+
+      <h2 id="promo-mteam"><span class="fn">_promoMTeam</span> — M-Team 馒头（API）</h2>
+      <p>适用：host 含 <code>m-team</code>。Cookie 填 <strong>API Key</strong>。</p>
+      <p>接口：<code>POST https://api.m-team.cc/api/torrent/detail</code> → <code>body.data.status.discount</code></p>
+      <table>
+        <thead><tr><th>优惠</th><th>API <code>discount</code></th><th>说明</th></tr></thead>
+        <tbody>
+          <tr><td>免费</td><td><code>FREE</code></td><td>100% 免费</td></tr>
+          <tr><td>50%</td><td><code>PERCENT_50</code></td><td>50% 下载</td></tr>
+          <tr><td>30%</td><td><code>PERCENT_70</code></td><td>30% 下载（馒头用 70 表示 30% off）</td></tr>
+          <tr><td>普通</td><td><code>NORMAL</code></td><td>无优惠</td></tr>
+          <tr><td>2X / 2XFree / 2X50%</td><td colspan="2">当前 API 未见对应值</td></tr>
+        </tbody>
+      </table>
+      <pre><code>const MTEAM_PROMO = {
+  'free': 'FREE',
+  '50%': 'PERCENT_50',
+  '30%': 'PERCENT_70'
+};
+
+const _promoMTeam = (type) => async function (url, cookie) {
+  const tid = url.match(/\/(\d+)/)[1];
+  const { body } = await util.requestPromise({
+    url: 'https://api.m-team.cc/api/torrent/detail',
+    method: 'POST',
+    headers: { 'x-api-key': cookie },
+    formData: { id: tid },
+    json: true
+  });
+  if (!body.data) throw new Error('疑似登录状态失效, 请检查 Api Key');
+  const discount = body.data.status?.discount || '';
+  const key = MTEAM_PROMO[type];
+  return key ? String(discount).indexOf(key) !== -1 : false;
+};</code></pre>
+
+      <h2 id="promo-opencd"><span class="fn">_promoOpencd</span> — OpenCD</h2>
+      <p>适用：<code>open.cd</code>、<code>www.open.cd</code>。结构 <code>div[class=title] img[class]</code>。</p>
+      <table>
+        <thead><tr><th>优惠</th><th>img class</th></tr></thead>
+        <tbody>
+          <tr><td>免费</td><td><code>pro_free</code></td></tr>
+          <tr><td>2XFree</td><td><code>pro_free2up</code></td></tr>
+          <tr><td>2X</td><td><code>pro_2up</code></td></tr>
+          <tr><td>50%</td><td><code>pro_50pctdown</code></td></tr>
+          <tr><td>30%</td><td><code>pro_30pctdown</code></td></tr>
+          <tr><td>2X50%</td><td><code>pro_50pctdown2up</code></td></tr>
+        </tbody>
+      </table>
+      <pre><code>const OPENCD_PROMO = {
+  'free': ['pro_free'],
+  '2xfree': ['pro_free2up'],
+  '2x': ['pro_2up'],
+  '50%': ['pro_50pctdown'],
+  '30%': ['pro_30pctdown'],
+  '2x50%': ['pro_50pctdown2up']
+};
+
+const _promoOpencd = (type) => async function (url, cookie) {
+  const d = await getDocument(url, cookie);
+  if (d.body.innerHTML.indexOf('userdetails') === -1) {
+    throw new Error('疑似登录状态失效, 请检查 Cookie');
+  }
+  const classes = OPENCD_PROMO[type] || [];
+  const state = d.querySelector('div[class=title] img[class]');
+  return state &amp;&amp; classes.includes(state.className);
+};</code></pre>
+
+      <h2 id="promo-ttg"><span class="fn">_promoTTG</span> — TTG（totheglory.im）</h2>
+      <p class="sites-note">已用 <code>ttg.txt</code> Cookie 实测详情页（2026-06-24）。</p>
+      <table>
+        <thead><tr><th>优惠</th><th>图标 src</th><th>class</th><th>实测 id</th><th>辅助文案</th></tr></thead>
+        <tbody>
+          <tr><td>免费</td><td><code>/pic/ico_free.gif</code></td><td><code>topic</code></td><td>821145</td><td>本种子限时不计流量</td></tr>
+          <tr><td>30%</td><td><code>/pic/ico_30.gif</code></td><td><code>topic</code></td><td>821172</td><td>下载流量计为实际流量的30%</td></tr>
+          <tr><td>50%</td><td><code>/pic/ico_half.gif</code></td><td><code>topic</code></td><td>821198</td><td>下载流量会减半</td></tr>
+          <tr><td>2X / 2XFree / 2X50%</td><td colspan="4">当前未见对应 <code>ico_*.gif</code>，可用文案兜底</td></tr>
+        </tbody>
+      </table>
+      <div class="warn">
+        页面中<strong>无 <code>topic</code> class</strong> 的 <code>ico_30.gif</code> / <code>ico_half.gif</code>（如 <code>align="absbottom"</code>）多为全站公告，不能当作该种子优惠。列表页可用 <code>checkable_IMG</code>。
+      </div>
+      <pre><code>const TTG_PROMO_ICON = {
+  'free': 'ico_free.gif', '30%': 'ico_30.gif', '50%': 'ico_half.gif'
+};
+
+const _promoTTG = (type) => async function (url, cookie) {
+  const d = await getDocument(url, cookie);
+  if (d.body.innerHTML.indexOf('userdetails') === -1) {
+    throw new Error('疑似登录状态失效, 请检查 Cookie');
+  }
+  const icon = TTG_PROMO_ICON[type];
+  if (icon) {
+    return !!d.querySelector(
+      `img.topic[src="/pic/${icon}"], img.checkable_IMG[src="/pic/${icon}"]`
+    );
+  }
+  // 2X 类未见图标时用文案
+  const html = d.body.innerHTML;
+  const textRules = {
+    '2xfree': () => /2X.*免费|不计上传.*免费/i.test(html),
+    '2x': () => /仅计上传|2X.*上传/i.test(html),
+    '2x50%': () => /2X.*50%|50%.*2X/i.test(html)
+  };
+  return textRules[type] ? textRules[type]() : false;
+};</code></pre>
+
+      <h2 id="promo-u2"><span class="fn">_promoU2</span> — U2（u2.dmhy.org）</h2>
+      <p class="sites-note">实测 <code>details.php?id=36728</code> → <code>img.pro_free2up</code>（2X Free）</p>
+      <table>
+        <thead><tr><th>优惠</th><th>「流量优惠」区块</th></tr></thead>
+        <tbody>
+          <tr><td>2XFree</td><td><code>class=pro_free2up</code></td></tr>
+          <tr><td>2X</td><td><code>class=pro_2up</code></td></tr>
+          <tr><td>50%</td><td><code>class=pro_50pctdown</code> 或 arrowdown 旁 <code>0.50X</code></td></tr>
+          <tr><td>30%</td><td><code>class=pro_30pctdown</code> 或 arrowdown 旁 <code>0.30X</code></td></tr>
+          <tr><td>2X50%</td><td><code>class=pro_50pctdown2up</code></td></tr>
+        </tbody>
+      </table>
+      <pre><code>const _promoU2 = (type) => async function (url, cookie) {
+  const d = await getDocument(url, cookie);
+  if (d.body.innerHTML.indexOf('userdetails') === -1) {
+    throw new Error('疑似登录状态失效, 请检查 Cookie');
+  }
+  const html = d.body.innerHTML;
+  const block = html.match(/流量優惠[\s\S]{0,1200}/)?.[0] || html;
+  const rules = {
+    '2xfree': () => /class=pro_free2up/.test(block),
+    '2x': () => /class=pro_2up/.test(block),
+    '50%': () => /class=pro_50pctdown/.test(block) ||
+      (/class=arrowdown/.test(block) &amp;&amp; /0\.50X/.test(block)),
+    '30%': () => /class=pro_30pctdown/.test(block) ||
+      (/class=arrowdown/.test(block) &amp;&amp; /0\.30X/.test(block)),
+    '2x50%': () => /class=pro_50pctdown2up/.test(block)
+  };
+  return rules[type] ? rules[type]() : false;
+};</code></pre>
+
+      <h2 id="promo-hdbits"><span class="fn">_promoHDBits</span> — HDBits（hdbits.org）</h2>
+      <p class="sites-note">cookies.txt 无 Cookie，规则参考 <code>span.tag.*</code> 惯例。</p>
+      <table>
+        <thead><tr><th>优惠</th><th>选择器</th></tr></thead>
+        <tbody>
+          <tr><td>2XFree</td><td><code>span.tag.freeleech</code> + <code>span.tag.doubleup</code></td></tr>
+          <tr><td>2X</td><td><code>span.tag.doubleup</code></td></tr>
+          <tr><td>50%</td><td><code>span.tag.halfleech</code></td></tr>
+          <tr><td>30%</td><td><code>span.tag.thirtyleech</code> 或页面含 30%</td></tr>
+          <tr><td>2X50%</td><td><code>halfleech</code> + <code>doubleup</code></td></tr>
+        </tbody>
+      </table>
+      <pre><code>const _promoHDBits = (type) => async function (url, cookie) {
+  const d = await getDocument(url, cookie);
+  if (d.body.innerHTML.indexOf('userdetails') === -1) {
+    throw new Error('疑似登录状态失效, 请检查 Cookie');
+  }
+  const has = (cls) => !!d.querySelector(`span.tag.${cls}`);
+  switch (type) {
+    case '2xfree': return has('freeleech') &amp;&amp; has('doubleup');
+    case '2x': return has('doubleup');
+    case '50%': return has('halfleech');
+    case '30%': return has('thirtyleech') || /30%/.test(d.body.innerHTML);
+    case '2x50%': return has('halfleech') &amp;&amp; has('doubleup');
+    default: return false;
+  }
+};</code></pre>
+
+      <h2 id="promo-hdarea"><span class="fn">_promoHDArea</span> — HDArea</h2>
+      <p>适用：<code>www.hdarea.co</code>、<code>hdarea.club</code> 等。结构 <code>h1#top font[class]</code>，class 同 NexusPHP。</p>
+      <pre><code>const _promoHDArea = (type) => async function (url, cookie) {
+  const d = await getDocument(url, cookie);
+  if (d.body.innerHTML.indexOf('userdetails') === -1) {
+    throw new Error('疑似登录状态失效, 请检查 Cookie');
+  }
+  const classes = NEXUSPHP_PROMO[type] || [];
+  const state = d.querySelector('h1#top font[class]');
+  return state &amp;&amp; classes.includes(state.className);
+};</code></pre>
+      <p class="sites-note">列表可能带 <code>pro_50pctdown2up</code>；若 #top 为 free 但需识别 2X50%，可额外检查 <code>class=pro_50pctdown2up</code>。</p>
+
+      <h2 id="promo-byr"><span class="fn">_promoByrPT</span> — BYR PT（byr.pt）</h2>
+      <p>标题区为 <code>#share</code>（非 <code>#top</code>），class 同 NexusPHP。</p>
+      <pre><code>const _promoByrPT = (type) => async function (url, cookie) {
+  const d = await getDocument(url, cookie);
+  if (d.body.innerHTML.indexOf('userdetails') === -1) {
+    throw new Error('疑似登录状态失效, 请检查 Cookie');
+  }
+  const classes = NEXUSPHP_PROMO[type] || [];
+  const state = d.querySelector('#share .free, #share font[class]');
+  return state &amp;&amp; classes.includes(state.className);
+};</code></pre>
+
+      <h2 id="promo-hhan"><span class="fn">_promoHHanClub</span> — HHanClub（hhanclub.net）</h2>
+      <p class="sites-note">列表实测标签：<code>promotion-tag-free</code>、<code>-50</code>、<code>-30</code>、<code>-2xfree</code></p>
+      <table>
+        <thead><tr><th>优惠</th><th>选择器</th></tr></thead>
+        <tbody>
+          <tr><td>2XFree</td><td><code>.promotion-tag-2xfree</code></td></tr>
+          <tr><td>2X</td><td><code>.promotion-tag-2x</code></td></tr>
+          <tr><td>50%</td><td><code>.promotion-tag-50</code></td></tr>
+          <tr><td>30%</td><td><code>.promotion-tag-30</code></td></tr>
+          <tr><td>2X50%</td><td><code>.promotion-tag-2x50</code></td></tr>
+        </tbody>
+      </table>
+      <pre><code>const _promoHHanClub = (type) => async function (url, cookie) {
+  const d = await getDocument(url, cookie);
+  if (d.body.innerHTML.indexOf('userdetails') === -1) {
+    throw new Error('疑似登录状态失效, 请检查 Cookie');
+  }
+  const map = { '2xfree': '2xfree', '2x': '2x', '50%': '50', '30%': '30', '2x50%': '2x50' };
+  const suffix = map[type];
+  if (!suffix) return false;
+  return !!d.querySelector(`.promotion-tag-${suffix}, .promotion-tag.promotion-tag-${suffix}`);
+};</code></pre>
+
+      <h2 id="promo-hudbt"><span class="fn">_promoHUDBT</span> — HUDBT</h2>
+      <p>适用：<code>zeus.hamsters.space</code>、<code>hudbt.hust.edu.cn</code>。结构 <code>div.minor-list img[class=...]</code></p>
+      <table>
+        <thead><tr><th>优惠</th><th>img class</th></tr></thead>
+        <tbody>
+          <tr><td>2XFree</td><td><code>twoupfree</code></td></tr>
+          <tr><td>2X</td><td><code>twoup</code></td></tr>
+          <tr><td>50%</td><td><code>halfdown</code></td></tr>
+          <tr><td>30%</td><td><code>thirtiedown</code> / <code>thirtypercent</code></td></tr>
+          <tr><td>2X50%</td><td><code>twouphalfdown</code></td></tr>
+        </tbody>
+      </table>
+      <pre><code>const _promoHUDBT = (type) => async function (url, cookie) {
+  const d = await getDocument(url, cookie);
+  if (d.body.innerHTML.indexOf('userdetails') === -1) {
+    throw new Error('疑似登录状态失效, 请检查 Cookie');
+  }
+  const map = {
+    '2xfree': ['twoupfree'], '2x': ['twoup'], '50%': ['halfdown'],
+    '30%': ['thirtiedown', 'thirtypercent'], '2x50%': ['twouphalfdown']
+  };
+  const classes = map[type] || [];
+  return classes.some(cls => d.querySelector(`div[class=minor-list] img[class=${cls}]`));
+};</code></pre>
+
+      <h2 id="promo-putao"><span class="fn">_promoPuTao</span> / <span class="fn">_promoHaresClub</span></h2>
+      <p>适用：<code>pt.sjtu.edu.cn</code>、<code>club.hares.top</code>。结构 <code>b font[class]</code>，class 同 NexusPHP。</p>
+      <pre><code>const _promoPuTao = (type) => async function (url, cookie) {
+  const d = await getDocument(url, cookie);
+  if (d.body.innerHTML.indexOf('userdetails') === -1) {
+    throw new Error('疑似登录状态失效, 请检查 Cookie');
+  }
+  const classes = NEXUSPHP_PROMO[type] || [];
+  const state = d.querySelector('b font[class]');
+  return state &amp;&amp; classes.includes(state.className);
+};
+// _promoHaresClub 逻辑相同</code></pre>
+
+      <h2 id="promo-bitporn"><span class="fn">_promoBitPorn</span> — BitPorn（bitporn.eu）</h2>
+      <table>
+        <thead><tr><th>优惠</th><th><code>span.stic2</code> 文本</th></tr></thead>
+        <tbody>
+          <tr><td>2XFree</td><td><code>2X Free</code></td></tr>
+          <tr><td>2X</td><td><code>2X</code></td></tr>
+          <tr><td>50%</td><td><code>50%</code> / <code>50% Off</code></td></tr>
+          <tr><td>30%</td><td><code>30%</code></td></tr>
+          <tr><td>2X50%</td><td><code>2X 50%</code></td></tr>
+        </tbody>
+      </table>
+      <pre><code>const _promoBitPorn = (type) => async function (url, cookie) {
+  const d = await getDocument(url, cookie);
+  if (d.body.innerHTML.indexOf('userdetails') === -1) {
+    throw new Error('疑似登录状态失效, 请检查 Cookie');
+  }
+  const texts = Array.from(d.querySelectorAll('span.stic2')).map(el => el.textContent.trim());
+  const map = {
+    '2xfree': ['2X Free'], '2x': ['2X'], '50%': ['50%', '50% Off'],
+    '30%': ['30%'], '2x50%': ['2X 50%']
+  };
+  const expect = map[type] || [];
+  return texts.some(t => expect.includes(t));
+};</code></pre>
+
+      <h2 id="promo-hdcity"><span class="fn">_promoHDCity</span> — HDCity</h2>
+      <p>适用：<code>hdcity.leniter.org</code>、<code>hdcity.city</code>。结构 <code>font.{class}</code></p>
+      <pre><code>const _promoHDCity = (type) => async function (url, cookie) {
+  const d = await getDocument(url, cookie);
+  if (d.body.innerHTML.indexOf('userdetails') === -1) {
+    throw new Error('疑似登录状态失效, 请检查 Cookie');
+  }
+  const map = {
+    '2xfree': ['twoupfree'], '2x': ['twoup'], '50%': ['halfdown'],
+    '30%': ['thirtiedown', 'thirtypercent'], '2x50%': ['twouphalfdown']
+  };
+  const classes = map[type] || [];
+  return classes.some(cls => d.querySelector(`font.${cls}`));
+};</code></pre>
+
+      <h2 id="promo-gazelle"><span class="fn">_promoLuminance</span> — Gazelle / Luminance</h2>
+      <p>适用：empornium、pixelcove、cathode-ray.tube 等。依据 <code>img[alt]</code> 组合判断。</p>
+      <table>
+        <thead><tr><th>优惠</th><th>判断</th></tr></thead>
+        <tbody>
+          <tr><td>2XFree</td><td><code>alt</code> 含 Freeleech + Double/2x</td></tr>
+          <tr><td>2X</td><td><code>alt</code> 含 Double Upload / 2x</td></tr>
+          <tr><td>50%</td><td><code>alt</code> 含 50% / Partial Freeleech</td></tr>
+          <tr><td>30%</td><td><code>alt</code> 含 30%</td></tr>
+          <tr><td>2X50%</td><td>50% 类 + 2x 类 alt 同时存在</td></tr>
+        </tbody>
+      </table>
+      <pre><code>const _promoLuminance = (type) => async function (url, cookie) {
+  const d = await getDocument(url, cookie);
+  if (d.body.innerHTML.indexOf('nav_userinfo') === -1) {
+    throw new Error('疑似登录状态失效, 请检查 Cookie');
+  }
+  const alts = Array.from(d.querySelectorAll('img[alt]')).map(i => i.getAttribute('alt') || '');
+  const has = (re) => alts.some(a => re.test(a));
+  switch (type) {
+    case '2xfree': return has(/Freeleech/i) &amp;&amp; has(/Double|2x/i);
+    case '2x': return has(/Double Upload|2x/i);
+    case '50%': return has(/50%|Partial Freeleech/i);
+    case '30%': return has(/30%/i);
+    case '2x50%': return has(/50%|Partial/i) &amp;&amp; has(/Double|2x/i);
+    default: return false;
+  }
+};</code></pre>
+
+      <h2 id="promo-dstudio"><span class="fn">_promoDepthStudio</span> — Depth Studio（dstudio.me）</h2>
+      <p>结构 <code>.details-title font.{class}</code> 或 <code>#top font.{class}</code>，class 同 NexusPHP。</p>
+      <pre><code>const _promoDepthStudio = (type) => async function (url, cookie) {
+  const d = await getDocument(url, cookie);
+  assertLoggedIn(d);
+  const map = {
+    '2xfree': ['twoupfree'], '2x': ['twoup'], '50%': ['halfdown'],
+    '30%': ['thirtiedown', 'thirtypercent'], '2x50%': ['twouphalfdown']
+  };
+  const classes = map[type] || [];
+  const selector = classes.map(c => `.details-title font.${c}, #top font.${c}`).join(', ');
+  return !!d.querySelector(selector);
+};</code></pre>
+
+      <h2 id="promo-table">按站点汇总</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>站点</th>
+            <th>2XFree</th>
+            <th>2X</th>
+            <th>50%</th>
+            <th>30%</th>
+            <th>2X50%</th>
+            <th>函数</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>*m-team*</code></td>
+            <td>API <code>FREE</code></td>
+            <td class="none">—</td>
+            <td>API <code>PERCENT_50</code></td>
+            <td>API <code>PERCENT_70</code></td>
+            <td class="none">—</td>
+            <td><code>_promoMTeam</code></td>
+          </tr>
+          <tr>
+            <td><code>open.cd</code> 等</td>
+            <td><code>pro_free2up</code></td>
+            <td><code>pro_2up</code></td>
+            <td><code>pro_50pctdown</code></td>
+            <td><code>pro_30pctdown</code></td>
+            <td><code>pro_50pctdown2up</code></td>
+            <td><code>_promoOpencd</code></td>
+          </tr>
+          <tr>
+            <td>NexusPHP 标准站点</td>
+            <td><code>twoupfree</code></td>
+            <td><code>twoup</code></td>
+            <td><code>halfdown</code></td>
+            <td><code>thirtypercent</code></td>
+            <td><code>twouphalfdown</code></td>
+            <td><code>_promoNexusPHP</code></td>
+          </tr>
+          <tr>
+            <td>totheglory.im</td>
+            <td><code>ico_free.gif</code></td>
+            <td class="none">—</td>
+            <td><code>ico_half.gif</code></td>
+            <td><code>ico_30.gif</code></td>
+            <td class="none">—</td>
+            <td><code>_promoTTG</code></td>
+          </tr>
+          <tr>
+            <td>u2.dmhy.org</td>
+            <td><code>pro_free2up</code></td>
+            <td><code>pro_2up</code></td>
+            <td><code>pro_50pctdown</code></td>
+            <td><code>pro_30pctdown</code></td>
+            <td><code>pro_50pctdown2up</code></td>
+            <td><code>_promoU2</code></td>
+          </tr>
+          <tr>
+            <td>hdbits.org</td>
+            <td>tag 组合</td>
+            <td><code>doubleup</code></td>
+            <td><code>halfleech</code></td>
+            <td><code>thirtyleech</code></td>
+            <td>tag 组合</td>
+            <td><code>_promoHDBits</code></td>
+          </tr>
+          <tr>
+            <td>hdarea.club 等</td>
+            <td colspan="5"><code>h1#top font[class]</code></td>
+            <td><code>_promoHDArea</code></td>
+          </tr>
+          <tr>
+            <td>byr.pt</td>
+            <td colspan="5"><code>#share font[class]</code></td>
+            <td><code>_promoByrPT</code></td>
+          </tr>
+          <tr>
+            <td>hhanclub.net</td>
+            <td><code>tag-2xfree</code></td>
+            <td><code>tag-2x</code></td>
+            <td><code>tag-50</code></td>
+            <td><code>tag-30</code></td>
+            <td><code>tag-2x50</code></td>
+            <td><code>_promoHHanClub</code></td>
+          </tr>
+          <tr>
+            <td>HUDBT</td>
+            <td colspan="5"><code>minor-list img[class]</code></td>
+            <td><code>_promoHUDBT</code></td>
+          </tr>
+          <tr>
+            <td>葡萄 / Hares</td>
+            <td colspan="5"><code>b font[class]</code></td>
+            <td><code>_promoPuTao</code></td>
+          </tr>
+          <tr>
+            <td>bitporn.eu</td>
+            <td colspan="5"><code>span.stic2</code> 文本</td>
+            <td><code>_promoBitPorn</code></td>
+          </tr>
+          <tr>
+            <td>hdcity</td>
+            <td colspan="5"><code>font.{class}</code></td>
+            <td><code>_promoHDCity</code></td>
+          </tr>
+          <tr>
+            <td>Gazelle 系</td>
+            <td colspan="5"><code>img[alt]</code> 组合</td>
+            <td><code>_promoLuminance</code></td>
+          </tr>
+          <tr>
+            <td>dstudio.me</td>
+            <td colspan="5">标题区 <code>font.{class}</code></td>
+            <td><code>_promoDepthStudio</code></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 id="related">相关文档</h2>
+      <table>
+        <thead><tr><th>文档</th><th>说明</th></tr></thead>
+        <tbody>
+          <tr><td><a href="scrape-sites.html">scrape-sites.html</a></td><td>免费 / HR 检测（含 _free、_freeMTeam、_freeOpencd）</td></tr>
+          <tr><td><a href="scrape-sites.md">scrape-sites.md</a></td><td>Markdown 完整版</td></tr>
+          <tr><td><code>app/libs/scrape.js</code></td><td>当前内置实现</td></tr>
+          <tr><td>任务 → 站点扩展</td><td>配置 <code>freeScript</code> / 自定义优惠脚本</td></tr>
+        </tbody>
+      </table>
+
+      <p class="subtitle" style="margin-top: 48px;">Markdown 版本：<code>docs/scrape-sites.md</code>「优惠类型检测」章节</p>
+    </main>
+  </div>
+</body>
+</html>

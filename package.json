@@ -1,0 +1,52 @@
+{
+  "name": "vertex-lite",
+  "version": "0.0.14.0",
+  "description": "Vertex lite: RSS and torrent racing without media subscribe/link features",
+  "main": "app/app.js",
+  "scripts": {
+    "app": "export HTTPS_PORT=4443 && export HTTPS_ENABLE=true && export DISPLAY=:99 && export PORT=4000 && nodemon app/app.js",
+    "eslint": "eslint app",
+    "build:webui": "cd webui && npm run build"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "bencode": "^2.0.1",
+    "better-sqlite3": "~7.5.3",
+    "connect-multiparty": "^2.2.0",
+    "connect-redis": "^6.0.0",
+    "crypto-js": "^4.2.0",
+    "express": "^4.17.1",
+    "express-http-proxy": "^1.6.3",
+    "express-session": "^1.17.2",
+    "express-ws": "^5.0.2",
+    "form-data": "^4.0.0",
+    "got": "^11.8.2",
+    "js-yaml": "^4.0.0",
+    "jsdom": "^20.0.0",
+    "log4js": "^6.3.0",
+    "matrix-org-irc": "^1.2.1",
+    "md5-node": "^1.0.1",
+    "moment": "^2.29.1",
+    "node-cron": "~2.0.3",
+    "puppeteer": "^13.4.0",
+    "puppeteer-extra": "^3.2.3",
+    "puppeteer-extra-plugin-stealth": "^2.9.0",
+    "redis": "^3.1.2",
+    "redlock": "^4.2.0",
+    "request": "^2.88.2",
+    "ssh2": "~1.6.0",
+    "tar": "^6.1.11",
+    "uuid": "^8.3.2",
+    "webdav": "^4.11.0",
+    "xml2js": "^0.4.23"
+  },
+  "devDependencies": {
+    "eslint": "^7.22.0",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.3.1",
+    "eslint-plugin-standard": "^5.0.0"
+  }
+}

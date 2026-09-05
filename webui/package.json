@@ -1,0 +1,52 @@
+{
+  "name": "vertex-lite",
+  "version": "0.0.15.0",
+  "private": true,
+  "author": "",
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "eslint": "eslint src"
+  },
+  "dependencies": {
+    "@achrinza/node-ipc": "^9.2.5",
+    "@fortawesome/fontawesome-svg-core": "^6.1.1",
+    "@fortawesome/free-brands-svg-icons": "^6.1.1",
+    "@fortawesome/free-solid-svg-icons": "^6.1.1",
+    "@fortawesome/vue-fontawesome": "^3.0.0-5",
+    "@vue/cli-plugin-babel": "^5.0.6",
+    "@vue/cli-service": "^5.0.6",
+    "ant-design-vue": "^3.2.9",
+    "antd-theme-generator": "^1.2.11",
+    "axios": "^0.27.2",
+    "babel-plugin-import": "^1.13.5",
+    "echarts": "^5.3.3",
+    "es6-promise": "^4.2.8",
+    "less": "^2.7.2",
+    "less-loader": "^11.0.0",
+    "md5-node": "^1.0.1",
+    "moment": "^2.29.1",
+    "register-service-worker": "^1.7.1",
+    "vue": "^3.2.36",
+    "vue-echarts": "^6.2.3",
+    "vue-lazyload-next": "0.0.2",
+    "vue-router": "^4.0.16",
+    "vue3-lazyload": "^0.3.6",
+    "xterm": "^4.19.0",
+    "xterm-addon-attach": "^0.6.0",
+    "xterm-addon-fit": "^0.5.0"
+  },
+  "devDependencies": {
+    "@babel/eslint-parser": "^7.18.2",
+    "@babel/eslint-plugin": "^7.17.7",
+    "@vue/cli-plugin-pwa": "^5.0.8",
+    "eslint": "^7.30.0",
+    "eslint-plugin-vue": "^7.13.0"
+  },
+  "browserslist": [
+    "defaults",
+    "ios_saf > 10",
+    "chrome > 76"
+  ],
+  "license": "ISC"
+}

@@ -1,0 +1,109 @@
+levels:
+  scdebug: 
+    value: 20002
+    colour: cyan
+  sc: 
+    value: 20001
+    colour: cyan
+
+appenders:
+  console:
+    type: console
+    layout:
+      type: pattern
+      pattern: '%[[%d{ISO8601}][%p %c] %z (%f{3} %l:%o)%] %m'
+  trace:
+    type: dateFile
+    filename: logs/app-access.log
+    pattern: yyyy-MM-dd
+    compress: true
+    numBackups: 30
+    layout:
+      type: pattern
+      pattern: '[%d{ISO8601}][%p %c] %z (%f{3} %l:%o) %m'
+  http:
+    type: logLevelFilter
+    appender: trace
+    level: trace
+    maxLevel: trace
+  info:
+    type: dateFile
+    filename: logs/app-info.log
+    pattern: yyyy-MM-dd
+    compress: true
+    numBackups: 30
+    layout:
+      type: pattern
+      pattern: '[%d{ISO8601}][%p %c] %z (%f{3} %l:%o) %m'
+  sc:
+    type: dateFile
+    filename: logs/app-sc.log
+    pattern: yyyy-MM-dd
+    compress: true
+    numBackups: 30
+    layout:
+      type: pattern
+      pattern: '[%d{ISO8601}][%p %c] %z (%f{3} %l:%o) %m'
+  scdebug:
+    type: dateFile
+    filename: logs/app-sc-debug.log
+    pattern: yyyy-MM-dd
+    compress: true
+    numBackups: 30
+    layout:
+      type: pattern
+      pattern: '[%d{ISO8601}][%p %c] %z (%f{3} %l:%o) %m'
+  debug:
+    type: dateFile
+    filename: logs/app-debug.log
+    pattern: yyyy-MM-dd
+    compress: true
+    numBackups: 30
+    layout:
+      type: pattern
+      pattern: '[%d{ISO8601}][%p %c] %z (%f{3} %l:%o) %m'
+  infoFilter:
+    type: logLevelFilter
+    appender: info
+    level: info
+    maxLevel: info
+  scFilter:
+    type: logLevelFilter
+    appender: sc
+    level: sc
+    maxLevel: sc
+  scdebugFilter:
+    type: logLevelFilter
+    appender: scdebug
+    level: scdebug
+    maxLevel: scdebug
+  debugFilter:
+    type: logLevelFilter
+    appender: debug
+    level: debug
+    maxLevel: debug
+  error:
+    type: dateFile
+    filename: logs/app-error.log
+    pattern: yyyy-MM-dd
+    compress: true
+    numBackups: 30
+    layout:
+      type: pattern
+      pattern: '%x{redis}[%d{ISO8601}[%p %c] %z (%f{3} %l:%o) %m'
+  minError:
+    type: logLevelFilter
+    appender: error
+    level: error
+categories:
+  default:
+    enableCallStack: true
+    appenders:
+      - console
+      - http
+      - infoFilter
+      - debugFilter
+      - minError
+      - scFilter
+      - scdebugFilter
+    level: info
