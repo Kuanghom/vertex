@@ -1,0 +1,15 @@
+services:
+  vertex:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    image: vertex:local
+    container_name: vertex
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      TZ: Asia/Shanghai
+    volumes:
+      # 数据根目录，升级镜像时保留。与原版完全兼容，无需迁移。
+      - ./vertex-data:/vertex

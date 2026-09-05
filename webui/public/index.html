@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="shortcut icon" href="assets/pwaicons/ios/256.png">
+    <meta property="og:image" content="assets/pwaicons/ios/256.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="vertex-theme" content="VERTEX-THEME">
+    <title><%= htmlWebpackPlugin.options.title %></title>
+  </head>
+  <body style="margin: 0;" class="body-bg">
+    <noscript>
+      <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+    </noscript>
+    <div id="app">
+    </div>
+  </body>
+  <script>
+    let customVH = window.innerHeight * 0.01
+    document.documentElement.style.setProperty('--vh', customVH + 'px');
+    window.addEventListener('resize', () => {
+      let customVH = window.innerHeight * 0.01
+      document.documentElement.style.setProperty(
+        '--vh',
+        customVH + 'px',
+      )
+    });
+    (function () {
+      const themeMeta = document.querySelector('meta[name=vertex-theme]');
+      let theme = themeMeta ? themeMeta.content : 'light';
+      if (!theme || theme === 'VERTEX-THEME') {
+        try { theme = localStorage.getItem('vertex-theme') || 'follow'; } catch (e) { theme = 'follow'; }
+      }
+      const themeColor = document.querySelector('meta[name=theme-color]');
+      const statusBar = document.querySelector('meta[name=apple-mobile-web-app-status-bar-style]');
+      const isLogin = window.location.pathname === '/user/login';
+      const prefersLight = window.matchMedia('(prefers-color-scheme: light)');
+      const setLoginBg = function () {
+        if (!isLogin) return;
+        document.body.style.backgroundColor = 'transparent';
+      };
+      const useDark = theme === 'dark' || (theme === 'follow' && !prefersLight.matches);
+      document.documentElement.classList.toggle('dark', useDark);
+      setLoginBg();
+      if (theme === 'follow') {
+        if (themeColor) themeColor.content = prefersLight.matches ? '#0099E3' : '#000000';
+        setLoginBg(prefersLight.matches);
+        prefersLight.addListener(function (e) {
+          if (themeColor) themeColor.content = e.matches ? '#0099E3' : '#000000';
+          setLoginBg(e.matches);
+        });
+      } else if (theme === 'dark') {
+        setLoginBg(false);
+      } else if (theme !== 'cyber') {
+        setLoginBg(true);
+      }
+      if (theme === 'cyber' && statusBar) {
+        statusBar.content = 'default';
+      }
+    })();
+  </script>
+</html>

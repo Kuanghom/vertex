@@ -1,0 +1,3192 @@
+/* Vertex · 港湾青后台
+   青色雾面画布 + 冰蓝侧栏 + 白卡片落在色地上，不再整页高白。 */
+
+:root {
+  --blue: #00a0e9;
+  --blue-deep: #0089c9;
+  --blue-soft: #d8f1fb;
+  --ok: #2db86c;
+  --ok-soft: #d8f5e6;
+  --warn: #e6a817;
+  --warn-soft: #fff1c4;
+  --bad: #e5484d;
+  --bad-soft: #fdecec;
+  --text: #16324a;
+  --text-2: #4a6b80;
+  --text-3: #7a97a8;
+  --line: #c5e3f0;
+  --canvas: #d7eef7;
+  --fill: #d7eef7;
+  --hover: #e3f4fb;
+  --panel: #ffffff;
+  --sidebar: #e5f4fb;
+  --nav: #16324a;
+  --nav-mute: #4a6b80;
+  --nav-hover: #d4eef8;
+  --nav-active: #bfe8f8;
+  --shadow: 0 8px 24px rgba(0, 112, 168, 0.10);
+  --radius-win: 16px;
+  --radius: 10px;
+  --font: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei UI", "Segoe UI", sans-serif;
+  --mono: "Cascadia Mono", Consolas, "Sarasa Term SC", ui-monospace, monospace;
+  --fn-ctl: 40px;
+}
+
+html.dark {
+  color-scheme: dark;
+  --blue: #3db7f2;
+  --blue-deep: #2aa3de;
+  --blue-soft: #143344;
+  --ok: #3dcf7a;
+  --ok-soft: #163226;
+  --warn: #e8b84a;
+  --warn-soft: #3a3014;
+  --bad: #f07178;
+  --bad-soft: #3a1c1e;
+  --text: #e4f2f8;
+  --text-2: #9bb8c8;
+  --text-3: #6d8a9a;
+  --line: #23485a;
+  --canvas: #0e1c24;
+  --fill: #0e1c24;
+  --hover: #16323e;
+  --panel: #142833;
+  --sidebar: #10222c;
+  --nav: #e4f2f8;
+  --nav-mute: #9bb8c8;
+  --nav-hover: #16323e;
+  --nav-active: #18485c;
+  --shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+}
+
+html, body, body.body-bg, #app, .ant-config-provider {
+  height: 100%;
+  margin: 0;
+  background: var(--canvas) !important;
+}
+body {
+  font-family: var(--font);
+  font-size: 14px;
+  color: var(--text);
+  background: var(--canvas);
+  overflow: hidden;
+}
+a { color: var(--blue); }
+a:hover { color: var(--blue-deep); }
+::selection { background: var(--blue); color: #fff; }
+
+*::-webkit-scrollbar { width: 8px; height: 8px; }
+*::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--text-3) 55%, transparent);
+}
+*::-webkit-scrollbar-track { background: transparent; }
+
+/* 去掉 antd 点击波纹和聚焦外发光 */
+html { --antd-wave-shadow-color: transparent; }
+[ant-click-animating-without-extra-node='true']::after,
+.ant-click-animating-node { display: none !important; animation: none !important; }
+
+/* —— 全屏网页壳：顶栏 + 侧栏 + 内容 + 底栏 —— */
+.fn-app {
+  height: 100%;
+  min-height: calc(var(--vh, 1vh) * 100);
+  display: flex;
+  flex-direction: column;
+  background: var(--canvas);
+  overflow: hidden;
+}
+.fn-shell {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.fn-app.is-bare .fn-shell {
+  display: flex;
+  flex-direction: column;
+}
+.fn-app.is-bare .fn-body {
+  grid-template-columns: 1fr;
+}
+.fn-app.is-bare .fn-main {
+  padding: 12px 16px 16px;
+}
+.fn-bare-bar {
+  display: flex;
+  align-items: center;
+  flex: 0 0 44px;
+  height: 44px;
+  gap: 12px;
+  padding: 0 16px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--line);
+}
+.fn-bare-back {
+  height: 28px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  background: transparent;
+  border-radius: 8px;
+  color: var(--text);
+  cursor: pointer;
+}
+.fn-bare-back:hover {
+  border-color: #00a0e9;
+  color: #00a0e9;
+}
+.fn-bare-title {
+  color: var(--text-2);
+  font-size: 13px;
+}
+.fn-titlebar {
+  position: relative;
+  top: 0;
+  margin: 0;
+  flex: 0 0 52px;
+  height: 52px;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 3px 20px 0;
+  box-sizing: border-box;
+  background:
+    linear-gradient(90deg, #00a0e9 0%, #3dcf7a 55%, #00a0e9 100%) 0 0 / 100% 3px no-repeat,
+    #ffffff;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  box-shadow: none;
+  user-select: none;
+}
+.fn-titlebar::before {
+  content: none;
+  display: none;
+}
+html.dark .fn-titlebar {
+  background:
+    linear-gradient(90deg, #3db7f2 0%, #3dcf7a 55%, #3db7f2 100%) 0 0 / 100% 3px no-repeat,
+    #142833;
+}
+.fn-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 750;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  color: var(--blue);
+}
+.fn-brand img { width: 22px; height: 22px; }
+.fn-title-mid {
+  flex: 1;
+  text-align: center;
+  color: var(--text-2);
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.fn-tb-actions { display: flex; gap: 6px; align-items: center; }
+.fn-icon-btn {
+  width: 32px; height: 32px;
+  border: 0;
+  background: transparent;
+  border-radius: 8px;
+  color: var(--text-2);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  font-size: 14px;
+}
+.fn-icon-btn:hover { background: var(--blue-soft); color: var(--blue-deep); }
+.fn-icon-btn:focus,
+.fn-icon-btn:focus-visible { outline: none; box-shadow: none; }
+.fn-logout-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-2);
+  font-size: 13px;
+  cursor: pointer;
+}
+.fn-logout-btn:hover {
+  background: var(--bad-soft);
+  color: var(--bad);
+}
+.fn-nav-logout {
+  margin-top: 16px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+}
+.fn-nav-logout .ant-popover-disabled-compatible-wrapper,
+.fn-nav-logout .ant-popconfirm-disabled-compatible-wrapper {
+  display: block;
+  width: 100%;
+}
+.fn-nav-exit {
+  width: 100%;
+  color: var(--bad);
+}
+.fn-pop-confirm .ant-popover-inner,
+.fn-pop-confirm .ant-popconfirm-inner-content,
+.ant-popconfirm .ant-popover-inner,
+.ant-popconfirm-inner-content {
+  min-width: 228px;
+}
+.ant-popconfirm-message,
+.ant-popover-message {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.ant-popconfirm-buttons,
+.ant-popover-buttons {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+.ant-popconfirm-buttons .ant-btn,
+.ant-popover-buttons .ant-btn {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  width: auto !important;
+  min-width: 64px;
+  height: 32px !important;
+  padding: 0 12px !important;
+  margin: 0 !important;
+  flex: 0 0 auto !important;
+  font-size: 13px !important;
+}
+
+.fn-body {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+}
+.fn-sidebar {
+  background: var(--sidebar);
+  border-right: 1px solid var(--line);
+  padding: 12px 10px 16px;
+  overflow: auto;
+  overflow-x: hidden;
+}
+.fn-nav-label {
+  font-size: 11px;
+  color: var(--nav-mute);
+  padding: 10px 10px 4px;
+}
+.fn-nav-item,
+.fn-nav-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  color: var(--nav);
+  text-decoration: none;
+  border: 0;
+  background: transparent;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+}
+.fn-nav-item:hover,
+.fn-nav-group:hover { background: var(--nav-hover); color: var(--nav); }
+.fn-nav-item.active {
+  background: var(--nav-active);
+  color: var(--blue-deep);
+  font-weight: 700;
+  box-shadow: inset 0 0 0 1px rgba(0, 160, 233, 0.22);
+}
+.fn-nav-group .chev {
+  margin-left: auto;
+  font-size: 10px;
+  color: var(--nav-mute);
+  transition: transform .15s;
+}
+.fn-nav-group.open .chev { transform: rotate(90deg); }
+.fn-sub {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 2px 0 8px;
+  margin: 0;
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
+.fn-nav-item.fn-nav-child {
+  height: 34px;
+  padding: 0 10px 0 44px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 450;
+  color: var(--nav-mute);
+  gap: 8px;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+.fn-nav-item.fn-nav-child:hover {
+  background: var(--nav-hover) !important;
+  color: var(--nav);
+}
+.fn-nav-item.fn-nav-child.active {
+  background: var(--nav-active) !important;
+  color: var(--blue);
+  font-weight: 600;
+}
+.fn-child-ico {
+  width: 14px;
+  flex: 0 0 14px;
+  font-size: 12px;
+  color: inherit;
+  opacity: 0.8;
+}
+.fn-tile {
+  width: 32px; height: 32px;
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 32px;
+  font-size: 13px;
+}
+.fn-main {
+  background:
+    radial-gradient(880px 420px at 8% -8%, rgba(0, 160, 233, 0.22), transparent 58%),
+    radial-gradient(640px 360px at 100% 108%, rgba(45, 184, 108, 0.14), transparent 52%),
+    linear-gradient(180deg, #cfeaf6 0%, #dceef7 46%, #d4e8f2 100%);
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+  padding: 20px 24px 24px;
+}
+html.dark .fn-main {
+  background:
+    radial-gradient(880px 420px at 8% -8%, rgba(0, 160, 233, 0.18), transparent 58%),
+    radial-gradient(640px 360px at 100% 108%, rgba(45, 184, 108, 0.08), transparent 52%),
+    var(--canvas);
+}
+.fn-sheet {
+  position: relative;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  padding: 22px 24px 28px;
+  min-height: calc(100% - 8px);
+  box-sizing: border-box;
+}
+.fn-page-busy {
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: color-mix(in srgb, var(--panel) 78%, transparent);
+  color: var(--text-2);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  pointer-events: none;
+}
+.fn-busy-dot {
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--line);
+  border-top-color: var(--blue);
+  border-radius: 50%;
+  animation: fn-spin 0.7s linear infinite;
+}
+@keyframes fn-spin {
+  to { transform: rotate(360deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fn-busy-dot { animation: none; border-top-color: var(--blue); }
+}
+html.fn-page-loading .fn-main .ant-empty,
+html.fn-page-loading .fn-main .ant-table-placeholder {
+  opacity: 0;
+}
+.fn-dash {
+  min-height: 100%;
+  width: 100%;
+  max-width: none;
+}
+.fn-dash .index {
+  max-width: none !important;
+  width: 100% !important;
+}
+.fn-page {
+  background: transparent;
+  min-height: 0;
+  padding: 0;
+  width: 100%;
+  max-width: none !important;
+}
+.fn-sheet > *,
+.fn-sheet .fn-page {
+  width: 100% !important;
+  max-width: none !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  box-sizing: border-box;
+}
+.fn-page-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.fn-page-head h1 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.fn-page-head h1::before {
+  content: "";
+  width: 3px;
+  height: 16px;
+  border-radius: 2px;
+  background: var(--blue);
+  flex: 0 0 3px;
+}
+.fn-sheet > div[style*="font-size: 24px"],
+.fn-page > div[style*="font-size: 24px"] {
+  display: flex !important;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  line-height: 1.3;
+  color: var(--text);
+  margin: 0 0 8px;
+}
+.fn-sheet > div[style*="font-size: 24px"]::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--blue);
+  box-shadow: 0 0 0 4px var(--blue-soft);
+  flex: 0 0 8px;
+}
+.fn-sheet > .ant-divider:nth-child(2) {
+  margin: 8px 0 20px;
+  border-color: var(--line) !important;
+}
+.fn-filter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 16px;
+  margin-bottom: 12px;
+}
+.fn-filter-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1 1 240px;
+  min-width: 0;
+}
+.fn-filter-item > span {
+  color: var(--text-2);
+  white-space: nowrap;
+  font-size: 14px;
+  flex: 0 0 auto;
+}
+.fn-filter-item > .ant-input,
+.fn-filter-item > .ant-input-affix-wrapper,
+.fn-filter-item > .ant-select,
+.fn-filter-item > .fn-search,
+.fn-search {
+  flex: 1 1 auto;
+  min-width: 200px;
+}
+.fn-filter,
+.fn-toolbar {
+  background: var(--blue-soft);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+.fn-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.fn-toolbar .fn-toolbar-hint {
+  flex: 1 1 auto;
+  margin: 0;
+}
+.fn-toolbar-plain {
+  background: transparent !important;
+  border: 0 !important;
+  padding: 0 2px !important;
+}
+.fn-table-card {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  overflow: visible;
+}
+.fn-table-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.fn-toolbar-hint { color: var(--text-3); font-size: 13px; }
+.fn-batch-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 320px;
+}
+.fn-batch-count {
+  color: var(--text-2);
+  font-size: 13px;
+  line-height: 1.5;
+}
+.fn-batch-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.fn-batch-actions .ant-select {
+  min-width: 0;
+}
+.fn-batch-actions .ant-select:first-child {
+  flex: 0 0 42%;
+}
+.fn-batch-actions .ant-select:last-child {
+  flex: 1 1 0;
+}
+.ant-popover.fn-batch-pop .ant-popover-inner-content {
+  padding: 12px;
+}
+.fn-batch-sheet .fn-batch-panel {
+  padding: 4px 8px 8px;
+}
+.fn-batch-panel,
+.fn-ops-sheet,
+.ant-popover.fn-batch-pop .ant-popover-inner,
+.ant-popover.fn-batch-pop .ant-popover-inner-content {
+  overflow: visible !important;
+}
+.fn-batch-dropdown.ant-select-dropdown,
+body.fn-ops-open .ant-select-dropdown {
+  z-index: 1300 !important;
+}
+.fn-btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  width: 100%;
+}
+.fn-btn-row > .ant-btn {
+  margin-left: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+.fn-guide-lead {
+  margin: 0 0 16px;
+  color: var(--text-2);
+  font-size: 14px;
+  line-height: 1.7;
+}
+.fn-guide-steps {
+  margin: 0 0 20px;
+  padding-left: 20px;
+  color: var(--text);
+  line-height: 2;
+}
+.fn-empty-hint {
+  padding: 48px 16px;
+  text-align: center;
+  color: var(--text-3);
+  font-size: 14px;
+}
+.fn-ops {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0 8px;
+  align-items: center;
+  justify-content: flex-end;
+  white-space: nowrap;
+}
+.fn-ops .ant-btn-link {
+  padding: 0 8px;
+  height: auto;
+  font-size: 14px;
+  color: var(--blue);
+}
+.fn-ops .ant-btn-link.ant-btn-dangerous,
+.fn-ops .ant-btn-dangerous {
+  color: var(--bad);
+}
+.fn-ops-more {
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--blue-soft);
+  color: var(--blue);
+  display: grid;
+  place-items: center;
+  font-size: 16px;
+  line-height: 1;
+  padding: 0;
+}
+.fn-ops-more:active {
+  background: #cfeaf6;
+}
+.fn-ops-trigger {
+  min-width: 52px;
+  padding: 0 10px !important;
+  font-weight: 600;
+}
+.fn-ops-mask {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  background: rgba(20, 32, 45, 0.46);
+  display: flex;
+  align-items: flex-end;
+  padding: 12px 12px max(12px, env(safe-area-inset-bottom));
+}
+.fn-ops-sheet {
+  width: 100%;
+  background: var(--panel);
+  border-radius: 16px;
+  padding: 8px 8px 10px;
+  box-shadow: 0 -8px 32px rgba(20, 32, 45, 0.18);
+}
+.fn-ops-sheet-handle {
+  width: 36px;
+  height: 4px;
+  border-radius: 4px;
+  background: var(--line);
+  margin: 4px auto 10px;
+}
+.fn-ops-sheet-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.fn-ops-sheet-list .ant-btn,
+.fn-ops-sheet-list .ant-btn-link,
+.fn-ops-sheet-list .ant-popover-disabled-compatible-wrapper,
+.fn-ops-sheet-list .ant-popconfirm {
+  display: block;
+  width: 100%;
+}
+.fn-ops-sheet-list .ant-btn {
+  height: 48px;
+  border: 0;
+  border-radius: 10px;
+  font-size: 16px;
+  box-shadow: none;
+  justify-content: center;
+}
+.fn-ops-sheet-list .ant-btn-link {
+  color: var(--text) !important;
+  background: var(--hover);
+}
+.fn-ops-sheet-list .ant-btn-dangerous,
+.fn-ops-sheet-list .ant-btn-link.ant-btn-dangerous {
+  color: var(--bad) !important;
+  background: var(--bad-soft, #fdecee);
+}
+.fn-ops-cancel {
+  display: block;
+  width: 100%;
+  height: 48px;
+  margin-top: 8px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--canvas);
+  color: var(--text-2);
+  font-size: 16px;
+}
+body.fn-ops-open {
+  overflow: hidden;
+}
+body.fn-ops-open .ant-popover,
+body.fn-ops-open .ant-popconfirm,
+body.fn-ops-open .ant-select-dropdown {
+  z-index: 1300 !important;
+}
+.fn-foot {
+  display: flex;
+  align-items: center;
+  flex: 0 0 32px;
+  gap: 16px;
+  padding: 0 20px;
+  border-top: 1px solid var(--line);
+  background: #dff3fa;
+  color: #3a6d86;
+  font-size: 12px;
+}
+html.dark .fn-foot {
+  background: #10222c;
+  color: var(--text-2);
+}
+.fn-foot .sp { margin-left: auto; font-variant-numeric: tabular-nums; }
+
+.fn-login-page {
+  position: relative;
+  overflow: hidden;
+  min-height: calc(var(--vh, 1vh) * 100);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  background-color: #101418;
+}
+.fn-login-scene {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.fn-login-media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+.fn-login-wash {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.36) 0%, rgba(0, 0, 0, 0.08) 46%, rgba(8, 12, 18, 0.22) 100%);
+}
+.fn-login-page.is-tone-light .fn-login-wash {
+  background: linear-gradient(90deg, rgba(8, 18, 28, 0.26) 0%, rgba(8, 18, 28, 0.06) 44%, rgba(8, 16, 24, 0.2) 100%);
+}
+.fn-login-page.is-tone-warm .fn-login-wash {
+  background: linear-gradient(90deg, rgba(20, 10, 8, 0.3) 0%, rgba(20, 10, 8, 0.06) 44%, rgba(16, 10, 8, 0.2) 100%);
+}
+.fn-login-petals {
+  position: absolute;
+  inset: 0;
+}
+.fn-login-petals i {
+  position: absolute;
+  top: -12%;
+  width: 10px;
+  height: 8px;
+  border-radius: 70% 10% 70% 10%;
+  background: radial-gradient(circle at 30% 30%, #ffd6e4, #f4a0b8 70%);
+  opacity: 0.78;
+  animation: fn-login-petal 9s linear infinite;
+}
+.fn-login-petals i:nth-child(1) { left: 8%; animation-duration: 8.4s; animation-delay: -1s; }
+.fn-login-petals i:nth-child(2) { left: 18%; width: 7px; height: 6px; animation-duration: 11s; animation-delay: -3s; }
+.fn-login-petals i:nth-child(3) { left: 27%; animation-duration: 7.2s; animation-delay: -5s; }
+.fn-login-petals i:nth-child(4) { left: 36%; width: 12px; height: 9px; animation-duration: 10.2s; animation-delay: -2.2s; }
+.fn-login-petals i:nth-child(5) { left: 47%; animation-duration: 8.8s; animation-delay: -6s; }
+.fn-login-petals i:nth-child(6) { left: 56%; width: 8px; height: 6px; animation-duration: 12s; animation-delay: -0.6s; }
+.fn-login-petals i:nth-child(7) { left: 64%; animation-duration: 7.8s; animation-delay: -4.4s; }
+.fn-login-petals i:nth-child(8) { left: 73%; width: 11px; height: 8px; animation-duration: 9.6s; animation-delay: -1.8s; }
+.fn-login-petals i:nth-child(9) { left: 81%; animation-duration: 10.8s; animation-delay: -7s; }
+.fn-login-petals i:nth-child(10) { left: 90%; width: 7px; height: 6px; animation-duration: 8s; animation-delay: -3.6s; }
+@keyframes fn-login-petal {
+  0% { transform: translate3d(0, 0, 0) rotate(0deg); opacity: 0; }
+  8% { opacity: 0.8; }
+  100% { transform: translate3d(-80px, 118vh, 0) rotate(360deg); opacity: 0.15; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fn-login-petals i { animation: none !important; }
+}
+@font-face {
+  font-family: "Alex Brush";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../assets/fonts/alex-brush.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Great Vibes";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../assets/fonts/great-vibes.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Liu Jian Mao Cao";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../assets/fonts/liu-jian-mao-cao.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Zhi Mang Xing";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../assets/fonts/zhi-mang-xing.woff2?v=quote2") format("woff2");
+}
+@font-face {
+  font-family: "Jason Handwriting 5";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../assets/fonts/jason-handwriting-5.woff2?v=1") format("woff2");
+}
+.fn-login-visual {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  pointer-events: none;
+  padding: 10vh 5vw 14vh 7vw;
+}
+.fn-login-verse {
+  width: min(720px, 92%);
+  margin-right: auto;
+  margin-left: 2%;
+}
+.fn-login-quote {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 0;
+  font-family: "Jason Handwriting 5", "Zhi Mang Xing", "STXingkai", "华文行楷", cursive;
+  font-size: clamp(48px, 5vw, 68px);
+  font-weight: 400;
+  letter-spacing: -0.04em;
+  line-height: 1.18;
+  color: rgba(255, 250, 244, 0.9);
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.42), 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+.fn-login-line {
+  display: block;
+  white-space: nowrap;
+}
+.fn-login-line.is-offset {
+  margin-top: 0.22em;
+  padding-left: 2em;
+}
+.fn-login-sign {
+  display: block;
+  width: max-content;
+  margin: 22px 0 0 58%;
+  font-family: "Alex Brush", "Great Vibes", "Snell Roundhand", cursive;
+  font-size: clamp(30px, 2.6vw, 40px);
+  font-weight: 400;
+  letter-spacing: 0;
+  color: rgba(255, 246, 236, 0.72);
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.38);
+}
+.fn-login-panel {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: min(480px, 100%);
+  background: transparent;
+  padding: 40px 48px 40px 24px;
+}
+.fn-login-card {
+  width: min(400px, 100%);
+  background: rgba(28, 34, 44, 0.62);
+  backdrop-filter: blur(18px) saturate(1.2);
+  -webkit-backdrop-filter: blur(18px) saturate(1.2);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 28px;
+  padding: 36px 36px 20px;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.92);
+}
+.fn-login-title {
+  font-size: 28px;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  margin: 12px 0 4px;
+  color: #fff;
+}
+.fn-login-sub {
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 13px;
+  margin: 0 0 22px;
+}
+.fn-login-page {
+  --fn-ctl: 44px;
+  color-scheme: dark;
+}
+.fn-login-page .ant-input,
+.fn-login-page .ant-input-lg,
+.fn-login-page .ant-input-affix-wrapper,
+.fn-login-page .ant-input-affix-wrapper-lg,
+.fn-login-page .ant-input-password {
+  height: 44px !important;
+  min-height: 44px !important;
+  font-size: 16px !important;
+  padding: 0 12px !important;
+  line-height: 44px !important;
+  box-sizing: border-box !important;
+}
+.fn-login-page .ant-input-affix-wrapper,
+.fn-login-page .ant-input-affix-wrapper-lg,
+.fn-login-page .ant-input-password {
+  line-height: 22px !important;
+}
+.fn-login-page .ant-input-affix-wrapper > input.ant-input,
+.fn-login-page .ant-input-password input.ant-input {
+  height: auto !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  line-height: 22px !important;
+  font-size: 16px !important;
+}
+.fn-login-page .ant-btn-lg {
+  height: 44px !important;
+}
+
+@media (max-width: 960px) {
+  .fn-body { grid-template-columns: 1fr; }
+  .fn-sidebar { display: none; }
+  .fn-login-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #101418;
+  }
+  .fn-login-wash,
+  .fn-login-page.is-tone-light .fn-login-wash,
+  .fn-login-page.is-tone-warm .fn-login-wash {
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.16) 0%, rgba(8, 12, 18, 0.42) 100%);
+  }
+  .fn-login-visual { display: none; }
+  .fn-login-panel {
+    background: transparent;
+    padding: 16px;
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
+    width: 100%;
+  }
+  .fn-login-card {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 28px 22px 16px;
+    border-radius: 24px;
+  }
+}
+
+/* —— ant-design-vue：白底细边，无灰填充 —— */
+.ant-input,
+.ant-input-affix-wrapper,
+.ant-input-number,
+.ant-input-password,
+.ant-picker,
+textarea.ant-input {
+  background: var(--panel) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--radius) !important;
+  color: var(--text) !important;
+  box-shadow: none !important;
+}
+.ant-input-affix-wrapper,
+.ant-input-affix-wrapper-lg,
+.ant-input-affix-wrapper-sm,
+.ant-input-password {
+  display: inline-flex !important;
+  align-items: center !important;
+}
+.ant-input-affix-wrapper > input.ant-input,
+.ant-input-affix-wrapper .ant-input,
+.ant-input-password input.ant-input {
+  height: auto !important;
+  min-height: 0 !important;
+  line-height: 22px !important;
+  padding: 0 !important;
+}
+.ant-input::placeholder,
+.ant-input-affix-wrapper input::placeholder,
+textarea.ant-input::placeholder {
+  color: var(--text-3) !important;
+}
+.ant-input:hover,
+.ant-input-affix-wrapper:hover,
+.ant-input-number:hover,
+.ant-picker:hover,
+textarea.ant-input:hover {
+  border-color: #cfd6de !important;
+}
+html.dark .ant-input:hover,
+html.dark .ant-input-affix-wrapper:hover,
+html.dark .ant-input-number:hover,
+html.dark .ant-picker:hover {
+  border-color: #3a4450 !important;
+}
+.ant-input:focus,
+.ant-input-focused,
+.ant-input-lg:focus,
+.ant-input.ant-input-lg:focus,
+.ant-input-affix-wrapper-focused,
+.ant-input-affix-wrapper-lg.ant-input-affix-wrapper-focused,
+.ant-input-affix-wrapper:focus,
+.ant-input-number-focused,
+.ant-picker-focused,
+textarea.ant-input:focus {
+  border-color: var(--blue) !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+.ant-input-group-addon {
+  background: var(--panel) !important;
+  border-color: var(--line) !important;
+  color: var(--text-2) !important;
+}
+.ant-input-affix-wrapper > input.ant-input {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+.ant-input-affix-wrapper-focused > input.ant-input:focus {
+  box-shadow: none !important;
+}
+
+.ant-select:not(.ant-select-customize-input) .ant-select-selector {
+  background: var(--panel) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--radius) !important;
+  color: var(--text) !important;
+  box-shadow: none !important;
+}
+.ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) .ant-select-selector,
+.ant-select-open .ant-select-selector {
+  border-color: var(--blue) !important;
+  box-shadow: none !important;
+}
+.ant-select-dropdown {
+  border-radius: 12px !important;
+  background: var(--panel) !important;
+  box-shadow: 0 8px 28px rgba(28, 50, 80, 0.16) !important;
+  padding: 6px !important;
+}
+.ant-select-item {
+  border-radius: 8px !important;
+  color: var(--text) !important;
+}
+.ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+  background: var(--blue-soft) !important;
+  color: var(--blue-deep) !important;
+  font-weight: 600 !important;
+}
+.ant-select-item-option-active:not(.ant-select-item-option-disabled) {
+  background: var(--hover) !important;
+}
+.ant-select-arrow { color: var(--text-3); }
+
+.ant-btn {
+  border-radius: var(--radius) !important;
+  box-shadow: none !important;
+  height: 36px;
+  padding: 0 14px;
+}
+.ant-btn-sm { height: 28px; padding: 0 10px; border-radius: 8px !important; }
+.ant-btn-primary {
+  background: var(--blue) !important;
+  border-color: var(--blue) !important;
+  box-shadow: 0 6px 14px rgba(0, 160, 233, 0.24) !important;
+}
+.ant-btn-primary:hover,
+.ant-btn-primary:focus {
+  background: var(--blue-deep) !important;
+  border-color: var(--blue-deep) !important;
+  box-shadow: 0 8px 18px rgba(0, 137, 201, 0.28) !important;
+}
+.ant-btn-default {
+  background: var(--panel) !important;
+  border-color: var(--line) !important;
+  color: var(--text) !important;
+}
+.ant-btn-default:hover,
+.ant-btn-default:focus {
+  border-color: var(--blue) !important;
+  color: var(--blue) !important;
+  box-shadow: none !important;
+}
+
+.ant-switch-checked { background: var(--blue) !important; }
+.ant-checkbox-checked .ant-checkbox-inner {
+  background-color: var(--blue) !important;
+  border-color: var(--blue) !important;
+}
+.ant-checkbox-wrapper:hover .ant-checkbox-inner,
+.ant-checkbox:hover .ant-checkbox-inner,
+.ant-checkbox-input:focus + .ant-checkbox-inner {
+  border-color: var(--blue) !important;
+}
+.ant-radio-checked .ant-radio-inner { border-color: var(--blue) !important; }
+.ant-radio-inner::after { background-color: var(--blue) !important; }
+.ant-radio-wrapper:hover .ant-radio, .ant-radio:hover .ant-radio-inner,
+.ant-radio-input:focus + .ant-radio-inner { border-color: var(--blue) !important; }
+
+.fn-entity {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.fn-entity-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  flex: 0 0 40px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 650;
+  overflow: hidden;
+}
+.fn-entity-avatar.has-img {
+  background: var(--hover);
+  border: 1px solid var(--line);
+}
+.fn-entity-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.fn-entity-copy {
+  min-width: 0;
+  text-align: left;
+}
+.fn-entity-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+.fn-row-info {
+  display: none;
+}
+html.fn-narrow .fn-row-info {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  padding: 0;
+  flex: 0 0 18px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: color-mix(in srgb, var(--text-2) 78%, transparent);
+  line-height: 0;
+  cursor: pointer;
+}
+html.fn-narrow .fn-row-info svg {
+  display: block;
+  width: 14px;
+  height: 14px;
+}
+html.fn-narrow .fn-row-info:hover,
+html.fn-narrow .fn-row-info:active {
+  border-color: var(--blue);
+  color: var(--blue);
+}
+.fn-entity-head .fn-entity-title { flex: 1; min-width: 0; }
+.fn-entity-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.fn-entity-desc {
+  margin-top: 2px;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--text-3);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.fn-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-2);
+  font-size: 13px;
+  line-height: 20px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 360px;
+}
+.fn-meta::before {
+  content: "";
+  width: 14px;
+  height: 14px;
+  flex: 0 0 14px;
+  border: 1.5px solid var(--text-3);
+  border-radius: 3px;
+  opacity: 0.65;
+  box-sizing: border-box;
+}
+
+.fn-search.ant-input-affix-wrapper,
+.fn-filter-item .ant-input-affix-wrapper,
+.fn-filter-item > .ant-input {
+  border-radius: 999px !important;
+}
+
+.fn-io {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  line-height: 20px;
+  text-align: left;
+}
+.fn-io > div {
+  white-space: nowrap;
+}
+.fn-io em {
+  font-style: normal;
+  font-weight: 650;
+  margin-right: 6px;
+  font-size: 12px;
+}
+.fn-io .up { color: var(--ok); }
+.fn-io .down { color: var(--bad); }
+.fn-cell-inline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.fn-ref-link {
+  color: var(--blue) !important;
+  cursor: pointer;
+  font-weight: 600;
+}
+.fn-ref-group + .fn-ref-group { margin-top: 16px; }
+.fn-ref-group-title {
+  color: var(--text-3);
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+.fn-ref-item {
+  display: block;
+  padding: 8px 0;
+  color: var(--text);
+  border-bottom: 1px solid var(--line);
+}
+.fn-ref-item:last-child { border-bottom: 0; }
+
+/* 飞书表格：表头无底、灰色标签、行间细分割线
+   参考 open.feishu.cn 表格 header_style.background_style=none + 设计规范 4N 间距 */
+.ant-table-wrapper,
+.ant-table,
+.ant-table-tbody > tr > td {
+  background: var(--panel) !important;
+  color: var(--text) !important;
+  border-color: var(--line) !important;
+}
+.ant-table-thead > tr > th {
+  background: #e8f6fc !important;
+  color: #3a6d86 !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  height: 40px;
+  padding: 10px 16px !important;
+  border-bottom: 1px solid var(--line) !important;
+  border-top: 0 !important;
+  white-space: nowrap !important;
+}
+html.dark .ant-table-thead > tr > th {
+  background: #16323e !important;
+  color: var(--text-2) !important;
+}
+.ant-table-tbody > tr > td {
+  border-bottom: 1px solid var(--line) !important;
+  border-right: 0 !important;
+  padding: 14px 16px !important;
+  vertical-align: middle;
+  color: var(--text-2) !important;
+  word-break: normal;
+  overflow-wrap: anywhere;
+}
+.ant-table-tbody > tr.ant-table-row:hover > td {
+  background: var(--blue-soft) !important;
+}
+html.dark .ant-table-tbody > tr.ant-table-row:hover > td {
+  background: var(--hover) !important;
+}
+.ant-table-container {
+  border: 0 !important;
+}
+.ant-table-container table > thead > tr:first-child th:first-child {
+  border-top-left-radius: 0;
+}
+.ant-table {
+  border-radius: 0;
+  overflow: visible;
+}
+.fn-main .ant-table table {
+  table-layout: fixed !important;
+  width: 100% !important;
+  min-width: 100% !important;
+}
+.fn-main .ant-table-thead > tr > th,
+.fn-main .ant-table-tbody > tr > td {
+  min-width: 88px;
+  white-space: nowrap;
+}
+.fn-main .ant-table-cell-fix-left {
+  min-width: 120px !important;
+  white-space: nowrap !important;
+}
+.fn-main .ant-table-tbody > tr > td.fn-card-ops,
+.fn-main .ant-table-thead > tr > th.fn-th-cell.is-locked {
+  text-align: right;
+}
+.fn-main .ant-table-tbody > tr > td:last-child,
+.fn-main .ant-table-thead > tr > th:last-child {
+  min-width: 220px;
+}
+.ant-table-pagination.ant-pagination {
+  margin: 20px 0 4px !important;
+  justify-content: center;
+  width: 100%;
+}
+.fn-page .ant-empty {
+  margin: 56px 0;
+}
+.fn-page .ant-empty-description {
+  color: var(--text-3);
+  font-size: 14px;
+}
+.fn-toolbar .fn-col-btn,
+.fn-filter .fn-col-btn,
+.fn-table-title .fn-col-btn {
+  margin-left: auto;
+  flex: 0 0 auto;
+}
+.fn-table-title {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+  width: 100%;
+}
+.fn-title-actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.fn-title-select {
+  width: 240px;
+}
+.fn-title-select .ant-select-selector,
+.fn-table-title .ant-select:not(.ant-select-sm) .ant-select-selector {
+  min-height: 40px !important;
+  height: 40px !important;
+  display: flex !important;
+  align-items: center;
+}
+.fn-col-btn {
+  height: 40px !important;
+}
+.fn-inline-ctrl {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 12px 16px;
+}
+.fn-main div[style*="font-size: 24px"] {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+}
+.fn-main .ant-table-title .ant-divider-vertical,
+.fn-main .ant-table-thead .ant-divider-vertical {
+  margin: 0 4px;
+}
+.fn-main .ant-divider-vertical {
+  margin-left: 12px;
+  margin-right: 12px;
+}
+.fn-main span + .ant-switch,
+.fn-main .ant-table-title .ant-switch,
+.fn-filter-item .ant-switch {
+  margin-left: 0;
+}
+.fn-main .ant-form-item-control-input-content > .ant-btn + .ant-btn:not([style*="margin-left"]) {
+  margin-left: 12px;
+}
+.fn-main .ant-input + .ant-btn:not([style*="margin-left"]),
+.fn-main .ant-input-affix-wrapper + .ant-btn:not([style*="margin-left"]),
+.fn-main .ant-select + .ant-btn:not([style*="margin-left"]) {
+  margin-left: 12px;
+}
+.fn-main .ant-input-group-compact .ant-btn + .ant-btn {
+  margin-left: 0;
+}
+.fn-main .ant-table-thead > tr > th.fn-th-cell {
+  position: relative;
+  padding-left: 22px;
+  padding-right: 14px;
+  user-select: none;
+}
+.fn-main .ant-table-thead > tr > th.fn-th-cell.is-locked {
+  padding-left: 16px;
+}
+.fn-main .ant-table-thead > tr > th.fn-th-cell:not(.is-locked)::before {
+  content: '⋮⋮';
+  position: absolute;
+  left: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-3);
+  letter-spacing: -2px;
+  font-size: 11px;
+  line-height: 1;
+  cursor: grab;
+  opacity: 0.45;
+}
+.fn-main .ant-table-thead > tr > th.fn-th-cell:not(.is-locked):hover::before {
+  opacity: 1;
+  color: #00a0e9;
+}
+.fn-main .ant-table-thead > tr > th.fn-th-cell::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 10px;
+  border-radius: 2px;
+  background: transparent;
+  cursor: col-resize;
+  z-index: 2;
+}
+.fn-main .ant-table-thead > tr > th.fn-th-cell:hover::after {
+  background: #00a0e9;
+}
+.fn-main .ant-table-thead > tr > th.fn-th-cell.is-drop {
+  box-shadow: inset 3px 0 0 #00a0e9;
+}
+body.fn-col-resizing,
+body.fn-col-resizing * {
+  cursor: col-resize !important;
+  user-select: none !important;
+}
+
+.fn-col-panel {
+  width: 260px;
+  padding: 4px 0 2px;
+}
+.fn-col-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 4px 10px;
+  font-weight: 600;
+  color: var(--text);
+}
+.fn-col-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 4px;
+  border-radius: 8px;
+  cursor: grab;
+}
+.fn-col-row:hover { background: var(--hover); }
+.fn-col-row.locked { cursor: default; opacity: 0.85; }
+.fn-col-grip {
+  color: var(--text-3);
+  letter-spacing: -2px;
+  font-size: 12px;
+  width: 14px;
+  user-select: none;
+}
+.fn-col-row .ant-checkbox-wrapper { flex: 1; }
+.fn-col-move { display: flex; gap: 2px; }
+.fn-col-move button {
+  width: 22px;
+  height: 22px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  border-radius: 6px;
+  color: var(--text-2);
+  line-height: 18px;
+  cursor: pointer;
+  padding: 0;
+}
+.fn-col-move button:disabled { opacity: 0.35; cursor: not-allowed; }
+.fn-col-tip {
+  margin: 8px 4px 0;
+  color: var(--text-3);
+  font-size: 12px;
+}
+.ant-popover.fn-col-pop .ant-popover-inner-content { padding: 12px; }
+
+.container-form-pc,
+.container-form-mobile {
+  padding: 4px 0 28px;
+  max-width: 920px;
+}
+
+/* 全站表单：统一控件高度与行距，覆盖 size=small
+   参考飞书设计规范 4N 间距（项间距 24、标签与控件 16） */
+.fn-form-roomy,
+.fn-main .ant-form,
+.ant-modal .ant-form,
+.ant-drawer .ant-form {
+  --fn-ctl: 40px;
+}
+.fn-form-roomy .ant-form-item,
+.fn-main .ant-form-item,
+.ant-modal .ant-form-item,
+.ant-drawer .ant-form-item {
+  margin-bottom: 24px;
+}
+.fn-form-roomy .ant-form-item-label > label,
+.fn-form-roomy .ant-form-item-label > label,
+.ant-modal .ant-form-item-label > label,
+.ant-drawer .ant-form-item-label > label {
+  height: var(--fn-ctl);
+  line-height: var(--fn-ctl);
+  font-size: 14px;
+}
+.fn-sheet .ant-form .ant-form-item-label > label,
+.fn-main .ant-form .ant-form-item-label > label {
+  height: auto;
+  line-height: 22px;
+  font-size: 14px;
+  font-weight: 500;
+}
+.fn-form-roomy .ant-input,
+.fn-form-roomy .ant-input-sm,
+.fn-form-roomy .ant-input-affix-wrapper,
+.fn-form-roomy .ant-input-affix-wrapper-sm,
+.fn-form-roomy .ant-input-password,
+.fn-form-roomy textarea.ant-input,
+.fn-form-roomy .ant-input-number,
+.fn-form-roomy .ant-picker,
+.fn-main .ant-form .ant-input,
+.fn-main .ant-form .ant-input-sm,
+.fn-main .ant-form .ant-input-affix-wrapper,
+.fn-main .ant-form .ant-input-affix-wrapper-sm,
+.fn-main .ant-form .ant-input-password,
+.fn-main .ant-form textarea.ant-input,
+.fn-main .ant-form .ant-input-number,
+.fn-main .ant-form .ant-picker,
+.ant-modal .ant-form .ant-input,
+.ant-modal .ant-form .ant-input-sm,
+.ant-modal .ant-form .ant-input-affix-wrapper,
+.ant-modal .ant-form .ant-input-password,
+.ant-modal .ant-form textarea.ant-input,
+.ant-modal .ant-form .ant-input-number,
+.ant-modal .ant-form .ant-picker,
+.ant-drawer .ant-form .ant-input,
+.ant-drawer .ant-form .ant-input-affix-wrapper,
+.ant-drawer .ant-form textarea.ant-input,
+.ant-drawer .ant-form .ant-input-number,
+.ant-drawer .ant-form .ant-picker {
+  min-height: var(--fn-ctl) !important;
+  height: var(--fn-ctl) !important;
+  font-size: 14px !important;
+  padding: 8px 12px !important;
+  line-height: 22px !important;
+  box-sizing: border-box !important;
+}
+.fn-form-roomy .ant-input-affix-wrapper,
+.fn-form-roomy .ant-input-affix-wrapper-sm,
+.fn-form-roomy .ant-input-password,
+.fn-main .ant-form .ant-input-affix-wrapper,
+.fn-main .ant-form .ant-input-affix-wrapper-sm,
+.fn-main .ant-form .ant-input-password,
+.ant-modal .ant-form .ant-input-affix-wrapper,
+.ant-modal .ant-form .ant-input-password,
+.ant-drawer .ant-form .ant-input-affix-wrapper {
+  padding: 0 12px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  line-height: 22px !important;
+}
+.fn-form-roomy .ant-input-affix-wrapper > input.ant-input,
+.fn-form-roomy .ant-input-password input.ant-input,
+.fn-main .ant-form .ant-input-affix-wrapper > input.ant-input,
+.fn-main .ant-form .ant-input-password input.ant-input,
+.ant-modal .ant-form .ant-input-affix-wrapper > input.ant-input,
+.ant-modal .ant-form .ant-input-password input.ant-input,
+.ant-drawer .ant-form .ant-input-affix-wrapper > input.ant-input,
+.ant-drawer .ant-form .ant-input-password input.ant-input {
+  height: auto !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  line-height: 22px !important;
+}
+.fn-form-roomy textarea.ant-input,
+.fn-main .ant-form textarea.ant-input,
+.ant-modal .ant-form textarea.ant-input,
+.ant-drawer .ant-form textarea.ant-input {
+  height: auto !important;
+  min-height: 96px !important;
+  line-height: 1.6 !important;
+}
+.fn-form-roomy .ant-select-selection-item,
+.fn-main .ant-form .ant-select-selection-item,
+.ant-modal .ant-form .ant-select-selection-item,
+.ant-drawer .ant-form .ant-select-selection-item {
+  text-align: left !important;
+}
+.fn-form-roomy .ant-select-selector,
+.fn-form-roomy .ant-select-sm .ant-select-selector,
+.fn-main .ant-form .ant-select-selector,
+.fn-main .ant-form .ant-select-sm .ant-select-selector,
+.ant-modal .ant-form .ant-select-selector,
+.ant-drawer .ant-form .ant-select-selector {
+  min-height: var(--fn-ctl) !important;
+  height: var(--fn-ctl) !important;
+  font-size: 14px !important;
+  padding: 4px 11px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  text-align: left !important;
+}
+.ant-input-group-wrapper,
+.fn-main .ant-form .ant-input-group-wrapper,
+.ant-modal .ant-form .ant-input-group-wrapper,
+.ant-drawer .ant-form .ant-input-group-wrapper {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+}
+.ant-input-wrapper.ant-input-group,
+.ant-input-group {
+  display: flex !important;
+  align-items: stretch !important;
+  width: 100% !important;
+}
+.ant-input-group > .ant-input,
+.ant-input-group > input.ant-input {
+  flex: 1 1 auto !important;
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+.fn-form-roomy .ant-input-group-addon,
+.fn-main .ant-form .ant-input-group-addon,
+.ant-modal .ant-form .ant-input-group-addon,
+.ant-drawer .ant-form .ant-input-group-addon,
+.ant-input-group-addon {
+  flex: 0 0 116px !important;
+  width: 116px !important;
+  max-width: 116px !important;
+  display: flex !important;
+  align-items: stretch !important;
+  padding: 0 !important;
+  overflow: hidden;
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+}
+.fn-form-roomy .ant-input-group-addon .ant-select,
+.fn-main .ant-form .ant-input-group-addon .ant-select,
+.ant-modal .ant-form .ant-input-group-addon .ant-select,
+.ant-drawer .ant-form .ant-input-group-addon .ant-select,
+.ant-input-group-addon .ant-select {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+}
+.fn-form-roomy .ant-input-group-addon .ant-select-selector,
+.fn-form-roomy .ant-input-group-addon .ant-select-sm .ant-select-selector,
+.fn-main .ant-form .ant-input-group-addon .ant-select-selector,
+.ant-modal .ant-form .ant-input-group-addon .ant-select-selector,
+.ant-drawer .ant-form .ant-input-group-addon .ant-select-selector,
+.ant-input-group-addon .ant-select .ant-select-selector {
+  border: 0 !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  padding: 0 10px !important;
+}
+.fn-form-roomy .ant-btn,
+.fn-main .ant-form .ant-btn,
+.ant-modal .ant-form .ant-btn {
+  height: 40px;
+  padding: 0 18px;
+}
+.fn-main .ant-form-item-extra,
+.ant-modal .ant-form-item-extra,
+.ant-drawer .ant-form-item-extra {
+  margin-top: 8px;
+  padding-bottom: 2px;
+  line-height: 1.65;
+  font-size: 13px;
+}
+.fn-main .ant-form-item-control-input-content > .ant-checkbox-wrapper,
+.ant-modal .ant-form-item-control-input-content > .ant-checkbox-wrapper {
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+}
+
+@media (min-width: 961px) {
+  .fn-sheet .ant-form .ant-form-item-label,
+  .fn-main .ant-form .ant-form-item-label {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    text-align: left !important;
+    padding: 0 0 8px !important;
+  }
+  .fn-sheet .ant-form .ant-form-item-control,
+  .fn-main .ant-form .ant-form-item-control {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    padding-left: 0 !important;
+    margin-left: 0 !important;
+  }
+  .fn-sheet .ant-form .ant-form-item-label > label,
+  .fn-main .ant-form .ant-form-item-label > label {
+    height: auto !important;
+    line-height: 22px !important;
+  }
+  .ant-modal .ant-form .ant-form-item-label,
+  .ant-drawer .ant-form .ant-form-item-label {
+    flex: 0 0 112px !important;
+    max-width: 112px !important;
+    width: 112px !important;
+    padding: 0 12px 0 0 !important;
+    text-align: left !important;
+  }
+  .ant-modal .ant-form .ant-form-item-label > label,
+  .ant-drawer .ant-form .ant-form-item-label > label {
+    justify-content: flex-start;
+    height: auto !important;
+    min-height: var(--fn-ctl);
+    line-height: 22px !important;
+    padding-top: 9px;
+    white-space: normal;
+  }
+  .ant-modal .ant-form .ant-form-item-control,
+  .ant-drawer .ant-form .ant-form-item-control {
+    flex: 1 1 0 !important;
+    max-width: calc(100% - 112px) !important;
+    width: auto !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  .fn-main .ant-form-item-control-input-content > .ant-input,
+  .fn-main .ant-form-item-control-input-content > .ant-input-affix-wrapper,
+  .fn-main .ant-form-item-control-input-content > .ant-input-password,
+  .fn-main .ant-form-item-control-input-content > .ant-select,
+  .fn-main .ant-form-item-control-input-content > .ant-input-group-wrapper,
+  .fn-main .ant-form-item-control-input-content > textarea.ant-input {
+    max-width: 640px;
+    width: 100%;
+  }
+}
+
+.ant-card,
+.ant-descriptions,
+.ant-modal-content,
+.ant-drawer-content {
+  background: var(--panel) !important;
+  color: var(--text) !important;
+}
+.ant-modal-content { border-radius: 12px !important; overflow: hidden; }
+.ant-modal-header,
+.ant-drawer-header {
+  background: var(--panel) !important;
+  border-color: var(--line) !important;
+  color: var(--text) !important;
+  padding: 16px 24px !important;
+}
+.ant-modal-body,
+.ant-drawer-body {
+  padding: 16px 24px 8px !important;
+  scrollbar-gutter: stable;
+}
+.fn-form-roomy .ant-modal-body {
+  padding: 16px 24px 8px !important;
+}
+.ant-modal-title, .ant-drawer-title { color: var(--text) !important; }
+.ant-drawer-body { background: var(--fill) !important; }
+.ant-divider { border-color: var(--line) !important; }
+.ant-form-item-label > label { color: var(--text-2) !important; }
+.ant-form-item-extra, .ant-form-item-explain { color: var(--text-3) !important; }
+.ant-tag {
+  border: 0 !important;
+  border-radius: 999px !important;
+  padding: 1px 8px;
+  line-height: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+.ant-tag-success {
+  background: var(--ok-soft) !important;
+  color: var(--ok) !important;
+}
+.ant-tag-error {
+  background: var(--bad-soft) !important;
+  color: var(--bad) !important;
+}
+.ant-tag-processing,
+.ant-tag-blue {
+  background: var(--blue-soft) !important;
+  color: var(--blue-deep) !important;
+}
+.ant-tag-warning,
+.ant-tag-gold {
+  background: var(--warn-soft) !important;
+  color: var(--warn) !important;
+}
+.ant-message-notice-content,
+.ant-notification-notice {
+  background: var(--panel) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 12px !important;
+  box-shadow: var(--shadow) !important;
+}
+.ant-message-custom-content,
+.ant-notification-notice-message,
+.ant-notification-notice-description {
+  color: var(--text) !important;
+}
+.ant-modal-close,
+.ant-modal-close-x,
+.ant-drawer-close,
+.ant-notification-notice-close,
+.ant-image-preview-close {
+  color: var(--text-2) !important;
+}
+.ant-modal-close-x {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 54px;
+  height: 54px;
+  line-height: 1 !important;
+}
+.ant-modal-close .anticon,
+.ant-modal-close svg,
+.ant-drawer-close .anticon,
+.ant-drawer-close svg {
+  width: 16px !important;
+  height: 16px !important;
+}
+.ant-modal-close:hover,
+.ant-drawer-close:hover,
+.ant-notification-notice-close:hover {
+  color: var(--text) !important;
+  background: var(--hover) !important;
+}
+
+.ant-tabs-ink-bar { background: var(--blue) !important; }
+.ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn { color: var(--blue) !important; }
+.ant-pagination-item {
+  background: var(--panel) !important;
+  border-color: var(--line) !important;
+  min-width: 32px;
+  height: 32px;
+  line-height: 30px;
+  border-radius: 6px !important;
+}
+.ant-pagination-item a { color: var(--text) !important; }
+.ant-pagination-item-active {
+  border-color: var(--blue) !important;
+  background: var(--panel) !important;
+}
+.ant-pagination-item-active a { color: var(--blue) !important; }
+.ant-pagination-simple-pager,
+.ant-pagination-simple-pager input,
+.ant-pagination-options-quick-jumper input {
+  background: var(--panel) !important;
+  color: var(--text) !important;
+  border-color: var(--line) !important;
+  caret-color: var(--blue);
+}
+.ant-pagination-simple-pager input,
+.ant-pagination-options-quick-jumper input {
+  border: 1px solid var(--line) !important;
+  border-radius: 6px !important;
+}
+.ant-pagination-simple-pager input:focus,
+.ant-pagination-options-quick-jumper input:focus {
+  border-color: var(--blue) !important;
+  outline: none;
+}
+.ant-pagination-prev .ant-pagination-item-link,
+.ant-pagination-next .ant-pagination-item-link,
+.ant-pagination-disabled .ant-pagination-item-link {
+  background: transparent !important;
+  border-color: transparent !important;
+  color: var(--text-2) !important;
+}
+
+.ant-dropdown-menu {
+  border-radius: 12px !important;
+  background: var(--panel) !important;
+  padding: 6px !important;
+}
+.ant-dropdown-menu-item { border-radius: 8px !important; color: var(--text) !important; }
+
+.ant-alert { border-radius: 10px; }
+
+.fn-drawer-note {
+  color: var(--text-2);
+  font-size: 13px;
+  margin: 0 0 10px;
+  line-height: 1.6;
+}
+.fn-drawer-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+
+html.dark .ant-select-dropdown,
+html.dark .ant-dropdown-menu,
+html.dark .ant-picker-dropdown,
+html.dark .ant-modal-content,
+html.dark .ant-message-notice-content {
+  background: var(--panel) !important;
+}
+html.dark .fn-login-panel { background: transparent; }
+html.dark .fn-login-card {
+  background: rgba(28, 34, 44, 0.62);
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.fn-login-page .fn-brand,
+.fn-login-page .fn-login-title,
+.fn-login-page .ant-form-item-label > label,
+.fn-login-page .ant-checkbox-wrapper {
+  color: rgba(255, 255, 255, 0.88) !important;
+}
+.fn-login-page .fn-login-sub { color: rgba(255, 255, 255, 0.58) !important; }
+.fn-login-page .ant-form-item-explain,
+.fn-login-page .ant-form-item-explain-error {
+  color: #ffb4b8 !important;
+}
+.fn-login-page .ant-input,
+.fn-login-page .ant-input-lg,
+.fn-login-page .ant-input-affix-wrapper,
+.fn-login-page .ant-input-affix-wrapper-lg,
+.fn-login-page .ant-input-password,
+html.dark .fn-login-page .ant-input,
+html.dark .fn-login-page .ant-input-affix-wrapper,
+html.dark .fn-login-page .ant-input-password {
+  background: rgba(0, 0, 0, 0.34) !important;
+  color: #fff !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-radius: 12px !important;
+  box-shadow: none !important;
+}
+.fn-login-page .ant-input::placeholder,
+.fn-login-page .ant-input-affix-wrapper input::placeholder {
+  color: rgba(255, 255, 255, 0.38) !important;
+}
+.fn-login-page .ant-input:hover,
+.fn-login-page .ant-input-affix-wrapper:hover,
+.fn-login-page .ant-input-password:hover {
+  border-color: rgba(0, 160, 233, 0.55) !important;
+}
+.fn-login-page .ant-input:focus,
+.fn-login-page .ant-input-focused,
+.fn-login-page .ant-input-affix-wrapper-focused,
+.fn-login-page .ant-input-affix-wrapper:focus {
+  border-color: #00a0e9 !important;
+  box-shadow: 0 0 0 3px rgba(0, 160, 233, 0.18) !important;
+}
+.fn-login-page .ant-input-password-icon,
+.fn-login-page .ant-input-suffix {
+  color: rgba(255, 255, 255, 0.55) !important;
+}
+.fn-login-page .ant-checkbox-inner {
+  background: rgba(0, 0, 0, 0.28) !important;
+  border-color: rgba(255, 255, 255, 0.28) !important;
+}
+.fn-login-page .ant-checkbox-checked .ant-checkbox-inner {
+  background: #00a0e9 !important;
+  border-color: #00a0e9 !important;
+}
+.fn-login-page .ant-btn-primary {
+  background: #00a0e9 !important;
+  border: 0 !important;
+  border-radius: 22px !important;
+  height: 44px !important;
+  font-weight: 650;
+  box-shadow: 0 8px 20px rgba(0, 160, 233, 0.28);
+}
+.fn-login-page .ant-btn-primary:hover {
+  background: #14aef3 !important;
+}
+
+/* —— 业务页内容：所有原页面共用，不只壳 —— */
+.fn-page .ant-table-wrapper {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  overflow: visible;
+}
+.fn-page .ant-table-title,
+.fn-main .ant-table-title {
+  padding: 0 0 12px !important;
+  border-bottom: 0;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+}
+.fn-page .ant-table-title::before,
+.fn-main .ant-table-title::before {
+  content: "";
+  width: 3px;
+  height: 14px;
+  border-radius: 2px;
+  background: var(--blue);
+}
+.fn-sheet .ant-divider {
+  margin: 8px 0 20px;
+  border-color: var(--line) !important;
+}
+.fn-main .ant-form {
+  background: transparent;
+  border-radius: 0;
+  padding: 0;
+}
+.fn-main .ant-descriptions {
+  background: var(--panel);
+  border-radius: 0;
+  padding: 4px 0 8px;
+}
+.fn-main .ant-descriptions-title {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: var(--text) !important;
+}
+.fn-main .ant-descriptions-item-label { color: var(--text-3) !important; }
+.fn-main .ant-descriptions-item-content { color: var(--text) !important; }
+
+@media (max-width: 960px) {
+  .fn-titlebar {
+    top: 0;
+    flex: 0 0 48px;
+    height: 48px;
+    padding: 3px 8px 0 4px;
+  }
+  .fn-icon-btn {
+    width: 44px;
+    height: 44px;
+    font-size: 16px;
+  }
+  .fn-logout-btn {
+    height: 44px;
+    padding: 0 12px;
+    font-size: 14px;
+  }
+  .fn-brand { font-size: 15px; }
+  .fn-title-mid { font-size: 14px; text-align: left; }
+  .fn-main {
+    padding: 12px 12px max(16px, env(safe-area-inset-bottom));
+    -webkit-overflow-scrolling: touch;
+  }
+  .fn-main .ant-spin-nested-loading,
+  .fn-main .ant-spin-container {
+    min-height: 180px;
+  }
+  .fn-sheet {
+    padding: 16px 14px 20px;
+    border-radius: 10px;
+    min-height: 0;
+  }
+  .fn-page {
+    padding: 0;
+  }
+  .fn-nav-item,
+  .fn-nav-group {
+    min-height: 44px;
+    padding: 10px 12px;
+    font-size: 15px;
+  }
+  .fn-nav-item.fn-nav-child {
+    height: 44px;
+    font-size: 15px;
+  }
+  .fn-filter,
+  .fn-toolbar,
+  .fn-table-toolbar {
+    gap: 10px;
+    padding: 10px;
+  }
+  .fn-filter > .ant-btn {
+    min-height: 40px;
+    min-width: 72px;
+  }
+  .fn-toolbar .ant-btn,
+  .fn-page-head .ant-btn {
+    min-height: 40px;
+    flex: 1 1 auto;
+  }
+  .fn-toolbar .fn-col-btn {
+    flex: 0 0 auto;
+    margin-left: auto;
+  }
+  .fn-filter-item {
+    flex: 1 1 100%;
+    width: 100%;
+    align-items: center;
+    flex-direction: row;
+    gap: 8px;
+  }
+  .fn-filter-item > span {
+    flex: 0 0 auto;
+    min-width: 52px;
+  }
+  .fn-filter-item > .ant-input,
+  .fn-filter-item > .ant-select,
+  .fn-filter-item > .ant-input-affix-wrapper,
+  .fn-filter-item > .fn-search,
+  .fn-filter > .ant-select,
+  .fn-filter > .ant-input,
+  .fn-filter > .ant-input-affix-wrapper,
+  .fn-search {
+    flex: 1 1 auto !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: 100%;
+  }
+  .ant-pagination-simple-pager input,
+  .ant-pagination-options-quick-jumper input {
+    width: 44px !important;
+    min-width: 44px !important;
+    height: 28px !important;
+    min-height: 28px !important;
+    padding: 0 4px !important;
+    font-size: 14px !important;
+    line-height: 26px !important;
+  }
+  .fn-main .ant-form .ant-input,
+  .fn-main .ant-form .ant-input-affix-wrapper,
+  .fn-main .ant-form .ant-select,
+  .fn-main .ant-form .ant-picker {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  .fn-main .ant-form .ant-input-group > .ant-input,
+  .fn-main .ant-form .ant-input-group > input.ant-input,
+  .ant-modal .ant-form .ant-input-group > .ant-input,
+  .ant-modal .ant-form .ant-input-group > input.ant-input {
+    width: auto !important;
+    max-width: none !important;
+  }
+  .fn-main .ant-form .ant-input-group-addon,
+  .ant-modal .ant-form .ant-input-group-addon,
+  .ant-drawer .ant-form .ant-input-group-addon {
+    flex-basis: 116px !important;
+    width: 116px !important;
+  }
+  .fn-main .ant-form .ant-input-group-addon .ant-select,
+  .ant-modal .ant-form .ant-input-group-addon .ant-select,
+  .ant-drawer .ant-form .ant-input-group-addon .ant-select {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+  .fn-ops-mobile {
+    width: auto;
+    justify-content: flex-end;
+    white-space: normal;
+  }
+  .fn-main .ant-table-thead > tr > th.fn-th-cell:not(.is-locked)::before {
+    display: none;
+  }
+  .ant-btn {
+    height: 40px;
+    padding: 0 16px;
+    font-size: 15px;
+  }
+  .ant-btn-sm { height: 36px; }
+  .ant-popconfirm-buttons,
+  .ant-popover-buttons {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+  }
+  .ant-popconfirm-buttons .ant-btn,
+  .ant-popover-buttons .ant-btn,
+  .fn-pop-confirm .ant-btn {
+    height: 32px !important;
+    width: auto !important;
+    flex: 0 0 auto !important;
+  }
+  .ant-input,
+  .ant-input-affix-wrapper,
+  .ant-select-selector,
+  .ant-input-password,
+  textarea.ant-input {
+    font-size: 16px !important;
+  }
+  .ant-input-affix-wrapper > input.ant-input,
+  .ant-input-password input.ant-input {
+    min-height: 0 !important;
+    height: auto !important;
+    font-size: 16px !important;
+  }
+  .ant-form .ant-form-item-label,
+  .ant-form .ant-form-item-control,
+  .ant-form-item > .ant-row > .ant-col,
+  .ant-form-item .ant-form-item-label,
+  .ant-form-item .ant-form-item-control {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    text-align: left !important;
+    padding: 0 !important;
+    margin-left: 0 !important;
+  }
+  .ant-form-item [class*="ant-col-offset-"] {
+    margin-left: 0 !important;
+  }
+  .ant-form-item-label > label { height: auto !important; line-height: 22px !important; padding-bottom: 8px !important; }
+  .ant-form-item { margin-bottom: 20px; }
+  .ant-descriptions-view,
+  .ant-descriptions-view table,
+  .ant-descriptions-view tbody,
+  .ant-descriptions-view tr,
+  .ant-descriptions-view th,
+  .ant-descriptions-view td,
+  .ant-descriptions-row,
+  .ant-descriptions-item {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  .ant-descriptions-item-container {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    width: 100% !important;
+  }
+  .ant-descriptions-item-label,
+  .ant-descriptions-item-content,
+  .ant-descriptions-item-label.ant-descriptions-item-colon {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    text-align: left !important;
+    flex: none !important;
+  }
+  .ant-descriptions-item-label {
+    padding-bottom: 4px !important;
+    font-weight: 600;
+  }
+  .ant-descriptions-item-content {
+    padding-bottom: 12px !important;
+  }
+  .ant-descriptions-item-label::after {
+    display: none !important;
+  }
+  .fn-main .ant-table-wrapper,
+  .fn-main .ant-table,
+  .fn-main .ant-table-container,
+  .fn-main .ant-table-content,
+  .fn-main .ant-table-header,
+  .fn-main .ant-table-body,
+  .fn-dialog-full .ant-table-wrapper,
+  .fn-dialog-full .ant-table,
+  .fn-dialog-full .ant-table-container,
+  .fn-dialog-full .ant-table-content,
+  .fn-dialog-full .ant-table-header,
+  .fn-dialog-full .ant-table-body {
+    overflow: visible !important;
+    overflow-x: visible !important;
+  }
+  .fn-main .ant-table table,
+  .fn-dialog-full .ant-table table {
+    display: block;
+    width: 100% !important;
+    min-width: 0 !important;
+    table-layout: auto !important;
+  }
+  .fn-main .ant-table-thead,
+  .fn-dialog-full .ant-table-thead {
+    display: none;
+  }
+  .fn-main .ant-table-tbody,
+  .fn-dialog-full .ant-table-tbody {
+    display: block;
+    width: 100%;
+  }
+  .fn-main .ant-table-tbody > tr.ant-table-measure-row,
+  .fn-dialog-full .ant-table-tbody > tr.ant-table-measure-row {
+    display: none !important;
+  }
+  .fn-main .ant-table-tbody > tr.ant-table-row,
+  .fn-dialog-full .ant-table-tbody > tr.ant-table-row {
+    display: block;
+    position: relative;
+    width: 100%;
+    margin: 0 0 12px;
+    padding: 14px 14px 10px;
+    background: #fff !important;
+    border: 1px solid var(--line) !important;
+    border-radius: 12px;
+    box-shadow: 0 1px 2px rgba(28, 50, 80, 0.04);
+  }
+  .fn-main .ant-table-tbody > tr.ant-table-row:has(.fn-card-ops),
+  .fn-dialog-full .ant-table-tbody > tr.ant-table-row:has(.fn-card-ops) {
+    padding-right: 50px;
+  }
+  html.dark .fn-main .ant-table-tbody > tr.ant-table-row,
+  html.dark .fn-dialog-full .ant-table-tbody > tr.ant-table-row {
+    background: var(--panel) !important;
+  }
+  .fn-main .ant-table-tbody > tr.ant-table-row:hover > td,
+  .fn-dialog-full .ant-table-tbody > tr.ant-table-row:hover > td {
+    background: transparent !important;
+  }
+  .fn-main .ant-table-tbody > tr.ant-table-row > td,
+  .fn-dialog-full .ant-table-tbody > tr.ant-table-row > td {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    height: auto !important;
+    padding: 8px 0 !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: unset !important;
+    word-break: break-word;
+    position: static !important;
+    font-size: 14px !important;
+  }
+  .fn-main .ant-table-tbody > tr.ant-table-row > td.fn-card-lead,
+  .fn-dialog-full .ant-table-tbody > tr.ant-table-row > td.fn-card-lead {
+    display: block;
+    padding: 0 0 10px !important;
+    margin-bottom: 4px;
+    border-bottom: 1px solid var(--line) !important;
+  }
+  .fn-main .ant-table-tbody > tr.ant-table-row > td.fn-card-field,
+  .fn-dialog-full .ant-table-tbody > tr.ant-table-row > td.fn-card-field {
+    display: block;
+    position: relative !important;
+    padding: 8px 0 8px 96px !important;
+    text-align: right;
+  }
+  .fn-main .ant-table-tbody > tr.ant-table-row > td.fn-card-field::before,
+  .fn-dialog-full .ant-table-tbody > tr.ant-table-row > td.fn-card-field::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 0;
+    top: 8px;
+    width: 88px;
+    color: var(--text-3);
+    font-size: 13px;
+    line-height: 22px;
+    text-align: left;
+  }
+  .fn-main .ant-table-tbody > tr.ant-table-row > td.fn-card-field > *,
+  .fn-dialog-full .ant-table-tbody > tr.ant-table-row > td.fn-card-field > * {
+    margin-left: 0;
+    text-align: inherit;
+  }
+  .fn-main .ant-table-tbody > tr.ant-table-row > td.fn-card-field .fn-io,
+  .fn-dialog-full .ant-table-tbody > tr.ant-table-row > td.fn-card-field .fn-io {
+    align-items: flex-end;
+    display: flex;
+  }
+  .fn-main .ant-table-tbody > tr.ant-table-row > td.fn-card-field:has(.ant-select),
+  .fn-main .ant-table-tbody > tr.ant-table-row > td.fn-card-field:has(.ant-input),
+  .fn-main .ant-table-tbody > tr.ant-table-row > td.fn-card-field:has(.ant-input-number),
+  .fn-main .ant-table-tbody > tr.ant-table-row > td.fn-card-field:has(.ant-picker),
+  .fn-main .ant-table-tbody > tr.ant-table-row > td.fn-card-field:has(.ant-input-affix-wrapper),
+  .fn-dialog-full .ant-table-tbody > tr.ant-table-row > td.fn-card-field:has(.ant-select),
+  .fn-dialog-full .ant-table-tbody > tr.ant-table-row > td.fn-card-field:has(.ant-input),
+  .fn-dialog-full .ant-table-tbody > tr.ant-table-row > td.fn-card-field:has(.ant-input-number),
+  .fn-dialog-full .ant-table-tbody > tr.ant-table-row > td.fn-card-field:has(.ant-picker),
+  .fn-dialog-full .ant-table-tbody > tr.ant-table-row > td.fn-card-field:has(.ant-input-affix-wrapper) {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    padding-left: 0 !important;
+    text-align: left;
+  }
+  .fn-main .ant-table-tbody > tr.ant-table-row > td.fn-card-field:has(.ant-select)::before,
+  .fn-main .ant-table-tbody > tr.ant-table-row > td.fn-card-field:has(.ant-input)::before,
+  .fn-main .ant-table-tbody > tr.ant-table-row > td.fn-card-field:has(.ant-input-number)::before,
+  .fn-main .ant-table-tbody > tr.ant-table-row > td.fn-card-field:has(.ant-picker)::before,
+  .fn-main .ant-table-tbody > tr.ant-table-row > td.fn-card-field:has(.ant-input-affix-wrapper)::before,
+  .fn-dialog-full .ant-table-tbody > tr.ant-table-row > td.fn-card-field:has(.ant-select)::before,
+  .fn-dialog-full .ant-table-tbody > tr.ant-table-row > td.fn-card-field:has(.ant-input)::before,
+  .fn-dialog-full .ant-table-tbody > tr.ant-table-row > td.fn-card-field:has(.ant-input-number)::before,
+  .fn-dialog-full .ant-table-tbody > tr.ant-table-row > td.fn-card-field:has(.ant-picker)::before,
+  .fn-dialog-full .ant-table-tbody > tr.ant-table-row > td.fn-card-field:has(.ant-input-affix-wrapper)::before {
+    position: static;
+    width: auto;
+    top: auto;
+  }
+  .fn-main .ant-table-tbody > tr.ant-table-row > td.fn-card-field .ant-select,
+  .fn-main .ant-table-tbody > tr.ant-table-row > td.fn-card-field .ant-input,
+  .fn-main .ant-table-tbody > tr.ant-table-row > td.fn-card-field .ant-input-number,
+  .fn-main .ant-table-tbody > tr.ant-table-row > td.fn-card-field .ant-picker,
+  .fn-main .ant-table-tbody > tr.ant-table-row > td.fn-card-field .ant-input-affix-wrapper,
+  .fn-dialog-full .ant-table-tbody > tr.ant-table-row > td.fn-card-field .ant-select,
+  .fn-dialog-full .ant-table-tbody > tr.ant-table-row > td.fn-card-field .ant-input,
+  .fn-dialog-full .ant-table-tbody > tr.ant-table-row > td.fn-card-field .ant-input-number,
+  .fn-dialog-full .ant-table-tbody > tr.ant-table-row > td.fn-card-field .ant-picker,
+  .fn-dialog-full .ant-table-tbody > tr.ant-table-row > td.fn-card-field .ant-input-affix-wrapper {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    text-align: left;
+  }
+  .fn-main .ant-table-tbody > tr.ant-table-row > td.fn-card-field .ant-select-selector,
+  .fn-main .ant-table-tbody > tr.ant-table-row > td.fn-card-field .ant-select-selection-item,
+  .fn-dialog-full .ant-table-tbody > tr.ant-table-row > td.fn-card-field .ant-select-selector,
+  .fn-dialog-full .ant-table-tbody > tr.ant-table-row > td.fn-card-field .ant-select-selection-item {
+    text-align: left !important;
+    justify-content: flex-start !important;
+  }
+  .fn-main .ant-table-tbody > tr.ant-table-row > td.fn-card-field .ant-tag,
+  .fn-dialog-full .ant-table-tbody > tr.ant-table-row > td.fn-card-field .ant-tag {
+    width: auto;
+    margin-inline-end: 0;
+  }
+  .fn-main .ant-table-tbody > tr.ant-table-row > td .fn-meta::before,
+  .fn-dialog-full .ant-table-tbody > tr.ant-table-row > td .fn-meta::before {
+    display: none;
+  }
+  .fn-dialog-full .ant-col-8,
+  .fn-dialog-full .ant-col-6 {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+  }
+  .fn-main .ant-table-tbody > tr.ant-table-row > td.fn-card-ops,
+  .fn-dialog-full .ant-table-tbody > tr.ant-table-row > td.fn-card-ops {
+    position: absolute !important;
+    top: 8px;
+    right: 8px;
+    display: block;
+    width: auto !important;
+    min-width: 0 !important;
+    margin: 0;
+    padding: 0 !important;
+    border: 0 !important;
+  }
+  .fn-main .ant-table-tbody > tr.ant-table-placeholder,
+  .fn-dialog-full .ant-table-tbody > tr.ant-table-placeholder {
+    display: block;
+    border: 0;
+    box-shadow: none;
+    padding: 28px 0;
+    background: transparent !important;
+  }
+  .fn-main .ant-table-tbody > tr.ant-table-placeholder > td,
+  .fn-dialog-full .ant-table-tbody > tr.ant-table-placeholder > td {
+    display: block;
+    border: 0 !important;
+    text-align: center;
+  }
+  .fn-main .ant-table-cell-fix-left,
+  .fn-main .ant-table-cell-fix-right,
+  .fn-dialog-full .ant-table-cell-fix-left,
+  .fn-dialog-full .ant-table-cell-fix-right {
+    position: static !important;
+    box-shadow: none !important;
+  }
+  .fn-entity-title,
+  .fn-entity-desc,
+  .fn-meta {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+    max-width: none;
+  }
+  .ant-pagination {
+    justify-content: center;
+  }
+  .ant-pagination-simple {
+    display: flex;
+    justify-content: center;
+  }
+  .fn-dialog-full .ant-modal {
+    max-width: 100% !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    top: 0 !important;
+  }
+  .fn-dialog-full .ant-modal-content {
+    border-radius: 0 !important;
+    min-height: 100dvh;
+    min-height: 100vh;
+  }
+  .fn-dialog-full .ant-modal-body {
+    max-height: none !important;
+    padding-bottom: max(24px, env(safe-area-inset-bottom)) !important;
+  }
+  .ant-modal-confirm .ant-modal {
+    max-width: calc(100vw - 24px) !important;
+    width: auto !important;
+    margin: 12px auto !important;
+    top: 18vh !important;
+    padding: 0 !important;
+  }
+  .ant-modal-confirm .ant-modal-content {
+    min-height: auto;
+    border-radius: 12px !important;
+  }
+  .ant-drawer-content-wrapper {
+    max-width: 100vw;
+  }
+  .fn-foot {
+    font-size: 12px;
+    gap: 8px 12px;
+    min-height: 36px;
+    height: auto;
+    flex-wrap: wrap;
+    padding: 6px 12px;
+    padding-bottom: max(6px, env(safe-area-inset-bottom));
+  }
+  .ant-message { top: max(12px, env(safe-area-inset-top)) !important; }
+  .data-rect-1 {
+    width: calc(50% - 16px) !important;
+    box-sizing: border-box;
+  }
+  .data-rect-2,
+  .data-rect-3-pc,
+  .data-rect-3-mobile {
+    width: calc(100% - 16px) !important;
+    box-sizing: border-box;
+  }
+  .ant-dropdown-menu-item {
+    min-height: 44px;
+    display: flex !important;
+    align-items: center;
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 960px) and (display-mode: standalone) {
+  .fn-titlebar {
+    flex-basis: calc(48px + env(safe-area-inset-top, 0px));
+    height: calc(48px + env(safe-area-inset-top, 0px));
+    padding-top: calc(3px + env(safe-area-inset-top, 0px));
+    box-sizing: border-box;
+    background:
+      linear-gradient(90deg, #00a0e9 0%, #3dcf7a 55%, #00a0e9 100%) 0 env(safe-area-inset-top, 0px) / 100% 3px no-repeat,
+      #ffffff;
+  }
+  html.dark .fn-titlebar {
+    background:
+      linear-gradient(90deg, #3db7f2 0%, #3dcf7a 55%, #3db7f2 100%) 0 env(safe-area-inset-top, 0px) / 100% 3px no-repeat,
+      #142833;
+  }
+}
+
+html.dark .ant-radio-wrapper,
+html.dark .ant-checkbox-wrapper,
+html.dark .ant-switch-inner,
+html.dark .ant-empty-description,
+html.dark .ant-pagination,
+html.dark .ant-pagination-simple-pager,
+html.dark .ant-pagination-simple-pager input,
+html.dark .ant-pagination-options-quick-jumper input,
+html.dark .ant-descriptions-item-label,
+html.dark .ant-descriptions-item-content,
+html.dark .ant-descriptions-title,
+html.dark .ant-modal-confirm-title,
+html.dark .ant-modal-confirm-content,
+html.dark .ant-popover-inner-content,
+html.dark .ant-popover-title,
+html.dark .ant-alert-message,
+html.dark .ant-alert-description {
+  color: var(--text) !important;
+}
+html.dark .ant-descriptions-item-label,
+html.dark .ant-empty-description,
+html.dark .ant-form-item-extra {
+  color: var(--text-2) !important;
+}
+html.dark .ant-tag {
+  background: var(--hover) !important;
+  color: var(--text-2) !important;
+}
+html.dark .ant-tag-success {
+  background: var(--ok-soft) !important;
+  color: var(--ok) !important;
+}
+html.dark .ant-tag-error {
+  background: var(--bad-soft) !important;
+  color: var(--bad) !important;
+}
+html.dark .ant-tag-processing,
+html.dark .ant-tag-blue {
+  background: var(--blue-soft) !important;
+  color: var(--blue) !important;
+}
+html.dark .ant-tag-warning,
+html.dark .ant-tag-gold {
+  background: var(--warn-soft) !important;
+  color: var(--warn) !important;
+}
+html.dark .ant-popover-inner,
+html.dark .ant-popover-arrow-content,
+html.dark .ant-modal-confirm .ant-modal-content,
+html.dark .ant-alert {
+  background: var(--panel) !important;
+  border-color: var(--line) !important;
+}
+html.dark .ant-input,
+html.dark .ant-input-affix-wrapper,
+html.dark .ant-input-number,
+html.dark .ant-picker,
+html.dark .ant-select-selector,
+html.dark .ant-select:not(.ant-select-customize-input) .ant-select-selector,
+html.dark textarea.ant-input,
+html.dark .ant-pagination-simple-pager input,
+html.dark .ant-pagination-options-quick-jumper input {
+  background: var(--panel) !important;
+  color: var(--text) !important;
+  border-color: var(--line) !important;
+  color-scheme: dark;
+}
+html.dark .ant-select-arrow,
+html.dark .ant-select-clear,
+html.dark .ant-picker-suffix {
+  color: var(--text-3);
+}
+html.dark .ant-btn:not(.ant-btn-primary):not(.ant-btn-link):not(.ant-btn-dangerous) {
+  background: var(--panel);
+  color: var(--text);
+  border-color: var(--line);
+}
+html.dark .fn-ops-sheet,
+html.dark .fn-batch-sheet {
+  background: var(--panel);
+}
+html.dark .fn-ops-sheet-list .ant-btn-link {
+  background: var(--hover);
+  color: var(--text) !important;
+}
+html.dark .fn-ops-cancel {
+  background: var(--canvas);
+  color: var(--text-2);
+}
+html.dark .fn-batch-count {
+  color: var(--text-2);
+}
+html.dark [style*="color: #666"],
+html.dark [style*="color: #999"],
+html.dark [style*="color: #646a73"],
+html.dark [style*="color: #1f2329"] {
+  color: var(--text-2) !important;
+}
+
+html.dark .ant-message,
+html.dark .ant-message-notice,
+html.dark .ant-notification {
+  color: var(--text) !important;
+  background: transparent !important;
+}
+html.dark .ant-message-notice-content,
+html.dark .ant-notification-notice,
+html.dark .ant-notification-notice-wrapper {
+  background: var(--panel) !important;
+  color: var(--text) !important;
+  border-color: var(--line) !important;
+}
+html.dark .ant-message-custom-content,
+html.dark .ant-message-success,
+html.dark .ant-message-error,
+html.dark .ant-message-warning,
+html.dark .ant-message-info,
+html.dark .ant-message-loading,
+html.dark .ant-message-custom-content > span,
+html.dark .ant-notification-notice-message,
+html.dark .ant-notification-notice-description,
+html.dark .ant-notification-notice-message-single-line-auto-margin {
+  color: var(--text) !important;
+  -webkit-text-fill-color: var(--text);
+}
+html.dark .ant-message-success .anticon { color: var(--ok) !important; }
+html.dark .ant-message-error .anticon,
+html.dark .ant-notification-notice-error .anticon { color: var(--bad) !important; }
+html.dark .ant-message-warning .anticon { color: var(--warn) !important; }
+html.dark .ant-message-info .anticon,
+html.dark .ant-message-loading .anticon { color: var(--blue) !important; }
+
+html.dark .ant-modal-close,
+html.dark .ant-modal-close-x,
+html.dark .ant-drawer-close,
+html.dark .ant-notification-notice-close,
+html.dark .ant-image-preview-close,
+html.dark .ant-modal-close .anticon,
+html.dark .ant-drawer-close .anticon,
+html.dark .ant-notification-notice-close .anticon,
+html.dark .ant-alert-close-icon,
+html.dark .ant-alert-close-icon .anticon-close,
+html.dark .ant-tag-close-icon,
+html.dark .anticon-close,
+html.dark .ant-input-clear-icon,
+html.dark .ant-select-clear {
+  color: var(--text-2) !important;
+}
+html.dark .ant-modal-close:hover,
+html.dark .ant-drawer-close:hover,
+html.dark .ant-notification-notice-close:hover {
+  color: var(--text) !important;
+  background: var(--hover) !important;
+}
+
+html.dark .ant-modal-header,
+html.dark .ant-modal-footer,
+html.dark .ant-modal-content,
+html.dark .ant-drawer-header,
+html.dark .ant-drawer-footer,
+html.dark .ant-drawer-content,
+html.dark .ant-drawer-wrapper-body {
+  background: var(--panel) !important;
+  border-color: var(--line) !important;
+  color: var(--text) !important;
+}
+html.dark .ant-modal-title,
+html.dark .ant-drawer-title,
+html.dark .ant-modal-body,
+html.dark .ant-drawer-body,
+html.dark .ant-form-item-label > label {
+  color: var(--text) !important;
+}
+html.dark .ant-form-item-extra,
+html.dark .ant-form-item-explain {
+  color: var(--text-2) !important;
+}
+html.dark .ant-form-item-explain-error {
+  color: var(--bad) !important;
+}
+
+html.dark .ant-select-dropdown,
+html.dark .ant-select-item,
+html.dark .ant-select-item-option-content,
+html.dark .ant-dropdown-menu,
+html.dark .ant-dropdown-menu-item,
+html.dark .ant-dropdown-menu-title-content {
+  background: var(--panel) !important;
+  color: var(--text) !important;
+}
+html.dark .ant-select-item-option-active:not(.ant-select-item-option-disabled),
+html.dark .ant-dropdown-menu-item:hover {
+  background: var(--hover) !important;
+}
+html.dark .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+  background: var(--nav-active) !important;
+  color: var(--text) !important;
+}
+
+html.dark .ant-tooltip-inner {
+  background: #1a2c36 !important;
+  color: var(--text) !important;
+}
+html.dark .ant-tooltip-arrow-content {
+  background: #1a2c36 !important;
+}
+
+html.dark .ant-picker-panel,
+html.dark .ant-picker-header,
+html.dark .ant-picker-footer,
+html.dark .ant-picker-time-panel,
+html.dark .ant-picker-content th {
+  background: var(--panel) !important;
+  color: var(--text) !important;
+  border-color: var(--line) !important;
+}
+html.dark .ant-picker-cell,
+html.dark .ant-picker-header-view button {
+  color: var(--text) !important;
+}
+html.dark .ant-picker-cell-in-view.ant-picker-cell-disabled .ant-picker-cell-inner,
+html.dark .ant-picker-time-panel-cell-disabled {
+  color: var(--text-3) !important;
+}
+
+html.dark .ant-tabs-tab,
+html.dark .ant-breadcrumb,
+html.dark .ant-breadcrumb-link,
+html.dark .ant-collapse-header,
+html.dark .ant-collapse-content,
+html.dark .ant-empty-description,
+html.dark .ant-list-item,
+html.dark .ant-list-item-meta-title,
+html.dark .ant-list-item-meta-description,
+html.dark .ant-statistic-title,
+html.dark .ant-statistic-content,
+html.dark .ant-upload,
+html.dark .ant-upload-text,
+html.dark .ant-upload-hint,
+html.dark .ant-tree,
+html.dark .ant-tree-title,
+html.dark .ant-typography,
+html.dark .ant-comment-content-author-name,
+html.dark .ant-comment-content-detail,
+html.dark .ant-result-title,
+html.dark .ant-result-subtitle,
+html.dark .ant-page-header-heading-title,
+html.dark .ant-card-head-title,
+html.dark .ant-card-body {
+  color: var(--text) !important;
+}
+html.dark .ant-card,
+html.dark .ant-card-head,
+html.dark .ant-collapse,
+html.dark .ant-collapse-content,
+html.dark .ant-list-split .ant-list-item {
+  background: var(--panel) !important;
+  border-color: var(--line) !important;
+}
+
+html.dark .ant-table,
+html.dark .ant-table-container,
+html.dark .ant-table-tbody > tr > td,
+html.dark .ant-table-placeholder {
+  background: var(--panel) !important;
+  color: var(--text) !important;
+}
+
+html.dark .ant-switch:not(.ant-switch-checked) {
+  background: #3a4d58;
+}
+html.dark .ant-checkbox-inner,
+html.dark .ant-radio-inner {
+  background: var(--panel) !important;
+  border-color: var(--line) !important;
+}
+
+html.dark .ant-pagination-simple .ant-pagination-simple-pager input,
+html.dark .ant-pagination-simple-pager input,
+html.dark .ant-pagination-options-quick-jumper input {
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--panel) !important;
+  background-color: var(--panel) !important;
+  color: var(--text) !important;
+  -webkit-text-fill-color: var(--text);
+  border: 1px solid var(--line) !important;
+}
+
+html.dark .ant-popconfirm-inner-content,
+html.dark .ant-popover-message,
+html.dark .ant-popover-message-title,
+html.dark .ant-modal-confirm-body,
+html.dark .ant-modal-confirm-title,
+html.dark .ant-modal-confirm-content {
+  color: var(--text) !important;
+}
+
+html.dark body {
+  color: var(--text);
+  background: var(--fill);
+}
+
+.fn-row-detail .ant-descriptions-item-label {
+  color: var(--text-2) !important;
+  width: 96px;
+}
+.fn-row-detail-foot {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.fn-dryrun-modal .ant-modal {
+  max-width: min(1100px, calc(100vw - 48px));
+}
+.fn-dryrun-modal .fn-dryrun-table .ant-table-thead > tr > th {
+  white-space: nowrap;
+}
+.fn-dryrun-modal .fn-dryrun-table .ant-table-tbody > tr > td {
+  vertical-align: top;
+}
+.fn-dryrun-modal .fn-dryrun-table .ant-table-tbody > tr > td:first-child {
+  white-space: normal;
+  word-break: break-word;
+  line-height: 1.45;
+}
+.fn-dryrun-modal .fn-dryrun-cards {
+  display: none;
+}
+@media (max-width: 960px) {
+  .fn-dryrun-modal .ant-modal {
+    max-width: 100% !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    top: 0 !important;
+  }
+  .fn-dryrun-modal .ant-modal-content {
+    border-radius: 0 !important;
+    min-height: 100dvh;
+    min-height: 100vh;
+  }
+  .fn-dryrun-modal .ant-modal-body {
+    max-height: none !important;
+    padding: 12px 14px max(20px, env(safe-area-inset-bottom)) !important;
+  }
+  .fn-dryrun-modal .fn-dryrun-table {
+    display: none !important;
+  }
+  .fn-dryrun-modal .fn-dryrun-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .fn-dryrun-modal .fn-dryrun-foot {
+    position: sticky;
+    bottom: 0;
+    padding-top: 8px;
+    background: var(--panel);
+  }
+  .fn-dryrun-modal .fn-dryrun-foot .ant-btn {
+    width: 100%;
+    height: 44px;
+  }
+}
+
+.fn-app.is-bare .fn-shell {
+  display: flex;
+  flex-direction: column;
+}
+.fn-app.is-bare .fn-body {
+  grid-template-columns: 1fr;
+}
+.fn-app.is-bare .fn-main {
+  padding: 16px 20px 20px;
+}
+.fn-bare-bar {
+  display: flex;
+  align-items: center;
+  flex: 0 0 44px;
+  height: 44px;
+  gap: 12px;
+  padding: 0 16px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--line);
+}
+.fn-bare-back {
+  height: 28px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--text);
+  border-radius: 8px;
+  cursor: pointer;
+}
+.fn-bare-back:hover {
+  border-color: #00a0e9;
+  color: #00a0e9;
+}
+.fn-bare-title {
+  font-weight: 650;
+  color: var(--text);
+}
+
+.fn-title-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
+}
+.fn-title-select {
+  width: 240px;
+}
+.fn-table-title .fn-title-select .ant-select-selector,
+.fn-table-title .fn-title-select.ant-select-sm .ant-select-selector {
+  height: 40px !important;
+  min-height: 40px !important;
+  display: flex !important;
+  align-items: center;
+}
+.fn-table-title .fn-title-actions .fn-col-btn {
+  margin-left: 0;
+}
+
+.fn-page > .fn-filter + .fn-toolbar {
+  background: transparent;
+  border: 0;
+  padding: 0 2px 8px;
+  justify-content: space-between;
+}
+
+.fn-tip-item,
+.fn-tip-item.ant-form-item,
+.fn-tip-item .ant-form-item-row,
+.fn-tip-item .ant-form-item-control,
+.fn-tip-item .ant-col,
+.fn-tip-item .ant-alert {
+  max-width: 100% !important;
+  width: 100% !important;
+  flex: 0 0 100% !important;
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+}
+
+.fn-main .ant-table-tbody > tr > td.fn-card-ops,
+.fn-main .ant-table-thead > tr > th.fn-card-ops,
+.fn-main .ant-table-tbody > tr > td:has(.fn-ops),
+.fn-main .ant-table-thead > tr > th:has(.fn-ops) {
+  text-align: right;
+}
+.fn-main .ant-table-thead > tr > th.fn-th-flex,
+.fn-main .ant-table-tbody > tr > td.fn-td-flex {
+  border-right: 0;
+  padding: 0 !important;
+  width: auto !important;
+  min-width: 16px;
+}
+.ant-modal .ant-form-item:last-child .ant-form-item-control-input-content,
+.fn-form-roomy .ant-form-item:last-child .ant-form-item-control-input-content {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.fn-log-tip {
+  max-width: 360px;
+}
+
+html.cyber {
+  color-scheme: dark;
+}
+
+/* 登录玻璃卡片：压过后面的全局 / 暗色表单规则 */
+html.dark .fn-login-page .fn-brand,
+html.dark .fn-login-page .fn-login-title,
+html.dark .fn-login-page .ant-form-item-label > label,
+html.dark .fn-login-page .ant-checkbox-wrapper,
+.fn-login-page .fn-brand,
+.fn-login-page .fn-login-title,
+.fn-login-page .ant-form-item-label > label,
+.fn-login-page .ant-checkbox-wrapper {
+  color: rgba(255, 255, 255, 0.88) !important;
+}
+html.dark .fn-login-page .fn-login-sub,
+.fn-login-page .fn-login-sub {
+  color: rgba(255, 255, 255, 0.58) !important;
+}
+html.dark .fn-login-page .ant-form-item-explain-error,
+.fn-login-page .ant-form-item-explain-error {
+  color: #ffb4b8 !important;
+}
+html.dark .fn-login-page .ant-input,
+html.dark .fn-login-page .ant-input-lg,
+html.dark .fn-login-page .ant-input-affix-wrapper,
+html.dark .fn-login-page .ant-input-affix-wrapper-lg,
+html.dark .fn-login-page .ant-input-password,
+html.dark .fn-login-page textarea.ant-input,
+.fn-login-page .ant-input,
+.fn-login-page .ant-input-lg,
+.fn-login-page .ant-input-affix-wrapper,
+.fn-login-page .ant-input-affix-wrapper-lg,
+.fn-login-page .ant-input-password {
+  background: rgba(0, 0, 0, 0.34) !important;
+  color: #fff !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-radius: 12px !important;
+  box-shadow: none !important;
+}
+.fn-login-page .ant-input-affix-wrapper > input.ant-input,
+.fn-login-page .ant-input-password input.ant-input {
+  background: transparent !important;
+  color: #fff !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+html.dark .fn-login-page .ant-checkbox-inner,
+.fn-login-page .ant-checkbox-inner {
+  background: rgba(0, 0, 0, 0.28) !important;
+  border-color: rgba(255, 255, 255, 0.28) !important;
+}
+html.dark .fn-login-page .ant-checkbox-checked .ant-checkbox-inner,
+.fn-login-page .ant-checkbox-checked .ant-checkbox-inner {
+  background: #00a0e9 !important;
+  border-color: #00a0e9 !important;
+}
+.fn-login-page .ant-btn-primary {
+  background: #00a0e9 !important;
+  border: 0 !important;
+  border-radius: 22px !important;
+  height: 44px !important;
+  font-weight: 650;
+  box-shadow: 0 8px 20px rgba(0, 160, 233, 0.28);
+}
+.fn-login-page .ant-input:-webkit-autofill,
+.fn-login-page .ant-input:-webkit-autofill:hover,
+.fn-login-page .ant-input:-webkit-autofill:focus,
+.fn-login-page input:-webkit-autofill,
+.fn-login-page input:-webkit-autofill:hover,
+.fn-login-page input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #fff !important;
+  caret-color: #fff;
+  border-color: rgba(255, 255, 255, 0.16) !important;
+  box-shadow: 0 0 0 1000px rgba(10, 14, 20, 0.72) inset !important;
+  -webkit-box-shadow: 0 0 0 1000px rgba(10, 14, 20, 0.72) inset !important;
+  transition: background-color 99999s ease-out 0s;
+}
+

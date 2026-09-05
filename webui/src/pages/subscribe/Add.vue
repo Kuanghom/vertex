@@ -1,0 +1,195 @@
+<template>
+  <div style="font-size: 24px; font-weight: bold;">订阅详情</div>
+  <a-divider></a-divider>
+  <div class="subscribe-add" >
+    <div style="text-align: left; ">
+      <a-form
+        labelAlign="right"
+        :labelWrap="true"
+        :model="item"
+        size="small"
+        @finish="editItem"
+        :labelCol="{ span: 3 }"
+        :wrapperCol="{ span: 21 }"
+        autocomplete="off"
+        :class="`container-form-${ isMobile() ? 'mobile' : 'pc' }`">
+        <a-form-item
+          label="订阅任务"
+          name="doubanId"
+          :rules="[{ required: true, message: '${label}不可为空! ' }]">
+          <a-select size="small" v-model:value="item.doubanId">
+            <a-select-option v-for="subscribe of subscribes" v-model:value="subscribe.id" :key="subscribe.id">{{ subscribe.alias }}</a-select-option>
+          </a-select>
+        </a-form-item>
+        <a-form-item
+          label="影视剧名"
+          name="name"
+          extra="添加完成后不会自动启动任务, 需要手动在订阅列表编辑一次, 或重启 Vertex 才启动追剧任务"
+          :rules="[{ required: true, message: '${label}不可为空! ' }]">
+          <a-input size="small" v-model:value="item.name"/>
+        </a-form-item>
+        <a-form-item
+          label="标签"
+          name="tag"
+          :rules="[{ required: true, message: '${label}不可为空! ' }]">
+          <a-select v-if="item.doubanId" size="small" v-model:value="item.tag">
+            <a-select-option v-for="category of subscribes.filter(i => i.id === item.doubanId)[0].categories" v-model:value="category.doubanTag" :key="category.doubanTag">{{ category.doubanTag }}</a-select-option>
+          </a-select>
+        </a-form-item>
+        <a-form-item
+          label="年份"
+          name="year"
+          :rules="[{ required: true, message: '${label}不可为空! ' }]">
+          <a-input size="small" v-model:value="item.year"/>
+        </a-form-item>
+        <a-form-item
+          label="上映日期"
+          name="releaseAt"
+          extra="格式为 2022-06-03, 若确认已上映, 可随意填写过去时间"
+          :rules="[{ required: true, message: '${label}不可为空! ' }]">
+          <a-input size="small" v-model:value="item.releaseAt"/>
+        </a-form-item>
+        <a-form-item
+          label="总集数"
+          name="episodes"
+          extra="电影类资源务必留空">
+          <a-input size="small" v-model:value="item.episodes"/>
+        </a-form-item>
+        <a-form-item
+          label="当前集"
+          name="episodeNow">
+          <a-input size="small" v-model:value="item.episodeNow"/>
+        </a-form-item>
+        <a-form-item
+          label="已完成"
+          name="downloaded"
+          :rules="[{ required: true, message: '${label}不可为空! ' }]">
+          <a-checkbox v-model:checked="item.downloaded">已完成</a-checkbox>
+        </a-form-item>
+        <a-form-item
+          label="搜索使用的关键词"
+          name="searchKey"
+          extra="搜索种子时使用的关键词, 留空不启用">
+          <a-input size="small" v-model:value="item.searchKey"/>
+        </a-form-item>
+        <a-form-item
+          label="包含关键词"
+          name="acceptKeys"
+          extra="以 , 为分割, 各个关键词间为 且 的关系">
+          <a-input size="small" v-model:value="item.acceptKeys"/>
+        </a-form-item>
+        <a-form-item
+          label="排除关键词"
+          name="rejectKeys"
+          extra="以 , 为分割, 各个关键词间为 或 的关系">
+          <a-input size="small" v-model:value="item.rejectKeys"/>
+        </a-form-item>
+        <a-form-item
+          label="固定季"
+          name="fixedSeason"
+          extra="适用于特别篇等内容, 设置固定季后按照设置项软链接, 如 特别篇, 此处填 0">
+          <a-input size="small" v-model:value="item.fixedSeason"/>
+        </a-form-item>
+        <a-form-item
+          label="自动链接集数偏移"
+          name="episodeOffset"
+          extra="自动链接时在识别集数的基础上做加减运算, 允许 -2, -1, 1, 2 等数值, 正值为加, 负值为减">
+          <a-input size="small" v-model:value="item.episodeOffset"/>
+        </a-form-item>
+        <a-form-item
+          label="取消限制年份"
+          name="restrictYear"
+          extra="默认限制年份, 勾选后取消限制">
+          <a-checkbox v-model:checked="item.restrictYear">取消限制年份</a-checkbox>
+        </a-form-item>
+        <a-form-item
+          label="禁止下载全集"
+          name="rejectCompleteTorrent"
+          extra="如果当前集不为零, 且勾选禁止下载全集, 则在选择种子时排除全集种子">
+          <a-checkbox v-model:checked="item.rejectCompleteTorrent">禁止下载全集</a-checkbox>
+        </a-form-item>
+        <a-form-item
+          label="忽略集数识别"
+          name="ignoreEpisodes"
+          extra="当种子未识别到集数时, 直接认为本种是全集">
+          <a-checkbox v-model:checked="item.ignoreEpisodes">忽略集数识别</a-checkbox>
+        </a-form-item>
+        <a-form-item
+          label="取消链接"
+          name="cancelLink"
+          extra="当勾选取消链接时, 该项目在种子完成后不会执行链接操作">
+          <a-checkbox v-model:checked="item.cancelLink">取消链接</a-checkbox>
+        </a-form-item>
+        <a-form-item
+          :wrapperCol="isMobile() ? { span:24 } : { span: 21, offset: 3 }">
+          <a-button type="primary" html-type="submit" style="margin-top: 24px; margin-bottom: 48px;">保存</a-button>
+        </a-form-item>
+      </a-form>
+    </div>
+  </div>
+</template>
+<script>
+export default {
+  data () {
+    return {
+      item: {
+        name: '',
+        tag: '',
+        year: '',
+        releaseAt: '',
+        episodes: '',
+        episodeNow: '',
+        downloaded: false,
+        searchKey: '',
+        rejectKeys: '',
+        fixedSeason: '',
+        episodeOffset: '',
+        restrictYear: false,
+        rejectCompleteTorrent: false,
+        ignoreEpisodes: false,
+        cancelLink: false
+      },
+      subscribes: []
+    };
+  },
+  methods: {
+    isMobile () {
+      if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    async editItem () {
+      try {
+        const res = await this.$api().subscribe.editItem(this.item);
+        await this.$message().success(res.message);
+        this.$goto('/subscribe/list', this.$router);
+      } catch (e) {
+        await this.$message().error(e.message);
+      }
+    },
+    async listSubscribe () {
+      try {
+        const res = await this.$api().subscribe.list();
+        this.subscribes = res.data;
+      } catch (e) {
+        this.$message().error(e.message);
+      }
+    }
+  },
+  async mounted () {
+    await this.listSubscribe();
+  }
+};
+</script>
+<style scoped>
+.subscribe-add {
+  height: calc(100% - 92px);
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+</style>

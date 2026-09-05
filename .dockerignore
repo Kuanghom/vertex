@@ -1,0 +1,16 @@
+.git
+.github
+.gitlab-ci.yml
+node_modules
+webui/node_modules
+webui/src
+webui/public
+logs
+app/data
+app/db
+app/logs
+torrents
+config.yaml
+develop
+.idea
+*.md

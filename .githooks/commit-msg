@@ -1,0 +1,8 @@
+#!/bin/sh
+# Strip tool attribution trailers that some editors inject into commit messages.
+msg="$1"
+tmp="${msg}.tmp"
+grep -viE '^[[:space:]]*Co-authored-by:.*(cursor|cursoragent|copilot|chatgpt|openai|claude|anthropic|gemini)' "$msg" \
+  | grep -viE '^[[:space:]]*(Generated-by|Made-with|Made with):' > "$tmp"
+mv "$tmp" "$msg"
+exit 0

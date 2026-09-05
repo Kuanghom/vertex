@@ -1,0 +1,30 @@
+env:
+  browser: true
+  es2021: true
+extends:
+  - 'eslint:recommended'
+  - 'plugin:vue/vue3-essential'
+parserOptions:
+  parser: '@babel/eslint-parser'
+  ecmaVersion: 12
+  sourceType: module
+  requireConfigFile: false
+plugins:
+  - '@babel'
+  - vue
+rules:
+  indent:
+    - error
+    - 2
+  linebreak-style:
+    - error
+    - unix
+  quotes:
+    - error
+    - single
+  semi:
+    - error
+    - always
+  'vue/no-v-model-argument': 0
+  no-throw-literal: 0
+  no-case-declarations: 0

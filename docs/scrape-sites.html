@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>免费 / HR 检测站点清单 — Vertex</title>
+  <style>
+    :root {
+      --bg: #f6f8fa;
+      --card: #ffffff;
+      --text: #1f2328;
+      --muted: #656d76;
+      --border: #d0d7de;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --code-bg: #f6f8fa;
+      --tag-free: #1a7f37;
+      --tag-hr: #bc4c00;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      max-width: 1280px;
+      margin: 0 auto;
+      min-height: 100vh;
+    }
+    nav {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      padding: 24px 16px;
+      border-right: 1px solid var(--border);
+      background: var(--card);
+    }
+    nav h2 {
+      font-size: 14px;
+      margin: 0 0 12px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+    nav a {
+      display: block;
+      padding: 6px 10px;
+      margin: 2px 0;
+      color: var(--text);
+      text-decoration: none;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    nav a:hover { background: var(--bg); color: var(--accent); }
+    nav .sub { padding-left: 14px; font-size: 13px; color: var(--muted); }
+    main { padding: 32px 40px 64px; }
+    h1 { font-size: 28px; margin: 0 0 8px; }
+    .subtitle { color: var(--muted); margin-bottom: 28px; }
+    h2 {
+      font-size: 22px;
+      margin: 40px 0 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    h3 {
+      font-size: 17px;
+      margin: 32px 0 10px;
+      color: var(--accent);
+    }
+    h3 .fn { font-family: ui-monospace, Consolas, monospace; }
+    .sites-note { font-size: 13px; color: var(--muted); margin: 0 0 10px; }
+    .flow {
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+      font-size: 13px;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      white-space: pre;
+      overflow-x: auto;
+    }
+    code {
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+      font-size: 0.92em;
+      background: var(--code-bg);
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+    }
+    pre {
+      background: #0d1117;
+      color: #e6edf3;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 16px;
+      overflow-x: auto;
+      font-size: 12.5px;
+      line-height: 1.55;
+      margin: 10px 0 20px;
+    }
+    pre code {
+      background: none;
+      border: none;
+      padding: 0;
+      color: inherit;
+      font-size: inherit;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0 20px;
+      font-size: 14px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    th, td {
+      border-bottom: 1px solid var(--border);
+      padding: 10px 14px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th { background: var(--bg); font-weight: 600; }
+    tr:last-child td { border-bottom: none; }
+    .tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .tag-free { background: #dafbe1; color: var(--tag-free); }
+    .tag-hr { background: #fff1e5; color: var(--tag-hr); }
+    .none { color: var(--muted); }
+    .note {
+      background: var(--accent-soft);
+      border-left: 4px solid var(--accent);
+      padding: 12px 16px;
+      border-radius: 0 8px 8px 0;
+      margin: 16px 0;
+      font-size: 14px;
+    }
+    .col-free { border-left: 3px solid #1a7f37; }
+    .tag-promo { background: #fbefff; color: #8250df; }
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      nav { position: static; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
+      main { padding: 24px 16px 48px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <nav>
+      <h2>目录</h2>
+      <a href="#intro">概述</a>
+      <a href="#flow">检测流程</a>
+      <a href="#sites">按站点汇总</a>
+      <a href="#code">内置判断代码</a>
+      <a class="sub" href="#code-free">免费检测</a>
+      <a class="sub" href="#code-hr">HR 检测</a>
+      <a class="sub" href="#code-map">域名映射表</a>
+      <a class="sub" href="#promo-mteam">M-Team / OpenCD</a>
+      <a href="#promo">优惠类型检测</a>
+      <a class="sub" href="#promo-table">按站点汇总</a>
+      <a href="#add">新增站点</a>
+      <a href="#entry">相关入口</a>
+    </nav>
+    <main>
+      <h1 id="intro">免费 / HR 检测站点清单</h1>
+      <p class="subtitle">
+        按站点域名汇总规则，并提供 <code>app/libs/scrape.js</code> 中的<strong>具体判断代码</strong>
+      </p>
+
+      <h2 id="flow">检测流程</h2>
+      <div class="flow">详情页 URL + Cookie
+  → ① 站点扩展脚本（优先）
+  → ② 内置规则（下表 + 判断代码）
+  → 不支持则报错</div>
+      <div class="note">
+        扩展脚本优先；M-Team（host 含 <code>m-team</code>）Cookie 填 API Key，走 <code>_freeMTeam</code>，无内置 HR。
+      </div>
+
+      <h2 id="sites">按站点汇总</h2>
+      <p>「免费 / HR 实现」为 <code>scrape.js</code> 函数名；<span class="none">—</span> 表示无内置。</p>
+      <table>
+        <thead>
+          <tr>
+            <th>站点域名</th>
+            <th class="col-free"><span class="tag tag-free">免费</span> 实现</th>
+            <th class="col-hr"><span class="tag tag-hr">HR</span> 实现</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><code>pt.btschool.club</code></td><td><code>_free</code></td><td class="none">—</td></tr>
+          <tr><td><code>hdhome.org</code></td><td><code>_free</code></td><td><code>_hr</code></td></tr>
+          <tr><td><code>springsunday.net</code></td><td><code>_free</code></td><td class="none">—</td></tr>
+          <tr><td><code>hdsky.me</code>、<code>hdsky.my</code></td><td><code>_free</code></td><td class="none">—</td></tr>
+          <tr><td><code>ourbits.club</code></td><td><code>_free</code></td><td><code>_hr</code></td></tr>
+          <tr><td><code>chdbits.co</code>、<code>ptchdbits.co</code></td><td><code>_free</code></td><td><code>_hrCHDBits</code></td></tr>
+          <tr><td><code>audiences.me</code></td><td><code>_free</code></td><td><code>_hr</code></td></tr>
+          <tr><td><code>www.hddolby.com</code></td><td><code>_free</code></td><td><code>_hr</code></td></tr>
+          <tr><td><code>pthome.net</code></td><td><code>_free</code></td><td class="none">—</td></tr>
+          <tr><td><code>pt.soulvoice.club</code></td><td><code>_free</code></td><td class="none">—</td></tr>
+          <tr><td><code>et8.org</code></td><td><code>_free</code></td><td class="none">—</td></tr>
+          <tr><td><code>hdfans.org</code></td><td><code>_free</code></td><td class="none">—</td></tr>
+          <tr><td><code>www.nicept.net</code></td><td><code>_free</code></td><td class="none">—</td></tr>
+          <tr><td><code>discfan.net</code></td><td><code>_free</code></td><td class="none">—</td></tr>
+          <tr><td><code>piggo.me</code></td><td><code>_free</code></td><td><code>_hr</code></td></tr>
+          <tr><td><code>hdatmos.club</code></td><td><code>_free</code></td><td class="none">—</td></tr>
+          <tr><td><code>pt.msg.vg</code></td><td><code>_free</code></td><td class="none">—</td></tr>
+          <tr><td><code>sharkpt.net</code></td><td><code>_free</code></td><td><code>_hr</code></td></tr>
+          <tr><td><code>azusa.wiki</code></td><td><code>_free</code></td><td class="none">—</td></tr>
+          <tr><td><code>kamept.com</code></td><td><code>_free</code></td><td class="none">—</td></tr>
+          <tr><td><code>pt.eastgame.org</code></td><td><code>_free</code></td><td class="none">—</td></tr>
+          <tr><td><code>pt.0ff.cc</code></td><td><code>_free</code></td><td class="none">—</td></tr>
+          <tr><td><code>wintersakura.net</code></td><td><code>_free</code></td><td class="none">—</td></tr>
+          <tr><td><code>open.cd</code>、<code>www.open.cd</code></td><td><code>_freeOpencd</code></td><td class="none">—</td></tr>
+          <tr><td><code>totheglory.im</code></td><td><code>_freeToTheGlory</code></td><td><code>_hrTheGlory</code></td></tr>
+          <tr><td><code>u2.dmhy.org</code></td><td><code>_freeDmhy</code></td><td class="none">—</td></tr>
+          <tr><td><code>hdbits.org</code></td><td><code>_freeHDBits</code></td><td class="none">—</td></tr>
+          <tr><td><code>www.hdarea.co</code>、<code>hdarea.club</code></td><td><code>_freeHDArea</code></td><td class="none">—</td></tr>
+          <tr><td><code>byr.pt</code></td><td><code>_freeByrPT</code></td><td class="none">—</td></tr>
+          <tr><td><code>hhanclub.net</code></td><td><code>_freeHHanClub</code></td><td><code>_hr</code></td></tr>
+          <tr><td><code>zeus.hamsters.space</code>、<code>hudbt.hust.edu.cn</code></td><td><code>_freeHUDBT</code></td><td class="none">—</td></tr>
+          <tr><td><code>pt.sjtu.edu.cn</code></td><td><code>_freePuTao</code></td><td class="none">—</td></tr>
+          <tr><td><code>bitporn.eu</code></td><td><code>_freeBitPorn</code></td><td class="none">—</td></tr>
+          <tr><td><code>hdcity.leniter.org</code>、<code>hdcity.city</code></td><td><code>_freeHDCity</code></td><td class="none">—</td></tr>
+          <tr><td><code>www.empornium.is</code>、<code>www.empornium.sx</code></td><td><code>_freeLuminance</code></td><td class="none">—</td></tr>
+          <tr><td><code>www.pixelcove.me</code>、<code>www.cathode-ray.tube</code></td><td><code>_freeLuminance</code></td><td class="none">—</td></tr>
+          <tr><td><code>dstudio.me</code></td><td><code>_freeDepthStudio</code></td><td><code>_hrDepthStudio</code></td></tr>
+          <tr><td><code>club.hares.top</code></td><td><code>_freeHaresClub</code></td><td class="none">—</td></tr>
+          <tr><td><code>*m-team*</code></td><td><code>_freeMTeam</code></td><td class="none">—</td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="code">内置判断代码</h2>
+      <p>摘自 <code>app/libs/scrape.js</code>。HTML 类检测先请求详情页并用 JSDOM 解析。</p>
+
+      <h3>入口分发</h3>
+      <pre><code>// exports.free
+if (host.includes('m-team')) return await _freeMTeam(url, cookie);
+if (freeWrapper[host]) return await freeWrapper[host](url, cookie);
+
+// exports.hr
+if (hrWrapper[host]) return await hrWrapper[host](url, cookie);</code></pre>
+
+      <h3 id="code-free"><span class="fn">_free</span> — NexusPHP 标准（免费）</h3>
+      <p class="sites-note">适用：pt.btschool.club、hdhome.org、springsunday.net、hdsky.me/my、ourbits.club、chdbits.co、ptchdbits.co、audiences.me、www.hddolby.com、pthome.net、pt.soulvoice.club、et8.org、hdfans.org、www.nicept.net、discfan.net、piggo.me、hdatmos.club、pt.msg.vg、sharkpt.net、azusa.wiki、kamept.com、pt.eastgame.org、pt.0ff.cc、wintersakura.net</p>
+      <pre><code>const _free = async function (url, cookie) {
+  const d = await getDocument(url, cookie);
+  if (d.body.innerHTML.indexOf('userdetails') === -1) {
+    throw new Error('疑似登录状态失效, 请检查 Cookie');
+  }
+  const state = d.querySelector('#top font[class], #top span[class]');
+  return state &amp;&amp; ['free', 'twoupfree'].indexOf(state.className) !== -1;
+};</code></pre>
+
+      <h3><span class="fn">_freeMTeam</span> — M-Team API</h3>
+      <p class="sites-note">适用：host 含 m-team。Cookie 填 API Key。</p>
+      <pre><code>const _freeMTeam = async function (url, cookie) {
+  const tid = url.match(/\/(\d+)/)[1];
+  const { body } = await util.requestPromise({
+    url: 'https://api.m-team.cc/api/torrent/detail',
+    method: 'POST',
+    headers: { 'x-api-key': cookie },
+    formData: { id: tid },
+    json: true
+  });
+  if (!body.data) throw new Error('疑似登录状态失效, 请检查 Api Key');
+  return body.data.status?.discount.indexOf('FREE') !== -1;
+};</code></pre>
+
+      <h3><span class="fn">_freeOpencd</span> — OpenCD</h3>
+      <pre><code>const _freeOpencd = async function (url, cookie) {
+  const d = await getDocument(url, cookie);
+  if (d.body.innerHTML.indexOf('userdetails') === -1) {
+    throw new Error('疑似登录状态失效, 请检查 Cookie');
+  }
+  const state = d.querySelector('div[class=title] img[class]');
+  return state &amp;&amp; ['pro_free', 'pro_free2up'].indexOf(state.className) !== -1;
+};</code></pre>
+
+      <h3><span class="fn">_freeToTheGlory</span> — TTG 免费</h3>
+      <pre><code>const _freeToTheGlory = async function (url, cookie) {
+  const d = await getDocument(url, cookie);
+  if (d.body.innerHTML.indexOf('userdetails') === -1) {
+    throw new Error('疑似登录状态失效, 请检查 Cookie');
+  }
+  return d.querySelector('img[src="/pic/ico_free.gif"][class="topic"]');
+};</code></pre>
+
+      <h3><span class="fn">_freeDmhy</span> — U2</h3>
+      <pre><code>const _freeDmhy = async function (url, cookie) {
+  const d = await getDocument(url, cookie);
+  if (d.body.innerHTML.indexOf('userdetails') === -1) {
+    throw new Error('疑似登录状态失效, 请检查 Cookie');
+  }
+  return d.querySelector('td[valign=top] img[class=pro_free2up]') ||
+    d.querySelector('td[valign=top] img[class=pro_free]') ||
+    (d.querySelector('td[valign=top] img[class=arrowdown]') &amp;&amp;
+      d.querySelector('td[valign=top] img[class=arrowdown]').nextSibling.innerHTML === '0.00X');
+};</code></pre>
+
+      <h3><span class="fn">_freeHDBits</span> — HDBits</h3>
+      <pre><code>const _freeHDBits = async function (url, cookie) {
+  const d = await getDocument(url, cookie);
+  if (d.body.innerHTML.indexOf('userdetails') === -1) {
+    throw new Error('疑似登录状态失效, 请检查 Cookie');
+  }
+  return d.querySelector('span[class="tag freeleech"]');
+};</code></pre>
+
+      <h3><span class="fn">_freeHDArea</span> — HDArea</h3>
+      <pre><code>const _freeHDArea = async function (url, cookie) {
+  const d = await getDocument(url, cookie);
+  if (d.body.innerHTML.indexOf('userdetails') === -1) {
+    throw new Error('疑似登录状态失效, 请检查 Cookie');
+  }
+  const state = d.querySelector('h1#top font[class]');
+  return state &amp;&amp; ['free', 'twoupfree'].indexOf(state.className) !== -1;
+};</code></pre>
+
+      <h3><span class="fn">_freeByrPT</span> — BYR PT</h3>
+      <pre><code>const _freeByrPT = async function (url, cookie) {
+  const d = await getDocument(url, cookie);
+  if (d.body.innerHTML.indexOf('userdetails') === -1) {
+    throw new Error('疑似登录状态失效, 请检查 Cookie');
+  }
+  const state = d.querySelector('#share .free');
+  return state &amp;&amp; ['free', 'twoupfree'].indexOf(state.className) !== -1;
+};</code></pre>
+
+      <h3><span class="fn">_freeHHanClub</span> — HHanClub 免费</h3>
+      <pre><code>const _freeHHanClub = async function (url, cookie) {
+  const d = await getDocument(url, cookie);
+  if (d.body.innerHTML.indexOf('userdetails') === -1) {
+    throw new Error('疑似登录状态失效, 请检查 Cookie');
+  }
+  const state = d.querySelector('.promotion-tag');
+  return state &amp;&amp; (state.className || '').includes('free');
+};</code></pre>
+
+      <h3><span class="fn">_freeHUDBT</span> — HUDBT</h3>
+      <pre><code>const _freeHUDBT = async function (url, cookie) {
+  const d = await getDocument(url, cookie);
+  if (d.body.innerHTML.indexOf('userdetails') === -1) {
+    throw new Error('疑似登录状态失效, 请检查 Cookie');
+  }
+  return d.querySelector('div[class=minor-list] img[class=free]') ||
+    d.querySelector('div[class=minor-list] img[class=twoupfree]');
+};</code></pre>
+
+      <h3><span class="fn">_freePuTao</span> — 葡萄 PT</h3>
+      <pre><code>const _freePuTao = async function (url, cookie) {
+  const d = await getDocument(url, cookie);
+  if (d.body.innerHTML.indexOf('userdetails') === -1) {
+    throw new Error('疑似登录状态失效, 请检查 Cookie');
+  }
+  const state = d.querySelector('b font[class]');
+  return state &amp;&amp; ['free', 'twoupfree'].indexOf(state.className) !== -1;
+};</code></pre>
+
+      <h3><span class="fn">_freeBitPorn</span> — BitPorn</h3>
+      <pre><code>const _freeBitPorn = async function (url, cookie) {
+  const d = await getDocument(url, cookie);
+  if (d.body.innerHTML.indexOf('userdetails') === -1) {
+    throw new Error('疑似登录状态失效, 请检查 Cookie');
+  }
+  return Array.from(d.querySelectorAll('span.stic2'))
+    .some(el => el.textContent.trim() === '2X Free' || el.textContent.trim() === 'Free');
+};</code></pre>
+
+      <h3><span class="fn">_freeHDCity</span> — HDCity</h3>
+      <pre><code>const _freeHDCity = async function (url, cookie) {
+  const d = await getDocument(url, cookie);
+  if (d.body.innerHTML.indexOf('userdetails') === -1) {
+    throw new Error('疑似登录状态失效, 请检查 Cookie');
+  }
+  return d.querySelector('font.free') || d.querySelector('font.twoupfree');
+};</code></pre>
+
+      <h3><span class="fn">_freeLuminance</span> — Gazelle / Luminance</h3>
+      <pre><code>const _freeLuminance = async function (url, cookie) {
+  const d = await getDocument(url, cookie);
+  if (d.body.innerHTML.indexOf('nav_userinfo') === -1) {
+    throw new Error('疑似登录状态失效, 请检查 Cookie');
+  }
+  return d.querySelector('img[alt="Freeleech"]');
+};</code></pre>
+
+      <h3><span class="fn">_freeDepthStudio</span> — Depth Studio 免费</h3>
+      <pre><code>const _freeDepthStudio = async function (url, cookie) {
+  const d = await getDocument(url, cookie);
+  assertLoggedIn(d);
+  const state = d.querySelector(
+    '.details-title font.free, .details-title font.twoupfree, #top font.free, #top font.twoupfree'
+  );
+  const globalFree = d.body.innerHTML.indexOf('全站 [Free] 生效中') !== -1;
+  return state || globalFree;
+};</code></pre>
+
+      <h3><span class="fn">_freeHaresClub</span> — Hares</h3>
+      <pre><code>const _freeHaresClub = async function (url, cookie) {
+  const d = await getDocument(url, cookie);
+  if (d.body.innerHTML.indexOf('userdetails') === -1) {
+    throw new Error('疑似登录状态失效, 请检查 Cookie');
+  }
+  const state = d.querySelector('b font[class]');
+  return state &amp;&amp; ['free', 'twoupfree'].indexOf(state.className) !== -1;
+};</code></pre>
+
+      <h3><span class="fn">_freeHDChina</span> — 未接入域名表</h3>
+      <pre><code>const _freeHDChina = async function (url, cookie) {
+  const d = await getDocument(url, cookie);
+  if (d.body.innerHTML.indexOf('userdetails') === -1) {
+    throw new Error('疑似登录状态失效, 请检查 Cookie');
+  }
+  const tid = url.match(/id=(\d*)/)[1];
+  const csrf = d.querySelector('meta[name=x-csrf]').content;
+  const promotion = await util.requestPromise({
+    url: 'https://hdchina.org/ajax_promotion.php',
+    method: 'POST',
+    headers: { cookie },
+    formData: { 'ids[]': tid, csrf },
+    json: true
+  });
+  return promotion.body.message[tid].sp_state.indexOf('pro_free') !== -1 ||
+    promotion.body.message[tid].sp_state.indexOf('pro_twoupfree') !== -1;
+};</code></pre>
+
+      <h3 id="code-hr"><span class="fn">_hr</span> — NexusPHP 标准（HR）</h3>
+      <p class="sites-note">适用：www.hddolby.com、hdhome.org、ourbits.club、piggo.me、hhanclub.net、sharkpt.net、audiences.me</p>
+      <pre><code>const _hr = async function (url, cookie) {
+  const d = await getDocument(url, cookie);
+  if (d.body.innerHTML.indexOf('userdetails') === -1) {
+    throw new Error('疑似登录状态失效, 请检查 Cookie');
+  }
+  return d.querySelector('img[class=hitandrun]');
+};</code></pre>
+
+      <h3><span class="fn">_hrCHDBits</span> — CHDBits HR</h3>
+      <pre><code>const _hrCHDBits = async function (url, cookie) {
+  const d = await getDocument(url, cookie);
+  if (d.body.innerHTML.indexOf('userdetails') === -1) {
+    throw new Error('疑似登陆状态失效, 请检查 Cookie');
+  }
+  const hr5 = d.body.innerHTML.indexOf('&lt;b&gt;H&amp;amp;R:&amp;nbsp;&lt;/b&gt;5day&lt;/td&gt;&lt;/tr&gt;');
+  const hr3 = d.body.innerHTML.indexOf('&lt;b&gt;H&amp;amp;R:&amp;nbsp;&lt;/b&gt;3day&lt;/td&gt;&lt;/tr&gt;');
+  return hr3 !== -1 || hr5 !== -1;
+};</code></pre>
+
+      <h3><span class="fn">_hrTheGlory</span> — TTG HR</h3>
+      <pre><code>const _hrTheGlory = async function (url, cookie) {
+  const d = await getDocument(url, cookie);
+  if (d.body.innerHTML.indexOf('userdetails') === -1) {
+    throw new Error('疑似登录状态失效, 请检查 Cookie');
+  }
+  return d.querySelector('img[src="/pic/hit_run.gif"][alt="Hit &amp; Run"]');
+};</code></pre>
+
+      <h3><span class="fn">_hrDepthStudio</span> — Depth Studio HR</h3>
+      <pre><code>const _hrDepthStudio = async function (url, cookie) {
+  const d = await getDocument(url, cookie);
+  assertLoggedIn(d);
+  return d.querySelector(
+    '#outer .details-title img.hitandrun, #outer .details-title img[alt="H&amp;R"], #outer .details-title img[title="H&amp;R"]'
+  );
+};</code></pre>
+
+      <h3 id="code-map">域名映射表</h3>
+      <pre><code>const freeWrapper = {
+  'pt.btschool.club': _free,
+  'club.hares.top': _freeHaresClub,
+  'hdhome.org': _free,
+  'springsunday.net': _free,
+  'hdsky.me': _free,
+  'hdsky.my': _free,
+  'ourbits.club': _free,
+  'chdbits.co': _free,
+  'ptchdbits.co': _free,
+  'audiences.me': _free,
+  'www.hddolby.com': _free,
+  'pthome.net': _free,
+  'pt.soulvoice.club': _free,
+  'et8.org': _free,
+  'hdfans.org': _free,
+  'www.nicept.net': _free,
+  'discfan.net': _free,
+  'piggo.me': _free,
+  'hdatmos.club': _free,
+  'pt.msg.vg': _free,
+  'sharkpt.net': _free,
+  'azusa.wiki': _free,
+  'kamept.com': _free,
+  'pt.eastgame.org': _free,
+  'pt.0ff.cc': _free,
+  'wintersakura.net': _free,
+  'open.cd': _freeOpencd,
+  'www.open.cd': _freeOpencd,
+  'totheglory.im': _freeToTheGlory,
+  'u2.dmhy.org': _freeDmhy,
+  'hdbits.org': _freeHDBits,
+  'www.hdarea.co': _freeHDArea,
+  'www.hdarea.club': _freeHDArea,
+  'hdarea.club': _freeHDArea,
+  'byr.pt': _freeByrPT,
+  'hhanclub.net': _freeHHanClub,
+  'zeus.hamsters.space': _freeHUDBT,
+  'hudbt.hust.edu.cn': _freeHUDBT,
+  'bitporn.eu': _freeBitPorn,
+  'pt.sjtu.edu.cn': _freePuTao,
+  'hdcity.leniter.org': _freeHDCity,
+  'hdcity.city': _freeHDCity,
+  'www.empornium.is': _freeLuminance,
+  'www.empornium.sx': _freeLuminance,
+  'www.pixelcove.me': _freeLuminance,
+  'www.cathode-ray.tube': _freeLuminance,
+  'dstudio.me': _freeDepthStudio
+};
+
+const hrWrapper = {
+  'www.hddolby.com': _hr,
+  'hdhome.org': _hr,
+  'ourbits.club': _hr,
+  'piggo.me': _hr,
+  'hhanclub.net': _hr,
+  'sharkpt.net': _hr,
+  'totheglory.im': _hrTheGlory,
+  'chdbits.co': _hrCHDBits,
+  'ptchdbits.co': _hrCHDBits,
+  'audiences.me': _hr,
+  'dstudio.me': _hrDepthStudio
+};</code></pre>
+
+      <h2 id="promo"><span class="tag tag-promo">优惠</span> 类型检测（30% / 50% / 2X / 2X50% / 2XFree）</h2>
+      <div class="note">
+        <strong>已整理（上文）</strong>：<code>_free</code>、<code>_freeMTeam</code>、<code>_freeOpencd</code><br>
+        使用 <code>cookies.txt</code> 请求各站 <code>details.php</code> 实测（2026-06-24）。Vertex 当前仅内置免费/HR，以下为扩展规则参考。
+      </div>
+
+      <h3>NexusPHP 系通用（除免费外）</h3>
+      <p>适用所有走 <code>_free</code> 的站点。在 discfan.net 实测 class 如下：</p>
+      <table>
+        <thead><tr><th>优惠</th><th>#top font/span class</th><th>实测 id</th></tr></thead>
+        <tbody>
+          <tr><td>2XFree</td><td><code>twoupfree</code></td><td>2406</td></tr>
+          <tr><td>2X</td><td><code>twoup</code></td><td>43149</td></tr>
+          <tr><td>50%</td><td><code>halfdown</code></td><td>43145（hdhome #132940）</td></tr>
+          <tr><td>30%</td><td><code>thirtypercent</code> 或 <code>thirtiedown</code></td><td>43127</td></tr>
+          <tr><td>2X50%</td><td><code>twouphalfdown</code></td><td>43144</td></tr>
+        </tbody>
+      </table>
+      <pre><code>const NEXUSPHP_PROMO = {
+  '2xfree': ['twoupfree'], '2x': ['twoup'], '50%': ['halfdown'],
+  '30%': ['thirtiedown', 'thirtypercent'], '2x50%': ['twouphalfdown']
+};
+const _promoNexusPHP = (type) => async (url, cookie) => {
+  const d = await getDocument(url, cookie);
+  if (d.body.innerHTML.indexOf('userdetails') === -1) throw new Error('疑似登录状态失效');
+  const state = d.querySelector('#top font[class], #top span[class]');
+  return state &amp;&amp; (NEXUSPHP_PROMO[type] || []).includes(state.className);
+};</code></pre>
+
+      <h3 id="promo-mteam"><span class="fn">_promoMTeam</span> — M-Team 馒头（API）</h3>
+      <p><code>body.data.status.discount</code>：<code>FREE</code> 免费 · <code>PERCENT_50</code> 50% · <code>PERCENT_70</code> 30% · <code>NORMAL</code> 普通</p>
+
+      <h3><span class="fn">_promoOpencd</span> — OpenCD</h3>
+      <p><code>div[class=title] img[class]</code>：<code>pro_free</code> · <code>pro_free2up</code> · <code>pro_2up</code> · <code>pro_50pctdown</code> · <code>pro_30pctdown</code> · <code>pro_50pctdown2up</code></p>
+
+      <h3><span class="fn">_promoTTG</span> — TTG</h3>
+      <p class="sites-note">已用 <code>ttg.txt</code> 实测。详情页看 <code>img.topic[src="/pic/ico_*.gif"]</code>，列表页可用 <code>checkable_IMG</code>。</p>
+      <table>
+        <thead><tr><th>优惠</th><th>图标</th><th>实测</th></tr></thead>
+        <tbody>
+          <tr><td>免费</td><td><code>/pic/ico_free.gif</code></td><td>#821145</td></tr>
+          <tr><td>30%</td><td><code>/pic/ico_30.gif</code></td><td>#821172</td></tr>
+          <tr><td>50%</td><td><code>/pic/ico_half.gif</code></td><td>#821198</td></tr>
+          <tr><td>2X / 2XFree / 2X50%</td><td colspan="2">当前未见对应图标，文案兜底</td></tr>
+        </tbody>
+      </table>
+      <p class="sites-note">无 <code>topic</code> class 的 <code>ico_30</code>/<code>ico_half</code> 为全站公告，勿误判。</p>
+
+      <h3><span class="fn">_promoU2</span> — U2</h3>
+      <p class="sites-note">实测 id=36728 → <code>pro_free2up</code></p>
+      <table>
+        <thead><tr><th>优惠</th><th>流量优惠区块</th></tr></thead>
+        <tbody>
+          <tr><td>2XFree</td><td><code>class=pro_free2up</code></td></tr>
+          <tr><td>2X</td><td><code>class=pro_2up</code></td></tr>
+          <tr><td>50%</td><td><code>pro_50pctdown</code> / <code>0.50X</code></td></tr>
+          <tr><td>30%</td><td><code>pro_30pctdown</code> / <code>0.30X</code></td></tr>
+          <tr><td>2X50%</td><td><code>pro_50pctdown2up</code></td></tr>
+        </tbody>
+      </table>
+
+      <h3><span class="fn">_promoHDBits</span> — HDBits</h3>
+      <p class="sites-note">无 Cookie，参考 <code>span.tag.*</code>。</p>
+      <table>
+        <thead><tr><th>优惠</th><th>选择器</th></tr></thead>
+        <tbody>
+          <tr><td>2XFree</td><td><code>freeleech</code> + <code>doubleup</code></td></tr>
+          <tr><td>2X</td><td><code>doubleup</code></td></tr>
+          <tr><td>50%</td><td><code>halfleech</code></td></tr>
+          <tr><td>30%</td><td><code>thirtyleech</code></td></tr>
+          <tr><td>2X50%</td><td><code>halfleech</code> + <code>doubleup</code></td></tr>
+        </tbody>
+      </table>
+
+      <h3><span class="fn">_promoHDArea</span> / <span class="fn">_promoByrPT</span> / <span class="fn">_promoHUDBT</span> / <span class="fn">_promoPuTao</span> / <span class="fn">_promoHDCity</span> / <span class="fn">_promoDepthStudio</span></h3>
+      <p>分别使用 <code>h1#top font[class]</code>、<code>#share font[class]</code>、<code>minor-list img[class]</code>、<code>b font[class]</code>、<code>font.{class}</code>、标题区 <code>font.{class}</code>，class 名均与 NexusPHP 表一致。</p>
+
+      <h3><span class="fn">_promoHHanClub</span> — HHanClub</h3>
+      <p><code>.promotion-tag-2xfree</code>、<code>-2x</code>、<code>-50</code>、<code>-30</code>、<code>-2x50</code>（列表实测）</p>
+
+      <h3><span class="fn">_promoBitPorn</span> / <span class="fn">_promoLuminance</span></h3>
+      <p>BitPorn：<code>span.stic2</code> 文本；Gazelle：<code>img[alt]</code> 组合。</p>
+
+      <h3 id="promo-table">按站点汇总</h3>
+      <table>
+        <thead>
+          <tr><th>站点</th><th>2XFree</th><th>2X</th><th>50%</th><th>30%</th><th>2X50%</th><th>函数</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>*m-team*</code></td><td>API FREE</td><td class="none">—</td><td>PERCENT_50</td><td>PERCENT_70</td><td class="none">—</td><td><code>_promoMTeam</code></td></tr>
+          <tr><td><code>open.cd</code> 等</td><td><code>pro_free2up</code></td><td><code>pro_2up</code></td><td><code>pro_50pctdown</code></td><td><code>pro_30pctdown</code></td><td><code>pro_50pctdown2up</code></td><td><code>_promoOpencd</code></td></tr>
+          <tr><td>NexusPHP 标准</td><td><code>twoupfree</code></td><td><code>twoup</code></td><td><code>halfdown</code></td><td><code>thirtypercent</code></td><td><code>twouphalfdown</code></td><td><code>_promoNexusPHP</code></td></tr>
+          <tr><td>totheglory.im</td><td><code>ico_free.gif</code></td><td class="none">—</td><td><code>ico_half.gif</code></td><td><code>ico_30.gif</code></td><td class="none">—</td><td><code>_promoTTG</code></td></tr>
+          <tr><td>u2.dmhy.org</td><td><code>pro_free2up</code></td><td><code>pro_2up</code></td><td><code>pro_50pctdown</code></td><td><code>pro_30pctdown</code></td><td><code>pro_50pctdown2up</code></td><td><code>_promoU2</code></td></tr>
+          <tr><td>hdbits.org</td><td>tag 组合</td><td><code>doubleup</code></td><td><code>halfleech</code></td><td><code>thirtyleech</code></td><td>tag 组合</td><td><code>_promoHDBits</code></td></tr>
+          <tr><td>hhanclub.net</td><td><code>tag-2xfree</code></td><td><code>tag-2x</code></td><td><code>tag-50</code></td><td><code>tag-30</code></td><td><code>tag-2x50</code></td><td><code>_promoHHanClub</code></td></tr>
+        </tbody>
+      </table>
+      <p class="sites-note">完整版见 <a href="scrape-sites-promo.html"><code>docs/scrape-sites-promo.html</code></a></p>
+
+      <h2 id="add">新增站点</h2>
+      <ol>
+        <li><strong>推荐</strong>：任务 → 站点扩展，配置 <code>freeScript</code> / <code>hrScript</code>。</li>
+        <li><strong>内置</strong>：在 <code>app/libs/scrape.js</code> 新增函数并注册到 <code>freeWrapper</code> / <code>hrWrapper</code>。</li>
+      </ol>
+
+      <h2 id="entry">相关入口</h2>
+      <table>
+        <thead><tr><th>功能</th><th>位置</th></tr></thead>
+        <tbody>
+          <tr><td>RSS 试运行 / 检测免费·HR</td><td>任务 → RSS</td></tr>
+          <tr><td>RSS 自动过滤</td><td>RSS 任务「抓取免费」「排除 HR」</td></tr>
+          <tr><td>扩展脚本</td><td>任务 → 站点扩展（<code>/task/scrape</code>）</td></tr>
+        </tbody>
+      </table>
+
+      <p class="subtitle" style="margin-top: 48px;">
+        Markdown：<code>docs/scrape-sites.md</code> ·
+        优惠类型：<a href="scrape-sites-promo.html"><code>docs/scrape-sites-promo.html</code></a>
+      </p>
+    </main>
+  </div>
+</body>
+</html>
