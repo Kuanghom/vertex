@@ -35,6 +35,7 @@
         </template>
         <template v-if="column.title === '操作'">
           <fn-ops>
+            <a-button type="link" @click="cloneClick(record)">克隆</a-button>
             <a-button type="link" @click="modifyClick(record)">编辑</a-button>
             <a-popconfirm title="确认删除这条数据？" ok-text="删除" cancel-text="取消" @confirm="deleteSelectRule(record)">
               <a-button type="link" danger>删除</a-button>
@@ -323,6 +324,15 @@ export default {
     modifyClick (row) {
       this.selectRule = { ...row, conditions: this.hydrateConditions(row.conditions) };
       this._formEditing = true;
+      this.formVisible = true;
+    },
+    cloneClick (row) {
+      const cloned = this.cloneRuleFrom(row);
+      this.selectRule = {
+        ...cloned,
+        conditions: this.hydrateConditions(cloned.conditions)
+      };
+      this._formEditing = false;
       this.formVisible = true;
     },
     async deleteSelectRule (row) {

@@ -92,6 +92,12 @@ export default {
     closeForm () {
       this.formVisible = false;
       this._formEditing = false;
+    },
+    cloneRuleFrom (row) {
+      const cloned = JSON.parse(JSON.stringify(row || {}));
+      cloned.id = undefined;
+      cloned.alias = (cloned.alias || '') + ' (副本)';
+      return cloned;
     }
   },
   watch: {

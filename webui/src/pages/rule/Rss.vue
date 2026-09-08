@@ -313,7 +313,11 @@ export default {
       this.formVisible = true;
     },
     cloneClick (row) {
-      this.rssRule = { ...row, id: undefined, conditions: this.hydrateConditions(row.conditions) };
+      const cloned = this.cloneRuleFrom(row);
+      this.rssRule = {
+        ...cloned,
+        conditions: this.hydrateConditions(cloned.conditions)
+      };
       this._formEditing = false;
       this.formVisible = true;
     },

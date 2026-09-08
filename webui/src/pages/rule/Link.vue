@@ -37,6 +37,7 @@
         </template>
         <template v-if="column.title === '操作'">
           <fn-ops>
+            <a-button type="link" @click="cloneClick(record)">克隆</a-button>
             <a-button type="link" @click="modifyClick(record)">编辑</a-button>
             <a-popconfirm title="确认删除这条数据？" ok-text="删除" cancel-text="取消" @confirm="deleteLinkRule(record)">
               <a-button type="link" danger>删除</a-button>
@@ -250,6 +251,14 @@ export default {
       this.linkRule = { ...row, minFileSize: parsed.value };
       this.minFileSizeUnit = parsed.unit;
       this._formEditing = true;
+      this.formVisible = true;
+    },
+    cloneClick (row) {
+      const cloned = this.cloneRuleFrom(row);
+      const parsed = parseSizeExpr(cloned.minFileSize);
+      this.linkRule = { ...cloned, minFileSize: parsed.value };
+      this.minFileSizeUnit = parsed.unit;
+      this._formEditing = false;
       this.formVisible = true;
     },
     async deleteLinkRule (row) {
