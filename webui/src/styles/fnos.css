@@ -1711,10 +1711,17 @@ html.dark .ant-table-tbody > tr.ant-table-row:hover > td {
 .fn-edit-table .ant-select,
 .fn-edit-table .ant-input,
 .fn-edit-table .ant-input-affix-wrapper,
-.fn-edit-table .ant-input-number {
+.fn-edit-table .ant-input-number,
+.fn-edit-table .ant-input-group-wrapper {
   width: 100% !important;
   min-width: 0 !important;
   max-width: 100%;
+}
+.fn-edit-table .fn-unit-input.ant-input-group-wrapper .ant-input {
+  width: auto !important;
+}
+.fn-edit-table .fn-unit-input .ant-select {
+  width: 88px !important;
 }
 .fn-edit-table .ant-table-tbody > tr > td {
   overflow: visible;

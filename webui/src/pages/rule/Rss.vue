@@ -129,7 +129,7 @@
           >
             <template #bodyCell="{ column, record }">
               <template v-if="column.dataIndex === 'key'">
-                <a-select size="small" v-model:value="record.key"  >
+                <a-select size="small" v-model:value="record.key" @change="onConditionKeyChange(record)">
                   <a-select-option v-for="conditionKey of conditionKeys" :key="conditionKey.key" :value="conditionKey.key">{{ conditionKey.name }}</a-select-option>
                 </a-select>
               </template>
@@ -147,7 +147,13 @@
                 </a-select>
               </template>
               <template v-if="column.dataIndex === 'value'">
-                <a-input size="small" v-model:value="record.value"/>
+                <fn-unit-input
+                  v-if="conditionKind(record.key)"
+                  v-model:value="record.value"
+                  v-model:unit="record._unit"
+                  :units="unitsFor(record.key)"
+                />
+                <a-input v-else size="small" v-model:value="record.value"/>
               </template>
               <template v-if="column.dataIndex === 'option'">
                 <a style="color: red" @click="rssRule.conditions = rssRule.conditions.filter(item => item !== record)">删除</a>
@@ -179,9 +185,10 @@
 <script>
 import { scrollToTop } from '../../util/scroll';
 import adminCrud from '../../mixins/adminCrud';
+import conditionUnit from '../../mixins/conditionUnit';
 
 export default {
-  mixins: [adminCrud],
+  mixins: [adminCrud, conditionUnit],
   data () {
     const columns = [
       {
@@ -241,7 +248,9 @@ export default {
       condition: {
         key: '',
         compareType: '',
-        value: ''
+        value: '',
+        _kind: '',
+        _unit: ''
       },
       rssRule: {},
       defaultRssRule: {
@@ -281,7 +290,10 @@ export default {
     },
     async modifyRssRule () {
       try {
-        await this.$api().rssRule.modify({ ...this.rssRule });
+        await this.$api().rssRule.modify({
+          ...this.rssRule,
+          conditions: this.serializeConditions(this.rssRule.conditions)
+        });
         this.$message().success((this.rssRule.id ? '编辑' : '新增') + '成功, 列表正在刷新...');
         this.closeForm();
         setTimeout(() => this.listRssRule(), 1000);
@@ -296,12 +308,12 @@ export default {
       this.formVisible = true;
     },
     modifyClick (row) {
-      this.rssRule = { ...row };
+      this.rssRule = { ...row, conditions: this.hydrateConditions(row.conditions) };
       this._formEditing = true;
       this.formVisible = true;
     },
     cloneClick (row) {
-      this.rssRule = { ...row, id: undefined };
+      this.rssRule = { ...row, id: undefined, conditions: this.hydrateConditions(row.conditions) };
       this._formEditing = false;
       this.formVisible = true;
     },

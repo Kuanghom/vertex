@@ -41,6 +41,7 @@ import FnFilter from './components/FnFilter.vue';
 import FnListSearch from './components/FnListSearch.vue';
 import FnOps from './components/FnOps.vue';
 import FnLogFeed from './components/FnLogFeed.vue';
+import FnUnitInput from './components/FnUnitInput.vue';
 
 library.add(fas);
 library.add(fab);
@@ -90,6 +91,7 @@ app.component('fn-filter', FnFilter);
 app.component('fn-list-search', FnListSearch);
 app.component('fn-ops', FnOps);
 app.component('fn-log-feed', FnLogFeed);
+app.component('fn-unit-input', FnUnitInput);
 
 router.beforeEach((to, from) => {
   if (to.meta.title) {
