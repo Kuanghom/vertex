@@ -45,6 +45,7 @@
       </div>
       <a-button @click="resetRssFilter">重置</a-button>
       <template #toolbar>
+      <a-button @click="$goto('/guide/presets', $router)">从预设导入</a-button>
       <a-button type="primary" @click="openCreate">新增</a-button>
       <a-popover
         v-if="!isNarrow"

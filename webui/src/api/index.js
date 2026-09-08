@@ -17,6 +17,7 @@ import u2Rss from './u2Rss';
 import subscribe from './subscribe';
 import torrent from './torrent';
 import log from './log';
+import preset from './preset';
 
 const api = {
   user,
@@ -37,7 +38,8 @@ const api = {
   torrent,
   log,
   watch,
-  u2Rss
+  u2Rss,
+  preset
 };
 
 export default () => { return api; };

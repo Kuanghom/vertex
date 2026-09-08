@@ -209,6 +209,10 @@ class UserMod {
         path: '/guide',
         icon: ['fas', 'route'],
         sub: [{
+          title: '快速导入',
+          path: '/guide/presets',
+          icon: ['fas', 'file-import']
+        }, {
           title: 'RSS 引导',
           path: '/guide/rss',
           icon: ['fas', 'rss']

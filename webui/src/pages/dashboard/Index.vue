@@ -62,6 +62,16 @@
           </div>
         </div>
         <div
+          v-if="!downloaders.length"
+          class="dash-row">
+          <div class="data-rect-2" style="cursor: pointer;" @click="$goto('/guide/presets', $router)">
+            <div class="data-rect-body">
+              <div>还没有下载器和规则</div>
+              <div class="data-rect-sub">去任务引导 → 快速导入，一键加上推荐套餐</div>
+            </div>
+          </div>
+        </div>
+        <div
           class="dash-row"
           v-if="showDownloaders || showServers"
           >

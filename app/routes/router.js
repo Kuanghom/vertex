@@ -238,6 +238,11 @@ module.exports = function (app, express, router) {
   router.get('/subscribe/search', ctrl.Douban.search);
   router.post('/subscribe/addWish', ctrl.Douban.addWish);
 
+  router.get('/preset/catalog', ctrl.Preset.catalog);
+  router.post('/preset/apply', ctrl.Preset.apply);
+  router.post('/preset/previewImport', multipartMiddleware, ctrl.Preset.previewImport);
+  router.post('/preset/importSelected', multipartMiddleware, ctrl.Preset.importSelected);
+
   router.get('/deleteRule/list', ctrl.DeleteRule.list);
   router.post('/deleteRule/add', ctrl.DeleteRule.add);
   router.post('/deleteRule/modify', ctrl.DeleteRule.modify);

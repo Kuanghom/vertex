@@ -32,6 +32,7 @@ import TaskScript from '@/pages/task/Script';
 import TaskScrape from '@/pages/task/Scrape';
 import TaskU2Rss from '@/pages/task/U2Rss';
 import GuideSubsribe from '@/pages/guide/Subscribe';
+import GuidePresets from '@/pages/guide/Presets';
 
 import ToolMikanHistory from '@/pages/tool/MikanHistory';
 import ToolNetworkTest from '@/pages/tool/NetworkTest';
@@ -392,9 +393,15 @@ const mix = {
 const guide = {
   path: 'guide',
   component: Layout,
-  redirect: '/guide/rss',
+  redirect: '/guide/presets',
   children: [
     {
+      path: 'presets',
+      component: GuidePresets,
+      meta: {
+        title: '快速导入 - 任务引导'
+      }
+    }, {
       path: 'rss',
       component: GuideRss,
       meta: {
