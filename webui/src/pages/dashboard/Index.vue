@@ -61,6 +61,19 @@
             </div>
           </div>
         </div>
+        <div v-if="healthIssues.length" class="dash-row dash-health">
+          <div
+            v-for="item in healthIssues"
+            :key="item.title + item.body"
+            class="data-rect-2 dash-health-card"
+            :class="'dash-health-' + item.level"
+            @click="$goto(item.href || '/index', $router)">
+            <div class="data-rect-body">
+              <div>{{ item.title }}</div>
+              <div class="data-rect-sub">{{ item.body }}</div>
+            </div>
+          </div>
+        </div>
         <div
           v-if="!downloaders.length"
           class="dash-row">
@@ -254,6 +267,9 @@ export default {
     },
     showServers () {
       return (this.runInfo.dashboardContent || []).includes('server');
+    },
+    healthIssues () {
+      return ((this.runInfo.health && this.runInfo.health.issues) || []).slice(0, 8);
     }
   },
   methods: {
@@ -435,6 +451,15 @@ export default {
   justify-content: center;
   gap: 16px;
   margin: 0 0 24px;
+}
+.dash-health-card {
+  cursor: pointer;
+  background: var(--warn-soft);
+  color: var(--warn);
+}
+.dash-health-danger {
+  background: var(--bad-soft);
+  color: var(--bad);
 }
 .dash-chart-wrap {
   display: flex;

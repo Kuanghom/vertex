@@ -1,5 +1,5 @@
 import { get, post } from '../util/axios';
-import { ingestErrors } from '../util/notices';
+import { ingestErrors, ingestHealth } from '../util/notices';
 
 export default {
   get: async () => {
@@ -18,6 +18,7 @@ export default {
     const url = '/api/setting/getRunInfo?_=' + Math.random();
     const res = await get(url);
     ingestErrors(res && res.data && res.data.errors);
+    ingestHealth(res && res.data && res.data.health);
     return res;
   },
   getHosts: async () => {

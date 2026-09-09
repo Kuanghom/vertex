@@ -187,6 +187,9 @@
         :wrapperCol="{ span: 21 }"
         autocomplete="off"
         :class="`container-form-${ isMobile() ? 'mobile' : 'pc' }`">
+        <div class="fn-form-sec">
+          <button type="button" class="fn-form-sec-h" @click="formSec.basic = !formSec.basic">基本<span>{{ formSec.basic ? '收起' : '展开' }}</span></button>
+          <div v-show="formSec.basic">
         <a-form-item
           label="别名"
           name="alias"
@@ -201,6 +204,39 @@
           :rules="[{ required: true, message: '${label}不可为空! ' }]">
           <a-checkbox v-model:checked="rss.enable">启用</a-checkbox>
         </a-form-item>
+        <a-form-item
+          label="RssUrl 列表"
+          name="rssUrls"
+          :rules="[{ required: true, message: '${label}不可为空! ' }]">
+          <a-form-item-rest v-for="(item, index) in rss.rssUrls" :key="index">
+            <a-input-group compact>
+              <a-input size="small" v-model:value="rss.rssUrls[index]" placeholder="增加你的RSS地址" style="width: calc(100% - 64px)"/>
+              <a-button
+                type="danger"
+                size="small" @click="() => rss.rssUrls = rss.rssUrls.filter(i => i !== rss.rssUrls[index])"
+                style="width: 64px;">删除</a-button>
+            </a-input-group>
+          </a-form-item-rest>
+          <a-button
+            size="small"
+            type="primary"
+            @click="rss.rssUrls.push('')"
+            >
+            新增
+          </a-button>
+        </a-form-item>
+        <a-form-item
+          label="Rss 周期"
+          name="cron"
+          extra="Rss Cron 表达式, 默认为 1 分钟更新一次"
+          :rules="[{ required: true, message: '${label}不可为空! ' }]">
+          <a-input size="small" v-model:value="rss.cron"/>
+        </a-form-item>
+          </div>
+        </div>
+        <div class="fn-form-sec">
+          <button type="button" class="fn-form-sec-h" @click="formSec.client = !formSec.client">下载器<span>{{ formSec.client ? '收起' : '展开' }}</span></button>
+          <div v-show="formSec.client">
         <a-form-item
           label="下载器"
           name="clientArr"
@@ -281,27 +317,11 @@
           <a-input size="small" v-model:value="rss.maxClientDownloadCount">
           </a-input>
         </a-form-item>
-        <a-form-item
-          label="RssUrl 列表"
-          name="rssUrls"
-          :rules="[{ required: true, message: '${label}不可为空! ' }]">
-          <a-form-item-rest v-for="(item, index) in rss.rssUrls" :key="index">
-            <a-input-group compact>
-              <a-input size="small" v-model:value="rss.rssUrls[index]" placeholder="增加你的RSS地址" style="width: calc(100% - 64px)"/>
-              <a-button
-                type="danger"
-                size="small" @click="() => rss.rssUrls = rss.rssUrls.filter(i => i !== rss.rssUrls[index])"
-                style="width: 64px;">删除</a-button>
-            </a-input-group>
-          </a-form-item-rest>
-          <a-button
-            size="small"
-            type="primary"
-            @click="rss.rssUrls.push('')"
-            >
-            新增
-          </a-button>
-        </a-form-item>
+          </div>
+        </div>
+        <div class="fn-form-sec">
+          <button type="button" class="fn-form-sec-h" @click="formSec.scrape = !formSec.scrape">抓取<span>{{ formSec.scrape ? '收起' : '展开' }}</span></button>
+          <div v-show="formSec.scrape">
         <a-form-item
           label="促销筛选"
           name="scrapePromo"
@@ -339,13 +359,11 @@
           :rules="[{ required: true, message: '${label}不可为空! ' }]">
           <a-input size="small" v-model:value="rss.cookie"/>
         </a-form-item>
-        <a-form-item
-          label="Rss 周期"
-          name="cron"
-          extra="Rss Cron 表达式, 默认为 1 分钟更新一次"
-          :rules="[{ required: true, message: '${label}不可为空! ' }]">
-          <a-input size="small" v-model:value="rss.cron"/>
-        </a-form-item>
+          </div>
+        </div>
+        <div class="fn-form-sec">
+          <button type="button" class="fn-form-sec-h" @click="formSec.push = !formSec.push">推到下载器时<span>{{ formSec.push ? '收起' : '展开' }}</span></button>
+          <div v-show="formSec.push">
         <a-form-item
           label="推送通知"
           name="pushNotify"
@@ -436,6 +454,11 @@
           extra="向下载器添加种子时启用种子的自动管理功能, 不了解请勿勾选">
           <a-checkbox v-model:checked="rss.autoTMM">自动管理</a-checkbox>
         </a-form-item>
+          </div>
+        </div>
+        <div class="fn-form-sec">
+          <button type="button" class="fn-form-sec-h" @click="formSec.advanced = !formSec.advanced">高级<span>{{ formSec.advanced ? '收起' : '展开' }}</span></button>
+          <div v-show="formSec.advanced">
         <a-form-item
           label="等待时间"
           name="sleepTime"
@@ -484,6 +507,11 @@
           :rules="[{ required: true, message: '${label}不可为空! ' }]">
           <a-input size="small" v-model:value="rss.replaceStr"/>
         </a-form-item>
+          </div>
+        </div>
+        <div class="fn-form-sec">
+          <button type="button" class="fn-form-sec-h" @click="formSec.rules = !formSec.rules">规则<span>{{ formSec.rules ? '收起' : '展开' }}</span></button>
+          <div v-show="formSec.rules">
         <a-form-item
           label="拒绝规则"
           name="rejectRules"
@@ -508,6 +536,8 @@
             </a-row>
           </a-checkbox-group>
         </a-form-item>
+          </div>
+        </div>
         <a-form-item class="fn-rss-actions">
           <a-button type="primary" html-type="submit">保存</a-button>
           <a-button html-type="button" :loading="ruleDryrunLoading" @click.prevent="dryrun">试运行</a-button>
@@ -684,6 +714,7 @@ export default {
       dryrunResult: [],
       dryrunPage: 1,
       dryrunPageSize: 10,
+      formSec: { basic: true, rules: true, scrape: true, client: true, push: false, advanced: false },
       ruleDryrunLoading: false,
       scrapeDryrunLoading: false,
       rssList: [],
@@ -1352,5 +1383,27 @@ export default {
   display: inline-flex;
   align-items: center;
   gap: 4px;
+}
+.fn-form-sec {
+  margin: 0 0 12px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--line);
+}
+.fn-form-sec-h {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 8px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--text);
+  font-weight: 600;
+  cursor: pointer;
+}
+.fn-form-sec-h span {
+  color: var(--text-3);
+  font-weight: 400;
+  font-size: 12px;
 }
 </style>

@@ -68,7 +68,10 @@ class AllocateRuleMod {
     }
     const all = allocate.listBuiltins().concat(userRules);
     for (const rule of all) {
-      rule.usedCount = rssList.filter(item => (item.allocateRule || 'builtin:original') === rule.id).length;
+      rule.usedBy = rssList
+        .filter(item => (item.allocateRule || 'builtin:original') === rule.id)
+        .map(item => ({ id: item.id, alias: item.alias, kind: 'task' }));
+      rule.usedCount = rule.usedBy.length;
       rule.used = rule.usedCount > 0;
     }
     return all;

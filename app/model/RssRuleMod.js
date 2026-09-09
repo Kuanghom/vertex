@@ -41,7 +41,18 @@ class RssRuleMod {
     const rssRuleList = util.listRssRule();
     const rssList = util.listRss();
     for (const rssRule of rssRuleList) {
-      rssRule.used = rssList.some(item => (item._rejectRules || []).indexOf(rssRule.id) !== -1 || (item._acceptRules || []).indexOf(rssRule.id) !== -1);
+      const usedBy = [];
+      rssList.forEach((item) => {
+        const accept = item.acceptRules || item._acceptRules || [];
+        const reject = item.rejectRules || item._rejectRules || [];
+        if (accept.indexOf(rssRule.id) !== -1) {
+          usedBy.push({ id: item.id, alias: item.alias, kind: 'accept' });
+        } else if (reject.indexOf(rssRule.id) !== -1) {
+          usedBy.push({ id: item.id, alias: item.alias, kind: 'reject' });
+        }
+      });
+      rssRule.usedBy = usedBy;
+      rssRule.used = usedBy.length > 0;
     }
     return rssRuleList;
   };

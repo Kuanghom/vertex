@@ -3,12 +3,18 @@
     <a-button @click="open = true">快速增加</a-button>
     <a-modal
       v-model:visible="open"
-      title="快速增加体积规则"
+      title="快速增加规则"
       :width="isNarrow ? '100%' : 560"
-      :wrap-class-name="isNarrow ? 'fn-dialog-full' : ''"
+      :wrap-class-name="(isNarrow ? 'fn-dialog-full ' : '') + 'fn-quick-size'"
       :footer="null"
     >
-      <p class="quick-size-lead">点选常用体积，或先点「自定义」再填写。已有的不会重复添加。</p>
+      <p class="quick-size-lead">先选一类，再点芯片。体积自定义要先点「自定义」。已有的不会重复添加。</p>
+      <div class="quick-size-tabs">
+        <button type="button" class="quick-size-chip" :class="{ on: tab === 'size' }" @click="tab = 'size'">体积</button>
+        <button type="button" class="quick-size-chip" :class="{ on: tab === 'title' }" @click="setTab('title')">标题</button>
+        <button type="button" class="quick-size-chip" :class="{ on: tab === 'site' }" @click="setTab('site')">站点</button>
+        <button type="button" class="quick-size-chip" :class="{ on: tab === 'extra' }" @click="setTab('extra')">免费 / HR</button>
+      </div>
       <div class="quick-size-chips">
         <button
           v-for="item of options"
@@ -22,6 +28,7 @@
           {{ item.alias }}<span v-if="item.exists"> · 已有</span>
         </button>
         <button
+          v-if="tab === 'size' || tab === 'title'"
           type="button"
           class="quick-size-chip"
           :class="{ on: useCustom }"
@@ -29,8 +36,21 @@
         >
           自定义
         </button>
+        <p v-if="tab === 'site' && !options.length" class="quick-size-empty">还没有站点，先去基础组件 → 站点里加上。</p>
       </div>
-      <div v-if="useCustom" class="quick-size-custom">
+      <div v-if="tab === 'title' && useCustom" class="quick-size-custom">
+        <div class="quick-size-custom-row">
+          <a-select size="small" v-model:value="titleMode" style="width: 88px">
+            <a-select-option value="contain">包含</a-select-option>
+            <a-select-option value="notContain">不含</a-select-option>
+          </a-select>
+          <a-input size="small" v-model:value="titleValue" placeholder="关键字" style="width: 160px"/>
+        </div>
+        <p v-if="customAlias" class="quick-size-custom-hint">
+          将添加为 {{ customAlias }}<span v-if="customExists"> · 已有，不会重复</span>
+        </p>
+      </div>
+      <div v-if="tab === 'size' && useCustom" class="quick-size-custom">
         <div class="quick-size-custom-row">
           <a-select size="small" v-model:value="customMode" style="width: 88px">
             <a-select-option value="bigger">大于</a-select-option>
@@ -51,8 +71,8 @@
         </p>
       </div>
       <div class="quick-size-bar">
-        <a-button type="primary" :disabled="!canAdd" :loading="saving" @click="addPicked">添加已选</a-button>
         <a-button @click="open = false">取消</a-button>
+        <a-button type="primary" :disabled="!canAdd" :loading="saving" @click="addPicked">添加已选</a-button>
       </div>
     </a-modal>
   </span>
@@ -101,25 +121,71 @@ export default {
       open: false,
       picked: [],
       saving: false,
+      tab: 'size',
       useCustom: false,
       customMode: 'bigger',
       customValue: '',
       customMax: '',
       customUnit: 'GiB',
+      titleMode: 'contain',
+      titleValue: '',
+      sites: [],
       sizeUnits: SIZE_UNITS
     };
   },
   computed: {
+    nameKey () {
+      return this.kind === 'select' ? 'title' : 'name';
+    },
     existSet () {
       return (this.existing || []).map(alias => String(alias || '').trim());
     },
+    presetRules () {
+      if (this.tab === 'title') {
+        return [
+          { alias: '标题含1080', conditions: [{ key: this.nameKey, compareType: 'contain', value: '1080' }] },
+          { alias: '标题含2160', conditions: [{ key: this.nameKey, compareType: 'contain', value: '2160' }] },
+          { alias: '标题含Remux', conditions: [{ key: this.nameKey, compareType: 'contain', value: 'Remux' }] },
+          { alias: '标题含WEB-DL', conditions: [{ key: this.nameKey, compareType: 'contain', value: 'WEB-DL' }] },
+          { alias: '标题不含720', conditions: [{ key: this.nameKey, compareType: 'notContain', value: '720' }] }
+        ];
+      }
+      if (this.tab === 'site') {
+        return (this.sites || []).map(site => ({
+          alias: '标题含' + site.name,
+          conditions: [{ key: this.nameKey, compareType: 'contain', value: site.name }]
+        }));
+      }
+      if (this.tab === 'extra') {
+        const hr = this.kind === 'select'
+          ? [{ key: 'tags', compareType: 'notContain', value: 'HR' }]
+          : [{ key: 'name', compareType: 'notContain', value: 'HR' }, { key: 'description', compareType: 'notContain', value: 'HR' }];
+        const free = this.kind === 'select'
+          ? [{ key: 'tags', compareType: 'contain', value: '免费' }]
+          : [{ key: this.nameKey, compareType: 'contain', value: 'Free' }];
+        return [
+          { alias: '排除HR', conditions: hr },
+          { alias: this.kind === 'select' ? '标签含免费' : '标题含Free', conditions: free }
+        ];
+      }
+      return SIZE_RULES;
+    },
     options () {
-      return SIZE_RULES.map((item) => ({
+      return this.presetRules.map((item) => ({
         ...item,
         exists: this.existSet.indexOf(item.alias) !== -1
       }));
     },
     customItem () {
+      if (this.tab === 'title') {
+        const text = String(this.titleValue || '').trim();
+        if (!text) return null;
+        return {
+          alias: (this.titleMode === 'notContain' ? '标题不含' : '标题含') + text,
+          conditions: [{ key: this.nameKey, compareType: this.titleMode, value: text }]
+        };
+      }
+      if (this.tab !== 'size') return null;
       const min = Number(this.customValue);
       if (!Number.isFinite(min) || min <= 0) return null;
       const unit = this.customUnit || 'GiB';
@@ -162,11 +228,19 @@ export default {
       if (val) {
         this.picked = [];
         this.useCustom = false;
+        this.tab = 'size';
         this.resetCustom();
+        this.loadSites();
       }
     }
   },
   methods: {
+    setTab (tab) {
+      this.tab = tab;
+      this.useCustom = false;
+      this.picked = [];
+      this.resetCustom();
+    },
     isPicked (alias) {
       return this.picked.indexOf(alias) !== -1;
     },
@@ -175,6 +249,18 @@ export default {
       this.customValue = '';
       this.customMax = '';
       this.customUnit = 'GiB';
+      this.titleMode = 'contain';
+      this.titleValue = '';
+    },
+    async loadSites () {
+      if (this.sites.length) return;
+      try {
+        const res = await this.$api().site.list();
+        const list = (res.data && res.data.siteList) || [];
+        this.sites = list.map(item => ({ name: item.name })).filter(item => item.name);
+      } catch (e) {
+        this.sites = [];
+      }
     },
     toggleCustom () {
       this.useCustom = !this.useCustom;
@@ -235,6 +321,7 @@ export default {
   margin: 0 0 12px;
   color: var(--text-2);
 }
+.quick-size-tabs,
 .quick-size-chips {
   display: flex;
   flex-wrap: wrap;
@@ -255,6 +342,11 @@ export default {
 }
 .quick-size-custom-hint {
   margin: 8px 0 0;
+  color: var(--text-3);
+  font-size: 13px;
+}
+.quick-size-empty {
+  margin: 0;
   color: var(--text-3);
   font-size: 13px;
 }

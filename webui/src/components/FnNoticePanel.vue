@@ -28,6 +28,7 @@
               </button>
             </div>
             <p class="fn-notice-body">{{ item.body }}<span v-if="item.count > 1"> ×{{ item.count }}</span></p>
+            <button v-if="item.href" type="button" class="fn-notice-link" @click="gotoHref(item.href)">去处理</button>
           </div>
         </div>
       </div>
@@ -71,6 +72,9 @@ export default {
       if (this.$moment().isSame(m, 'day')) return m.format('HH:mm');
       if (this.$moment().subtract(1, 'day').isSame(m, 'day')) return '昨天 ' + m.format('HH:mm');
       return m.format('YYYY-MM-DD HH:mm');
+    },
+    gotoHref (href) {
+      this.$goto(href, this.$router);
     },
     gotoLog () {
       this.$emit('goto-log');

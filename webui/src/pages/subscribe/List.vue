@@ -1,7 +1,7 @@
 <template>
   <div style="font-size: 24px; font-weight: bold;">订阅列表</div>
   <a-divider></a-divider>
-  <fn-filter :active="type !== 'all' || status !== 'all'" title="筛选">
+  <fn-filter :active="type !== 'all' || status !== 'all'" :resettable="false" title="筛选">
     <div class="fn-filter-item">
       <span>类型</span>
       <a-select v-model:value="type" @change="doFilte">

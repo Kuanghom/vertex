@@ -1,5 +1,5 @@
 <template>
-  <div class="delete-rule fn-page">
+  <div class="delete-rule fn-page fn-page-flow">
     <fn-filter :active="listSearchActive" title="搜索">
       <fn-list-search
         v-model:query="listQuery"
@@ -30,6 +30,9 @@
       :customRow="listCustomRow"
     >
       <template #bodyCell="{ column, record }">
+        <template v-if="column.dataIndex === 'usedBy'">
+          <span :title="usedByTitle(record)">{{ usedByText(record, '未引用') }}</span>
+        </template>
         <template v-if="column.dataIndex === 'type'">
           {{ record.type === 'normal' ? '普通' : 'JavaScript'}}
         </template>
@@ -37,7 +40,7 @@
           <fn-ops>
             <a-button type="link" @click="cloneClick(record)">克隆</a-button>
             <a-button type="link" @click="modifyClick(record)">编辑</a-button>
-            <a-popconfirm title="确认删除这条数据？" ok-text="删除" cancel-text="取消" @confirm="deleteDeleteRule(record)">
+            <a-popconfirm :title="deleteConfirm(record)" ok-text="删除" cancel-text="取消" :disabled="record.used" @confirm="deleteDeleteRule(record)">
               <a-button type="link" danger>删除</a-button>
             </a-popconfirm>
           </fn-ops>
@@ -255,6 +258,7 @@ import { scrollToTop } from '../../util/scroll';
 import adminCrud from '../../mixins/adminCrud';
 import { SPEED_UNITS, toBytes, fromBytes } from '../../util/sizeUnit';
 import conditionUnit from '../../mixins/conditionUnit';
+import { usedByText, usedByTitle } from '../../util/ruleConflict';
 
 export default {
   mixins: [adminCrud, conditionUnit],
@@ -271,6 +275,10 @@ export default {
         dataIndex: 'alias',
         sorter: (a, b) => a.alias.localeCompare(b.alias),
         width: 30
+      }, {
+        title: '引用',
+        dataIndex: 'usedBy',
+        width: 28
       }, {
         title: '持续时间',
         dataIndex: 'fitTime',
@@ -420,6 +428,12 @@ export default {
     };
   },
   methods: {
+    usedByText,
+    usedByTitle,
+    deleteConfirm (row) {
+      if (row.used) return usedByTitle(row) + '，先从下载器里去掉再删';
+      return '确认删除这条数据？';
+    },
     async listDeleteRule () {
       try {
         const res = await this.$api().deleteRule.list();
@@ -474,7 +488,7 @@ export default {
     },
     async deleteDeleteRule (row) {
       if (row.used) {
-        this.$message().error('组件被占用, 取消占用后删除');
+        this.$message().error(usedByTitle(row) + '，先从下载器里去掉再删');
         return;
       }
       try {

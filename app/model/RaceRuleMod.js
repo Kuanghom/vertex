@@ -38,8 +38,20 @@ class RaceRuleMod {
     const raceRuleSetList = util.listRaceRuleSet();
     const doubanList = util.listDouban();
     for (const raceRule of raceRuleList) {
-      raceRule.used = !!doubanList.some(item => item.raceRules.concat(item => item.rejectRules).indexOf(raceRule.id) !== -1) ||
-        !!raceRuleSetList.some(item => item.raceRules.indexOf(raceRule.id) !== -1);
+      const usedBy = [];
+      doubanList.forEach((item) => {
+        const ids = [].concat(item.raceRules || [], item.rejectRules || []);
+        if (ids.indexOf(raceRule.id) !== -1) {
+          usedBy.push({ id: item.id, alias: item.alias, kind: 'subscribe' });
+        }
+      });
+      raceRuleSetList.forEach((item) => {
+        if ((item.raceRules || []).indexOf(raceRule.id) !== -1) {
+          usedBy.push({ id: item.id, alias: item.alias, kind: 'set' });
+        }
+      });
+      raceRule.usedBy = usedBy;
+      raceRule.used = usedBy.length > 0;
     }
     return raceRuleList;
   };

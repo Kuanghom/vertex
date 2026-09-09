@@ -42,6 +42,7 @@ import FnListSearch from './components/FnListSearch.vue';
 import FnOps from './components/FnOps.vue';
 import FnLogFeed from './components/FnLogFeed.vue';
 import FnUnitInput from './components/FnUnitInput.vue';
+import { applyListDensity } from './util/listDensity';
 
 library.add(fas);
 library.add(fab);
@@ -136,6 +137,7 @@ const formatSize = (_size) => {
 };
 
 initViewport();
+applyListDensity();
 app.mixin(responsive);
 
 app.mixin({

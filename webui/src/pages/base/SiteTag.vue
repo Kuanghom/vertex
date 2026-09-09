@@ -1,6 +1,6 @@
 <template>
   <div class="site-tag fn-page">
-    <fn-filter :active="!!keyword" title="搜索">
+    <fn-filter :active="!!keyword" :resettable="false" title="搜索">
       <div class="fn-filter-item">
         <span>搜索</span>
         <a-input
@@ -11,11 +11,11 @@
           style="width: 260px;"
         />
       </div>
-      <div class="fn-filter-item">
-        <span>自动打标签</span>
-        <a-switch v-model:checked="setting.enabled" checked-children="启用" un-checked-children="禁用" @change="saveSetting" />
-      </div>
       <template #toolbar>
+        <div class="fn-toolbar-setting">
+          <span>自动打标签</span>
+          <a-switch v-model:checked="setting.enabled" checked-children="启用" un-checked-children="禁用" @change="saveSetting" />
+        </div>
         <a-button type="primary" @click="openCreate">新增</a-button>
         <a-button danger @click="resetDefault">恢复默认</a-button>
         <fn-column-settings

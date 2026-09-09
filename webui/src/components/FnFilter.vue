@@ -2,24 +2,44 @@
   <div class="fn-filter-host" :class="{ 'is-pc-inline': pcInline }" ref="host">
     <div v-if="showToolbar" :class="toolbarClassName">
       <template v-if="pcInline">
-        <div ref="inlineBar" class="fn-filter-inline">
-          <slot />
+        <div
+          class="fn-filter-searchbar"
+          :class="{
+            'is-active': active || open,
+            'has-more': showMoreBtn,
+            'has-inline-action': !showMoreBtn && resettable
+          }">
+          <fa class="fn-filter-search-icon" :icon="['fas', textSearch ? 'search' : 'filter']"/>
+          <div ref="inlineBar" class="fn-filter-inline">
+            <slot />
+          </div>
+          <button
+            v-if="showMoreBtn"
+            ref="moreBtn"
+            type="button"
+            class="fn-filter-more"
+            :class="{ 'is-on': active || open }"
+            aria-label="更多搜索"
+            title="更多搜索"
+            :aria-expanded="open"
+            @click="toggle"
+          >
+            <fa :icon="['fas', 'sliders-h']"/>
+            <span>更多搜索</span>
+            <i v-if="active" class="fn-filter-dot"/>
+          </button>
         </div>
-        <button
-          v-if="showMoreBtn"
-          ref="moreBtn"
-          type="button"
-          class="fn-filter-more"
-          :class="{ 'is-on': active || open }"
-          aria-label="更多搜索"
-          title="更多搜索"
-          @click="toggle"
-        >
-          更多搜索
-          <i v-if="active" class="fn-filter-dot"/>
-        </button>
-        <div v-if="$slots.toolbar" class="fn-filter-tools">
+        <div class="fn-filter-tools">
           <slot name="toolbar" />
+          <a-button
+            class="fn-density-btn"
+            :class="{ 'is-active': listCompact }"
+            :aria-pressed="listCompact"
+            :title="listCompact ? '切换为标准行高' : '切换为紧凑行高'"
+            @click="toggleListDensity">
+            <fa :icon="['fas', 'compress-alt']"/>
+            <span>紧凑</span>
+          </a-button>
         </div>
       </template>
       <template v-else>
@@ -49,6 +69,10 @@
           ref="panel"
           class="fn-filter-panel"
           :class="panelClass"
+          :role="inline ? undefined : 'dialog'"
+          :aria-modal="inline ? undefined : 'true'"
+          :aria-label="modalTitle"
+          :tabindex="inline ? undefined : -1"
           @click.stop
         >
           <template v-if="!inline && isNarrow">
@@ -60,9 +84,21 @@
             />
             <div class="fn-filter-sheet-head">{{ title }}</div>
           </template>
-          <div v-if="!inline && !isNarrow" class="fn-filter-pop-head">全部搜索条件</div>
+          <div v-if="!inline && !isNarrow" class="fn-filter-pop-head">
+            <div>
+              <strong>{{ modalTitle }}</strong>
+              <span>组合条件，快速缩小结果范围</span>
+            </div>
+            <button type="button" class="fn-filter-close" aria-label="关闭搜索选项" @click="closeSheet(true)">
+              <fa :icon="['fas', 'times']"/>
+            </button>
+          </div>
           <div :class="fieldsClass" @click="onSheetClick">
             <slot />
+          </div>
+          <div v-if="!inline && !isNarrow" class="fn-filter-pop-foot">
+            <a-button v-if="resettable" @click="runPanelAction(/重置/)">重置</a-button>
+            <a-button type="primary" @click="runPanelAction(/^(查询|搜索|筛选|检查)$/)">搜索</a-button>
           </div>
         </section>
       </div>
@@ -71,8 +107,14 @@
 </template>
 
 <script>
+import {
+  LIST_DENSITY_EVENT,
+  getCompactList,
+  setCompactList
+} from '../util/listDensity';
+
 const EVENT = 'fn-ops-open';
-const INLINE_CAP = 3;
+const INLINE_CAP = 1;
 
 export default {
   name: 'FnFilter',
@@ -92,13 +134,22 @@ export default {
     toolbarClass: {
       type: String,
       default: ''
+    },
+    modalTitle: {
+      type: String,
+      default: '搜索选项'
+    },
+    resettable: {
+      type: Boolean,
+      default: true
     }
   },
   data () {
     return {
       open: false,
       fieldCount: 0,
-      overflow: false
+      textSearch: true,
+      listCompact: getCompactList()
     };
   },
   computed: {
@@ -112,7 +163,7 @@ export default {
       return !this.inline && this.isNarrow;
     },
     showMoreBtn () {
-      return this.pcInline && (this.fieldCount > INLINE_CAP || this.overflow);
+      return this.pcInline && this.fieldCount > INLINE_CAP;
     },
     showToolbar () {
       return this.inline ? !!this.$slots.toolbar : true;
@@ -156,29 +207,19 @@ export default {
       window.dispatchEvent(new CustomEvent(EVENT));
       this.open = true;
       document.body.classList.add('fn-ops-open');
-      this.$nextTick(this.placePop);
+      this.$nextTick(() => {
+        if (this.$refs.panel) this.$refs.panel.focus();
+      });
     },
-    closeSheet () {
+    closeSheet (returnFocus) {
       this.open = false;
       document.body.classList.remove('fn-ops-open');
-    },
-    placePop () {
-      if (this.inline || this.isNarrow || !this.open) return;
-      const btn = this.$refs.moreBtn || this.$refs.trigger;
-      const panel = this.$refs.panel;
-      if (!btn || !panel) return;
-      const r = btn.getBoundingClientRect();
-      const width = Math.min(420, window.innerWidth - 24);
-      let left = r.right - width;
-      if (left < 12) left = 12;
-      let top = r.bottom + 8;
-      const h = panel.offsetHeight || 220;
-      if (top + h > window.innerHeight - 12) {
-        top = Math.max(12, r.top - h - 8);
+      if (returnFocus) {
+        this.$nextTick(() => {
+          const trigger = this.$refs.moreBtn || this.$refs.trigger;
+          if (trigger) trigger.focus();
+        });
       }
-      panel.style.top = `${Math.round(top)}px`;
-      panel.style.left = `${Math.round(left)}px`;
-      panel.style.width = `${Math.round(width)}px`;
     },
     onMaskClick () {
       if (!this.inline && this.open) this.closeSheet();
@@ -192,58 +233,58 @@ export default {
         this.closeSheet();
       }
     },
+    runPanelAction (pattern) {
+      const panel = this.$refs.panel;
+      const fields = panel && panel.querySelector('.fn-filter-in-pop');
+      const inline = this.$refs.inlineBar;
+      const buttons = []
+        .concat(fields ? Array.prototype.slice.call(fields.querySelectorAll('.ant-btn')) : [])
+        .concat(inline ? Array.prototype.slice.call(inline.querySelectorAll('.ant-btn')) : []);
+      const button = buttons.find((el) => {
+        return pattern.test((el.textContent || '').replace(/\s+/g, ''));
+      });
+      if (button) button.click();
+      else this.closeSheet();
+    },
     onForeignOpen () {
       if (this.open) this.closeSheet();
     },
     onWinChange () {
-      if (this.open) this.placePop();
       this.measureInline();
+    },
+    toggleListDensity () {
+      setCompactList(!this.listCompact);
+    },
+    onListDensityChange (e) {
+      this.listCompact = !!e.detail;
+    },
+    onKeydown (e) {
+      if (e.key === 'Escape' && this.open) this.closeSheet(true);
     },
     measureInline () {
       if (!this.pcInline) {
         if (this.fieldCount) this.fieldCount = 0;
-        if (this.overflow) this.overflow = false;
         return;
       }
-      const host = this.$refs.host;
       const bar = this.$refs.inlineBar;
-      const toolbar = host && host.querySelector('.fn-toolbar');
-      if (!bar || !toolbar || toolbar.clientWidth < 80) return;
+      if (!bar) return;
       const kids = Array.prototype.slice.call(bar.children);
       const fields = kids.filter((el) => el.classList && el.classList.contains('fn-filter-item'));
       if (this.fieldCount !== fields.length) this.fieldCount = fields.length;
+      const first = fields[0];
+      const textSearch = !!(first && first.querySelector('input.ant-input, .ant-input-affix-wrapper, textarea.ant-input'));
+      if (this.textSearch !== textSearch) this.textSearch = textSearch;
       kids.forEach((el) => el.classList.remove('is-collapsed'));
-      if (fields.length > INLINE_CAP) {
-        fields.forEach((el, i) => {
-          if (i >= INLINE_CAP) el.classList.add('is-collapsed');
-        });
-      }
-      const tools = host.querySelector('.fn-filter-tools');
-      const more = host.querySelector('.fn-filter-more');
-      const toolsW = tools ? tools.getBoundingClientRect().width : 0;
-      const moreW = more ? more.getBoundingClientRect().width : (fields.length > INLINE_CAP ? 88 : 0);
-      const available = toolbar.clientWidth - toolsW - moreW - 12;
-      const gap = 12;
-      const usedWidth = () => {
-        const shown = Array.prototype.slice.call(bar.children).filter((el) => {
-          return !el.classList.contains('is-collapsed') && getComputedStyle(el).display !== 'none';
-        });
-        return shown.reduce((sum, el) => sum + el.getBoundingClientRect().width, 0) + Math.max(0, shown.length - 1) * gap;
-      };
-      const visible = fields.filter((el) => !el.classList.contains('is-collapsed'));
-      let extra = false;
-      while (visible.length && usedWidth() > available) {
-        visible.pop().classList.add('is-collapsed');
-        extra = true;
-      }
-      const next = fields.length > INLINE_CAP || extra;
-      if (this.overflow !== next) this.overflow = next;
+      fields.forEach((el, i) => {
+        if (i >= INLINE_CAP) el.classList.add('is-collapsed');
+      });
     }
   },
   mounted () {
     window.addEventListener(EVENT, this.onForeignOpen);
+    window.addEventListener(LIST_DENSITY_EVENT, this.onListDensityChange);
     window.addEventListener('resize', this.onWinChange);
-    window.addEventListener('scroll', this.onWinChange, true);
+    document.addEventListener('keydown', this.onKeydown);
     this.$nextTick(this.measureInline);
     if (typeof ResizeObserver !== 'undefined' && this.$refs.host) {
       this._ro = new ResizeObserver(() => this.measureInline());
@@ -252,8 +293,9 @@ export default {
   },
   beforeUnmount () {
     window.removeEventListener(EVENT, this.onForeignOpen);
+    window.removeEventListener(LIST_DENSITY_EVENT, this.onListDensityChange);
     window.removeEventListener('resize', this.onWinChange);
-    window.removeEventListener('scroll', this.onWinChange, true);
+    document.removeEventListener('keydown', this.onKeydown);
     if (this._ro) this._ro.disconnect();
     document.body.classList.remove('fn-ops-open');
   }

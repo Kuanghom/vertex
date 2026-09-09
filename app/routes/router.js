@@ -206,6 +206,7 @@ module.exports = function (app, express, router) {
   router.get('/rss/list', ctrl.Rss.list);
   router.post('/rss/add', ctrl.Rss.add);
   router.post('/rss/dryrun', ctrl.Rss.dryrun);
+  router.post('/rss/dryrunRule', ctrl.Rss.dryrunRule);
   router.post('/rss/scrapeDryrun', ctrl.Rss.scrapeDryrun);
   router.post('/rss/scrapeTorrent', ctrl.Rss.scrapeTorrent);
   router.get('/rss/promoSupport', ctrl.Rss.promoSupport);
@@ -277,6 +278,7 @@ module.exports = function (app, express, router) {
   router.get('/torrent/list', ctrl.Torrent.list);
   router.get('/torrent/listHistory', ctrl.Torrent.listHistory);
   router.get('/torrent/listHistoryFilterOptions', ctrl.Torrent.listHistoryFilterOptions);
+  router.get('/torrent/listHistorySummary', ctrl.Torrent.listHistorySummary);
   router.get('/torrent/info', ctrl.Torrent.info);
   router.get('/torrent/getBulkLinkList', ctrl.Torrent.getBulkLinkList);
   router.get('/torrent/scrapeName', ctrl.Torrent.scrapeName);

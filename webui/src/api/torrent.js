@@ -31,6 +31,10 @@ export default {
     const url = `/api/torrent/listHistoryFilterOptions?type=${encodeURIComponent(type || 'rss')}`;
     return await get(url);
   },
+  listHistorySummary: async (type) => {
+    const url = `/api/torrent/listHistorySummary?type=${encodeURIComponent(type || 'rss')}`;
+    return await get(url);
+  },
   getDelInfo: async (qs) => {
     const qsString = Object.keys(qs).map(item => `${item}=${encodeURIComponent(qs[item])}`).join('&');
     const url = `/api/torrent/getDelInfo?${qsString}`;

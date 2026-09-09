@@ -6,7 +6,7 @@
         <span class="fn-bare-title">{{ pageTitle }}</span>
       </header>
       <header v-else class="fn-titlebar">
-        <button v-if="narrow" class="fn-icon-btn" type="button" aria-label="菜单" title="菜单" @click="mobileMenu = true">
+        <button v-if="narrow || compact" class="fn-icon-btn" type="button" aria-label="菜单" title="菜单" @click="mobileMenu = true">
           <fa :icon="['fas', 'bars']"/>
         </button>
         <div class="fn-brand" @click="gotoWiki">
@@ -40,7 +40,7 @@
       </header>
 
       <div class="fn-body">
-        <nav v-if="!narrow && !bareMode" class="fn-sidebar">
+        <nav v-if="!narrow && !compact && !bareMode" class="fn-sidebar">
           <template v-for="item of visibleMenu" :key="item.path">
             <button
               v-if="!item.sub"
@@ -262,6 +262,9 @@ export default {
   computed: {
     narrow () {
       return viewport.narrow;
+    },
+    compact () {
+      return viewport.compact;
     },
     pageTitle () {
       return (this.$route.meta && this.$route.meta.title) || 'Vertex';

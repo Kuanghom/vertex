@@ -42,6 +42,40 @@ export const noticeBox = reactive({
   items: load()
 });
 
+export function ingestHealth (health) {
+  const issues = health && health.issues;
+  if (!issues || !issues.length) return;
+  const now = Date.now();
+  const next = noticeBox.items.slice();
+  issues.forEach((issue) => {
+    const title = issue.title || issue.group || '健康检查';
+    const body = issue.body || '';
+    const fp = fingerprint('health:' + title, body);
+    const dup = next.find(item => item.fp === fp);
+    if (dup) {
+      dup.count = (dup.count || 1) + 1;
+      dup.time = now;
+      dup.href = issue.href || dup.href;
+      next.splice(next.indexOf(dup), 1);
+      next.unshift(dup);
+      return;
+    }
+    next.unshift({
+      id: now + '-' + Math.random().toString(36).slice(2, 8),
+      group: issue.group || '健康',
+      title,
+      body,
+      href: issue.href,
+      fp,
+      time: now,
+      read: false,
+      count: 1
+    });
+  });
+  noticeBox.items = next.slice(0, LIMIT);
+  persist(noticeBox.items);
+}
+
 export function ingestErrors (errors) {
   if (!errors || !errors.length) return;
   const now = Date.now();

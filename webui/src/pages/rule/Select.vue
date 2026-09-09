@@ -31,6 +31,9 @@
       :customRow="listCustomRow"
     >
       <template #bodyCell="{ column, record }">
+        <template v-if="column.dataIndex === 'usedBy'">
+          <span :title="usedByTitle(record)">{{ usedByText(record, '未引用') }}</span>
+        </template>
         <template v-if="column.dataIndex === 'sortType'">
           {{ (conditionKeys.filter(item => item.key === record.sortBy)[0] || {}).name }}
           {{ record.sortType ? record.sortType === 'asc' ? '/ 升序' : '/ 降序' : '' }}
@@ -38,8 +41,9 @@
         <template v-if="column.title === '操作'">
           <fn-ops>
             <a-button type="link" @click="cloneClick(record)">克隆</a-button>
+            <fn-rule-dryrun link kind="select" :rule="record"/>
             <a-button type="link" @click="modifyClick(record)">编辑</a-button>
-            <a-popconfirm title="确认删除这条数据？" ok-text="删除" cancel-text="取消" @confirm="deleteSelectRule(record)">
+            <a-popconfirm :title="deleteConfirm(record)" ok-text="删除" cancel-text="取消" :disabled="record.used" @confirm="deleteSelectRule(record)">
               <a-button type="link" danger>删除</a-button>
             </a-popconfirm>
           </fn-ops>
@@ -165,6 +169,7 @@
         </a-form-item>
         <a-form-item>
           <a-button type="primary" html-type="submit">保存</a-button>
+          <fn-rule-dryrun kind="select" :rule="dryrunRule"/>
           <a-button style="margin-left: 12px;" @click="closeForm">取消</a-button>
         </a-form-item>
       </a-form>
@@ -176,9 +181,11 @@ import { scrollToTop } from '../../util/scroll';
 import adminCrud from '../../mixins/adminCrud';
 import conditionUnit from '../../mixins/conditionUnit';
 import FnQuickSize from '../../components/FnQuickSize.vue';
+import FnRuleDryrun from '../../components/FnRuleDryrun.vue';
+import { findRuleConflict, usedByText, usedByTitle } from '../../util/ruleConflict';
 
 export default {
-  components: { FnQuickSize },
+  components: { FnQuickSize, FnRuleDryrun },
   mixins: [adminCrud, conditionUnit],
   data () {
     const columns = [
@@ -195,6 +202,10 @@ export default {
           multiple: 1
         },
         width: 30
+      }, {
+        title: '引用',
+        dataIndex: 'usedBy',
+        width: 28
       }, {
         title: '优先级',
         dataIndex: 'priority',
@@ -302,9 +313,21 @@ export default {
   computed: {
     selectAliases () {
       return (this.selectRuleList || []).map(item => item.alias);
+    },
+    dryrunRule () {
+      return {
+        ...this.selectRule,
+        conditions: this.serializeConditions(this.selectRule.conditions || [])
+      };
     }
   },
   methods: {
+    usedByText,
+    usedByTitle,
+    deleteConfirm (row) {
+      if (row.used) return usedByTitle(row) + '，先从订阅里去掉再删';
+      return '确认删除这条数据？';
+    },
     async listSelectRule () {
       try {
         const res = await this.$api().selectRule.list();
@@ -315,9 +338,17 @@ export default {
     },
     async modifySelectRule () {
       try {
+        const conditions = this.serializeConditions(this.selectRule.conditions);
+        const hit = findRuleConflict(this.selectRuleList, this.selectRule, conditions);
+        if (hit.aliasHit || hit.condHit) {
+          const bits = [];
+          if (hit.aliasHit) bits.push('别名已有「' + hit.aliasHit.alias + '」');
+          if (hit.condHit) bits.push('条件和「' + hit.condHit.alias + '」相同');
+          if (!window.confirm(bits.join('，') + '，还要保存吗？')) return;
+        }
         await this.$api().selectRule.modify({
           ...this.selectRule,
-          conditions: this.serializeConditions(this.selectRule.conditions)
+          conditions
         });
         this.$message().success((this.selectRule.id ? '编辑' : '新增') + '成功, 列表正在刷新...');
         this.closeForm();
@@ -350,7 +381,7 @@ export default {
     },
     async deleteSelectRule (row) {
       if (row.used) {
-        this.$message().error('组件被占用, 取消占用后删除');
+        this.$message().error(usedByTitle(row) + '，先从订阅里去掉再删');
         return;
       }
       try {

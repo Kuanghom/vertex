@@ -572,6 +572,19 @@ class TorrentMod {
     return where;
   }
 
+  async listHistorySummary (options) {
+    const since = require('moment')().subtract(7, 'days').unix();
+    const type = options.type || 'rss';
+    const typeWhere = type === 'bingewatching'
+      ? 'record_type IN (4,6,98,99)'
+      : 'record_type IN (1,2,3)';
+    const rows = await util.getRecords(
+      'select record_note as note, count(*) as n from torrents where record_type = 2 and ' + typeWhere + ' and record_time > ? group by record_note order by n desc limit 20',
+      [since]
+    );
+    return { reasons: rows, since };
+  }
+
   async listHistoryFilterOptions (options) {
     let where = 'where 1 = 1';
     if (options.type === 'rss') {

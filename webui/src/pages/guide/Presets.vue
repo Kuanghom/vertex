@@ -22,6 +22,13 @@
         </div>
         <a-button type="text" size="small" @click="clearResult">关闭</a-button>
       </div>
+      <div v-if="checklist.length" class="preset-check">
+        <div class="preset-family-title">导入后还要处理</div>
+        <div v-for="item in checklist" :key="item.key" class="preset-check-row">
+          <span>{{ item.text }}</span>
+          <a-button type="link" size="small" @click="$goto(item.href, $router)">{{ item.action }}</a-button>
+        </div>
+      </div>
       <div class="preset-next">
         <a-button v-if="fromPath" size="small" type="primary" @click="goBack">返回{{ fromTitle }}</a-button>
         <a-button size="small" @click="$goto('/base/downloader', $router)">去下载器补账号</a-button>
@@ -249,6 +256,7 @@ export default {
       importPicked: [],
       importing: false,
       result: null,
+      checklist: [],
       resultDetail: false
     };
   },
@@ -439,6 +447,7 @@ export default {
     clearResult () {
       this.result = null;
       this.resultDetail = false;
+      this.checklist = [];
     },
     preferScope () {
       if (this.activeKind === 'backup') return;
@@ -497,6 +506,41 @@ export default {
       this.result = res.data;
       this.resultDetail = false;
       this.$message().success(res.message);
+      this.buildChecklist(res.data);
+    },
+    async buildChecklist (result) {
+      this.checklist = [];
+      if (!result) return;
+      const rows = [].concat(result.created || [], result.reused || []);
+      const taskIds = rows.filter(item => item.kind === 'task').map(item => item.id);
+      const clientIds = rows.filter(item => item.kind === 'client').map(item => item.id);
+      try {
+        if (taskIds.length) {
+          const res = await this.$api().rss.list();
+          (res.data || []).filter(item => taskIds.indexOf(item.id) !== -1).forEach((task) => {
+            const urls = (task.rssUrls || []).map(url => String(url || '').trim()).filter(url => /^https?:\/\//i.test(url));
+            if (!urls.length) {
+              this.checklist.push({ key: 'rss-' + task.id, text: '任务「' + task.alias + '」还要填 RSS 地址', href: '/task/rss', action: '去填写' });
+            }
+            if (!task.enable) {
+              this.checklist.push({ key: 'off-' + task.id, text: '任务「' + task.alias + '」还是关闭的', href: '/task/rss', action: '去打开' });
+            }
+            if (!(task.clientArr || []).length) {
+              this.checklist.push({ key: 'cli-' + task.id, text: '任务「' + task.alias + '」还没绑下载器', href: '/task/rss', action: '去绑定' });
+            }
+          });
+        }
+        if (clientIds.length) {
+          const res = await this.$api().downloader.list();
+          (res.data || []).filter(item => clientIds.indexOf(item.id) !== -1).forEach((client) => {
+            if (!client.enable || !client.clientUrl) {
+              this.checklist.push({ key: 'dl-' + client.id, text: '下载器「' + client.alias + '」还要补账号后启用', href: '/base/downloader', action: '去补账号' });
+            }
+          });
+        }
+      } catch (e) {
+        this.checklist = [];
+      }
     },
     onPreview ({ file }) {
       if (file.status === 'done' && file.response && file.response.success) {
@@ -651,6 +695,19 @@ export default {
   flex-wrap: wrap;
   gap: 6px;
   align-items: center;
+}
+.preset-check {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+}
+.preset-check-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  align-items: center;
+  font-size: 13px;
+  color: var(--text-2);
 }
 .preset-alias {
   font-weight: 600;
