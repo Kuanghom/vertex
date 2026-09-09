@@ -45,26 +45,34 @@
     </div>
 
     <div class="preset-tabs">
-      <a-radio-group v-model:value="activeKind" button-style="solid" size="small">
+      <a-radio-group class="preset-kind-switch" v-model:value="activeKind" button-style="solid" size="small">
         <a-radio-button v-for="tab in kindTabs" :key="tab.kind" :value="tab.kind">
-          {{ tab.title }} {{ tab.count }}
+          <span>{{ tab.title }}</span>
+          <span class="preset-tab-count">{{ tab.count }}</span>
         </a-radio-button>
-        <a-radio-button value="backup">备份导入</a-radio-button>
+        <a-radio-button value="backup">
+          <fa :icon="['fas', 'file-import']"/>
+          <span>备份导入</span>
+        </a-radio-button>
       </a-radio-group>
     </div>
 
     <template v-if="activeKind !== 'backup'">
       <div class="preset-toolbar">
         <a-input
-          class="fn-search"
+          class="preset-search"
           v-model:value="keyword"
           allowClear
-          placeholder="筛选别名"/>
-        <a-radio-group v-model:value="scope" size="small">
-          <a-radio-button value="fresh">未导入 {{ scopeCount('fresh') }}</a-radio-button>
-          <a-radio-button value="recommended">推荐 {{ scopeCount('recommended') }}</a-radio-button>
-          <a-radio-button value="all">全部 {{ scopeCount('all') }}</a-radio-button>
-          <a-radio-button value="exists">已有 {{ scopeCount('exists') }}</a-radio-button>
+          placeholder="筛选别名">
+          <template #prefix>
+            <fa class="preset-search-icon" :icon="['fas', 'search']"/>
+          </template>
+        </a-input>
+        <a-radio-group class="preset-scope-switch" v-model:value="scope" button-style="solid" size="small">
+          <a-radio-button value="fresh"><span>未导入</span><span class="preset-tab-count">{{ scopeCount('fresh') }}</span></a-radio-button>
+          <a-radio-button value="recommended"><span>推荐</span><span class="preset-tab-count">{{ scopeCount('recommended') }}</span></a-radio-button>
+          <a-radio-button value="all"><span>全部</span><span class="preset-tab-count">{{ scopeCount('all') }}</span></a-radio-button>
+          <a-radio-button value="exists"><span>已有</span><span class="preset-tab-count">{{ scopeCount('exists') }}</span></a-radio-button>
         </a-radio-group>
       </div>
 
@@ -153,15 +161,17 @@
     </template>
 
     <div v-else class="preset-backup">
-      <p class="fn-guide-lead">上传 Vertex 备份或规则 zip，按类型勾选后再导入。地址和密钥会清空。</p>
+      <p class="fn-guide-lead">上传 Vertex 备份或规则包（zip / tar.gz），按类型勾选后再导入。地址和密钥会清空。</p>
       <a-upload
+        accept=".zip,.tar.gz,.tgz,.tar"
+        :before-upload="beforeBackup"
         :capture="null"
         :showUploadList="true"
         :maxCount="1"
         action="/api/preset/previewImport"
         name="file"
         @change="onPreview">
-        <a-button>选择备份 / zip</a-button>
+        <a-button>选择备份 / zip / tar.gz</a-button>
       </a-upload>
       <div v-if="importGroups" class="preset-backup-body">
         <div v-for="kind in backupKinds" :key="kind" class="preset-backup-group">
@@ -542,6 +552,12 @@ export default {
         this.checklist = [];
       }
     },
+    beforeBackup (file) {
+      const name = String(file && file.name || '').toLowerCase();
+      if (/\.(zip|tar\.gz|tgz|tar)$/.test(name)) return true;
+      this.$message().error('请选择 zip 或 tar.gz 备份');
+      return false;
+    },
     onPreview ({ file }) {
       if (file.status === 'done' && file.response && file.response.success) {
         this.importGroups = file.response.data;
@@ -612,6 +628,114 @@ export default {
 .preset-list-bar {
   justify-content: space-between;
   margin-bottom: 8px;
+}
+.preset-result + .preset-tabs {
+  margin-top: 16px;
+}
+.preset-tabs {
+  width: fit-content;
+  max-width: 100%;
+  padding: 4px;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--hover);
+  scrollbar-width: none;
+}
+.preset-tabs::-webkit-scrollbar {
+  display: none;
+}
+.preset-kind-switch,
+.preset-scope-switch {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  white-space: nowrap;
+}
+.preset-tabs :deep(.ant-radio-button-wrapper),
+.preset-scope-switch :deep(.ant-radio-button-wrapper) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 34px;
+  padding: 0 12px;
+  border: 0 !important;
+  border-radius: 8px !important;
+  background: transparent;
+  color: var(--text-2);
+  font-size: 13px;
+  line-height: 34px;
+  box-shadow: none !important;
+  transition: background 160ms ease, color 160ms ease, box-shadow 160ms ease;
+}
+.preset-tabs :deep(.ant-radio-button-wrapper::before),
+.preset-scope-switch :deep(.ant-radio-button-wrapper::before) {
+  display: none !important;
+}
+.preset-tabs :deep(.ant-radio-button-wrapper:hover),
+.preset-scope-switch :deep(.ant-radio-button-wrapper:hover) {
+  background: var(--panel);
+  color: var(--blue-deep);
+}
+.preset-tabs :deep(.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled)),
+.preset-scope-switch :deep(.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled)) {
+  background: var(--panel) !important;
+  color: var(--blue-deep) !important;
+  font-weight: 600;
+  box-shadow: 0 1px 4px rgba(20, 64, 84, 0.12) !important;
+}
+.preset-tab-count {
+  display: inline-grid;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  place-items: center;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--text-3) 12%, transparent);
+  color: var(--text-3);
+  font-size: 11px;
+  line-height: 20px;
+}
+:deep(.ant-radio-button-wrapper-checked) .preset-tab-count {
+  background: var(--blue-soft);
+  color: var(--blue-deep);
+}
+.preset-toolbar {
+  display: grid;
+  grid-template-columns: minmax(240px, 420px) auto;
+  justify-content: space-between;
+  gap: 10px 20px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--hover) 72%, var(--panel));
+}
+.preset-search {
+  width: 100%;
+  height: 36px;
+  border-radius: 9px !important;
+  background: var(--panel) !important;
+}
+.preset-search-icon {
+  color: var(--blue);
+  font-size: 12px;
+}
+.preset-scope-switch {
+  justify-self: end;
+  padding: 3px;
+  overflow-x: auto;
+  border-radius: 10px;
+  background: var(--hover);
+  scrollbar-width: none;
+}
+.preset-scope-switch::-webkit-scrollbar {
+  display: none;
+}
+.preset-scope-switch :deep(.ant-radio-button-wrapper) {
+  height: 30px;
+  padding: 0 10px;
+  line-height: 30px;
 }
 .preset-families {
   display: flex;
@@ -764,6 +888,19 @@ export default {
   box-shadow: var(--shadow);
 }
 @media (max-width: 960px) {
+  .preset-tabs {
+    width: 100%;
+  }
+  .preset-kind-switch {
+    width: max-content;
+  }
+  .preset-toolbar {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .preset-scope-switch {
+    width: 100%;
+    justify-self: stretch;
+  }
   .preset-grid,
   .preset-rule-grid {
     grid-template-columns: 1fr;

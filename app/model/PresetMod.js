@@ -377,18 +377,30 @@ class PresetMod {
 
   _readArchive (file) {
     const filePath = file.path || file.originalFilename;
+    const filename = String(file.originalFilename || file.name || filePath || '').toLowerCase();
     const buf = fs.readFileSync(filePath);
     if (buf[0] === 0x50 && buf[1] === 0x4b) {
       return this._readZip(buf);
     }
+    const gzip = (buf[0] === 0x1f && buf[1] === 0x8b) || /\.(tar\.gz|tgz)$/.test(filename);
+    if (!gzip && !/\.tar$/.test(filename)) {
+      throw new Error('请上传 zip 或 tar.gz 备份');
+    }
     const tmp = path.join('/tmp', 'vertex-preset-' + Date.now());
     fs.mkdirSync(tmp, { recursive: true });
-    require('tar').x({
-      sync: true,
-      file: filePath,
-      cwd: tmp
-    });
-    return this._walkJson(tmp, tmp);
+    try {
+      require('tar').x({
+        sync: true,
+        gzip,
+        file: filePath,
+        cwd: tmp
+      });
+      return this._walkJson(tmp, tmp);
+    } finally {
+      try {
+        fs.rmSync(tmp, { recursive: true, force: true });
+      } catch (e) {}
+    }
   }
 
   _walkJson (root, dir, out) {

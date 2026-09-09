@@ -14,20 +14,6 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { fab } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { use } from 'echarts/core';
-import { CanvasRenderer } from 'echarts/renderers';
-import { PieChart, LineChart, BarChart } from 'echarts/charts';
-import {
-  TitleComponent,
-  TooltipComponent,
-  LegendComponent,
-  GridComponent,
-  GraphicComponent,
-  DataZoomComponent,
-  ToolboxComponent
-} from 'echarts/components';
-import VChart from 'vue-echarts';
-import 'zrender/lib/svg/svg';
 import VueLazyLoad from 'vue-lazyload-next';
 import md5 from 'md5-node';
 
@@ -47,20 +33,6 @@ import { applyListDensity } from './util/listDensity';
 library.add(fas);
 library.add(fab);
 
-use([
-  CanvasRenderer,
-  PieChart,
-  LineChart,
-  BarChart,
-  TitleComponent,
-  TooltipComponent,
-  LegendComponent,
-  GridComponent,
-  GraphicComponent,
-  DataZoomComponent,
-  ToolboxComponent
-]);
-
 const app = createApp(App);
 const components = [
   Button, Form, Input, Menu, Layout, Drawer,
@@ -76,8 +48,6 @@ for (const component of components) {
 app.use(VueLazyLoad, {
   loading: '/assets/images/loading.gif'
 });
-
-app.component('v-chart', VChart);
 
 app.component('v-nodes', (_, {
   attrs

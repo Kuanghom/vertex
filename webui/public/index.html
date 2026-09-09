@@ -14,7 +14,18 @@
       <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
     <div id="app">
+      <div class="fn-boot">Vertex 加载中</div>
     </div>
+    <style>
+      .fn-boot {
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        color: #3a6d86;
+        font: 14px/1.6 system-ui, sans-serif;
+      }
+      html.dark .fn-boot { color: #9ec9dc; }
+    </style>
   </body>
   <script>
     let customVH = window.innerHeight * 0.01

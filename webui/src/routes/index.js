@@ -2,75 +2,62 @@ import { createRouter, createWebHistory } from 'vue-router';
 import { beginPageLoad } from '../util/pageLoad';
 
 import Index from '@/pages/Index';
-
 import Layout from '@/pages/Layout';
 
-import DashboardIndex from '@/pages/dashboard/Index';
-
-import BaseServer from '@/pages/base/Server';
-import BaseDownloader from '@/pages/base/Downloader';
-import BaseSite from '@/pages/base/Site';
-import BaseNotification from '@/pages/base/Notification';
-import BaseSiteTag from '@/pages/base/SiteTag';
-
-import MetricServer from '@/pages/metric/Server';
-import MetricDownloader from '@/pages/metric/Downloader';
-import MetricSite from '@/pages/metric/Site';
-
-import RuleDelete from '@/pages/rule/Delete';
-import RuleLink from '@/pages/rule/Link';
-import RuleRss from '@/pages/rule/Rss';
-import RuleSelect from '@/pages/rule/Select';
-import RuleAllocate from '@/pages/rule/Allocate';
-
-import TaskRss from '@/pages/task/Rss';
-import TaskSubscribe from '@/pages/task/Subscribe';
-import TaskLink from '@/pages/task/Link';
-import TaskBulkLink from '@/pages/task/BulkLink';
-import TaskWatchCategory from '@/pages/task/WatchCategory';
-import TaskScript from '@/pages/task/Script';
-import TaskScrape from '@/pages/task/Scrape';
-import TaskU2Rss from '@/pages/task/U2Rss';
-import GuideSubsribe from '@/pages/guide/Subscribe';
-import GuidePresets from '@/pages/guide/Presets';
-
-import ToolMikanHistory from '@/pages/tool/MikanHistory';
-import ToolNetworkTest from '@/pages/tool/NetworkTest';
-import ToolMTeamLogin from '@/pages/tool/MTeamLogin';
-import ToolHosts from '@/pages/tool/Hosts';
-import ToolProxy from '@/pages/tool/Proxy';
-import ToolShell from '@/pages/tool/Shell';
-import ToolPathGenerator from '@/pages/tool/PathGenerator';
-import ToolClientLog from '@/pages/tool/ClientLog';
-import ToolClearHistory from '@/pages/tool/ClearHistory';
-
-import InfoInfo from '@/pages/info/Info';
-import InfoLog from '@/pages/info/Log';
-import InfoAbout from '@/pages/info/About';
-
-import SettingBase from '@/pages/setting/Base';
-import SettingStyle from '@/pages/setting/Style';
-import SettingSecurity from '@/pages/setting/Security';
-import SettingInteraction from '@/pages/setting/Interaction';
-import SettingMenu from '@/pages/setting/Menu';
-import SettingBackup from '@/pages/setting/Backup';
-import SettingCookieCloud from '@/pages/setting/CookieCloud';
-
-import SubscribeList from '@/pages/subscribe/List';
-import SubscribeDetail from '@/pages/subscribe/Detail';
-import SubscribeAdd from '@/pages/subscribe/Add';
-import SubscribeSearch from '@/pages/subscribe/Search';
-
-import HistoryRss from '@/pages/history/Rss';
-import HistorySubsribe from '@/pages/history/Subscribe';
-import HistoryWatchCategory from '@/pages/history/WatchCategory';
-
-import MixSearch from '@/pages/mix/Search';
-import MixDownloader from '@/pages/mix/Downloader';
-
-import GuideRss from '@/pages/guide/Rss';
-
-import Login from '@/pages/user/Login';
+const Login = () => import(/* webpackChunkName: "page-login" */ '@/pages/user/Login');
+const DashboardIndex = () => import(/* webpackChunkName: "page-dashboard" */ '@/pages/dashboard/Index');
+const BaseServer = () => import(/* webpackChunkName: "page-base" */ '@/pages/base/Server');
+const BaseDownloader = () => import(/* webpackChunkName: "page-base" */ '@/pages/base/Downloader');
+const BaseSite = () => import(/* webpackChunkName: "page-base" */ '@/pages/base/Site');
+const BaseNotification = () => import(/* webpackChunkName: "page-base" */ '@/pages/base/Notification');
+const BaseSiteTag = () => import(/* webpackChunkName: "page-base" */ '@/pages/base/SiteTag');
+const MetricServer = () => import(/* webpackChunkName: "page-metric" */ '@/pages/metric/Server');
+const MetricDownloader = () => import(/* webpackChunkName: "page-metric" */ '@/pages/metric/Downloader');
+const MetricSite = () => import(/* webpackChunkName: "page-metric" */ '@/pages/metric/Site');
+const RuleDelete = () => import(/* webpackChunkName: "page-rule" */ '@/pages/rule/Delete');
+const RuleLink = () => import(/* webpackChunkName: "page-rule" */ '@/pages/rule/Link');
+const RuleRss = () => import(/* webpackChunkName: "page-rule" */ '@/pages/rule/Rss');
+const RuleSelect = () => import(/* webpackChunkName: "page-rule" */ '@/pages/rule/Select');
+const RuleAllocate = () => import(/* webpackChunkName: "page-rule" */ '@/pages/rule/Allocate');
+const TaskRss = () => import(/* webpackChunkName: "page-task" */ '@/pages/task/Rss');
+const TaskSubscribe = () => import(/* webpackChunkName: "page-task" */ '@/pages/task/Subscribe');
+const TaskLink = () => import(/* webpackChunkName: "page-task" */ '@/pages/task/Link');
+const TaskBulkLink = () => import(/* webpackChunkName: "page-task" */ '@/pages/task/BulkLink');
+const TaskWatchCategory = () => import(/* webpackChunkName: "page-task" */ '@/pages/task/WatchCategory');
+const TaskScript = () => import(/* webpackChunkName: "page-task" */ '@/pages/task/Script');
+const TaskScrape = () => import(/* webpackChunkName: "page-task" */ '@/pages/task/Scrape');
+const TaskU2Rss = () => import(/* webpackChunkName: "page-task" */ '@/pages/task/U2Rss');
+const GuideSubsribe = () => import(/* webpackChunkName: "page-guide" */ '@/pages/guide/Subscribe');
+const GuidePresets = () => import(/* webpackChunkName: "page-guide" */ '@/pages/guide/Presets');
+const GuideRss = () => import(/* webpackChunkName: "page-guide" */ '@/pages/guide/Rss');
+const ToolMikanHistory = () => import(/* webpackChunkName: "page-tool" */ '@/pages/tool/MikanHistory');
+const ToolNetworkTest = () => import(/* webpackChunkName: "page-tool" */ '@/pages/tool/NetworkTest');
+const ToolMTeamLogin = () => import(/* webpackChunkName: "page-tool" */ '@/pages/tool/MTeamLogin');
+const ToolHosts = () => import(/* webpackChunkName: "page-tool" */ '@/pages/tool/Hosts');
+const ToolProxy = () => import(/* webpackChunkName: "page-tool" */ '@/pages/tool/Proxy');
+const ToolShell = () => import(/* webpackChunkName: "page-tool" */ '@/pages/tool/Shell');
+const ToolPathGenerator = () => import(/* webpackChunkName: "page-tool" */ '@/pages/tool/PathGenerator');
+const ToolClientLog = () => import(/* webpackChunkName: "page-tool" */ '@/pages/tool/ClientLog');
+const ToolClearHistory = () => import(/* webpackChunkName: "page-tool" */ '@/pages/tool/ClearHistory');
+const InfoInfo = () => import(/* webpackChunkName: "page-info" */ '@/pages/info/Info');
+const InfoLog = () => import(/* webpackChunkName: "page-info" */ '@/pages/info/Log');
+const InfoAbout = () => import(/* webpackChunkName: "page-info" */ '@/pages/info/About');
+const SettingBase = () => import(/* webpackChunkName: "page-setting" */ '@/pages/setting/Base');
+const SettingStyle = () => import(/* webpackChunkName: "page-setting" */ '@/pages/setting/Style');
+const SettingSecurity = () => import(/* webpackChunkName: "page-setting" */ '@/pages/setting/Security');
+const SettingInteraction = () => import(/* webpackChunkName: "page-setting" */ '@/pages/setting/Interaction');
+const SettingMenu = () => import(/* webpackChunkName: "page-setting" */ '@/pages/setting/Menu');
+const SettingBackup = () => import(/* webpackChunkName: "page-setting" */ '@/pages/setting/Backup');
+const SettingCookieCloud = () => import(/* webpackChunkName: "page-setting" */ '@/pages/setting/CookieCloud');
+const SubscribeList = () => import(/* webpackChunkName: "page-subscribe" */ '@/pages/subscribe/List');
+const SubscribeDetail = () => import(/* webpackChunkName: "page-subscribe" */ '@/pages/subscribe/Detail');
+const SubscribeAdd = () => import(/* webpackChunkName: "page-subscribe" */ '@/pages/subscribe/Add');
+const SubscribeSearch = () => import(/* webpackChunkName: "page-subscribe" */ '@/pages/subscribe/Search');
+const HistoryRss = () => import(/* webpackChunkName: "page-history" */ '@/pages/history/Rss');
+const HistorySubsribe = () => import(/* webpackChunkName: "page-history" */ '@/pages/history/Subscribe');
+const HistoryWatchCategory = () => import(/* webpackChunkName: "page-history" */ '@/pages/history/WatchCategory');
+const MixSearch = () => import(/* webpackChunkName: "page-mix" */ '@/pages/mix/Search');
+const MixDownloader = () => import(/* webpackChunkName: "page-mix" */ '@/pages/mix/Downloader');
 
 const user = {
   path: 'user',

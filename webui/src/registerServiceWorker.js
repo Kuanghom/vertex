@@ -19,8 +19,7 @@ if ('serviceWorker' in window.navigator) {
       console.log('New content is downloading.');
     },
     updated () {
-      console.log('New content is available; please refresh.');
-      window.location.reload();
+      console.log('New content is available.');
     },
     offline () {
       console.log('No internet connection found. App is running in offline mode.');

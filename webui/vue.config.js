@@ -39,6 +39,18 @@ module.exports = {
         return fallback;
       }
     };
+    config.optimization.splitChunks({
+      chunks: 'all',
+      cacheGroups: {
+        echarts: {
+          name: 'chunk-echarts',
+          test: /[\\/]node_modules[\\/](echarts|zrender|vue-echarts)[\\/]/,
+          chunks: 'async',
+          priority: 30,
+          reuseExistingChunk: true
+        }
+      }
+    });
     config.plugin('define').tap((args) => {
       const updateTime = safeExec('git log --pretty=format:%at -1', '');
       const head = safeExec('git rev-parse HEAD', 'local');
@@ -75,6 +87,7 @@ module.exports = {
       swDest: 'service-worker.js',
       skipWaiting: true,
       clientsClaim: true,
+      maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
       navigateFallbackDenylist: [/^\/api/, /^\/proxy/],
       runtimeCaching: [
         {
@@ -84,6 +97,14 @@ module.exports = {
       ],
       exclude: [
         /\.map$/,
+        /\.mp4$/,
+        /login-bg/,
+        /\.less$/,
+        /page-/,
+        /chunk-echarts/,
+        /pwaicons\/windows11/,
+        /pwaicons\/ios\/(1024|256|512|180|167|152|144|128|120|114|100|87|80|76|72|64|60|58|57|50|40|29|20)\.png$/,
+        /fonts\/(alex-brush|great-vibes|jason-handwriting)/,
         /^manifest.*\.js(?:on)?$/,
         /^assets\/pwaicons\/.*ico$/,
         /^assets\/icons\/.*.ico/,
