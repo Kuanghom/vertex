@@ -45,7 +45,7 @@
       </div>
       <a-button @click="resetRssFilter">重置</a-button>
       <template #toolbar>
-      <a-button @click="$goto('/guide/presets', $router)">从预设导入</a-button>
+      <a-button @click="$goto('/guide/presets?kind=task&from=/task/rss', $router)">从预设导入</a-button>
       <a-button type="primary" @click="openCreate">新增</a-button>
       <a-popover
         v-if="!isNarrow"
@@ -287,7 +287,7 @@
           :rules="[{ required: true, message: '${label}不可为空! ' }]">
           <a-form-item-rest v-for="(item, index) in rss.rssUrls" :key="index">
             <a-input-group compact>
-              <a-input size="small" v-model:value="rss.rssUrls[index]" style="width: calc(100% - 64px)"/>
+              <a-input size="small" v-model:value="rss.rssUrls[index]" placeholder="增加你的RSS地址" style="width: calc(100% - 64px)"/>
               <a-button
                 type="danger"
                 size="small" @click="() => rss.rssUrls = rss.rssUrls.filter(i => i !== rss.rssUrls[index])"
@@ -1062,7 +1062,9 @@ export default {
       }
     },
     getValidRssUrls () {
-      return (this.rss.rssUrls || []).map(url => (url || '').trim()).filter(Boolean);
+      return (this.rss.rssUrls || [])
+        .map(url => (url || '').trim())
+        .filter(url => /^https?:\/\//i.test(url));
     },
     async dryrun () {
       const rssUrls = this.getValidRssUrls();

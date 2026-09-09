@@ -21,6 +21,7 @@
           <button v-if="!narrow" class="fn-icon-btn" type="button" title="HTTP 代理" @click="openDrawer('proxy')">
             <fa :icon="['fas', 'globe']"/>
           </button>
+          <fn-notice-bell/>
           <button class="fn-icon-btn" type="button" :title="dark ? '浅色' : '深色'" @click="toggleTheme">
             <fa :icon="dark ? ['fas', 'sun'] : ['fas', 'moon']"/>
           </button>
@@ -201,6 +202,7 @@
 <script>
 import { viewport } from '../mixins/responsive';
 import FnRowDetail from '../components/FnRowDetail.vue';
+import FnNoticeBell from '../components/FnNoticeBell.vue';
 import { applyTheme } from '../util/theme';
 
 const BARE_PATHS = ['/info/log', '/tool/clientLog'];
@@ -237,7 +239,7 @@ const TILES_DARK = {
 };
 
 export default {
-  components: { FnRowDetail },
+  components: { FnRowDetail, FnNoticeBell },
   data () {
     return {
       selectedKeys: [],
@@ -289,6 +291,11 @@ export default {
     drawerWidth () {
       if (this.narrow) return Math.min(viewport.width, 440);
       return 440;
+    }
+  },
+  watch: {
+    '$route.path' () {
+      this.syncKeys();
     }
   },
   methods: {

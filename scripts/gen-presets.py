@@ -118,7 +118,9 @@ def strip_task(item):
         "onlyReseed": item.get("onlyReseed"),
         "maxSleepTime": item.get("maxSleepTime"),
         "enable": False,
-        "rssUrls": [],
+        "clientSortBy": item.get("clientSortBy") or "leechingCount",
+        "allocateRule": item.get("allocateRule") or "builtin:original",
+        "rssUrls": ["增加你的RSS地址"],
         "cookie": "",
         "clientArr": [],
         "reseedClients": [],
@@ -212,6 +214,10 @@ def main():
         if payload.get("type") == "javascript" and not (payload.get("code") or "").strip():
             # empty copy; skip
             continue
+        if not payload.get("sortBy"):
+            payload["sortBy"] = "time"
+        if not payload.get("sortType"):
+            payload["sortType"] = "desc"
         hint = cond_brief(row.get("conditions"))
         add_item("select", row.get("id"), alias, payload, hint=hint)
 

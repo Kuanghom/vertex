@@ -7,7 +7,8 @@
         placeholder="别名 / ID"
         @reset="resetListSearch"/>
       <template #toolbar>
-        <a-button @click="$goto('/guide/presets', $router)">从预设导入</a-button>
+        <a-button @click="$goto('/guide/presets?kind=select&from=/rule/select', $router)">从预设导入</a-button>
+        <fn-quick-size kind="select" :existing="selectAliases" @added="listSelectRule"/>
         <a-button type="primary" @click="openCreate">新增</a-button>
         <fn-column-settings
           :items="columnSettingItems"
@@ -174,8 +175,10 @@
 import { scrollToTop } from '../../util/scroll';
 import adminCrud from '../../mixins/adminCrud';
 import conditionUnit from '../../mixins/conditionUnit';
+import FnQuickSize from '../../components/FnQuickSize.vue';
 
 export default {
+  components: { FnQuickSize },
   mixins: [adminCrud, conditionUnit],
   data () {
     const columns = [
@@ -284,6 +287,10 @@ export default {
           compareType: '',
           value: ''
         }],
+        type: 'normal',
+        priority: '0',
+        sortBy: 'time',
+        sortType: 'desc',
         code: '(torrent) => {\n' +
               '  return false;\n' +
               '}'
@@ -291,6 +298,11 @@ export default {
       loading: true,
       selectRuleList: []
     };
+  },
+  computed: {
+    selectAliases () {
+      return (this.selectRuleList || []).map(item => item.alias);
+    }
   },
   methods: {
     async listSelectRule () {

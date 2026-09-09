@@ -47,6 +47,8 @@ function findByAlias (kind, alias) {
   return existingList(kind).find(item => String(item.alias || '').trim() === name);
 }
 
+const RSS_URL_HINT = '增加你的RSS地址';
+
 function cleanPayload (payload) {
   const out = { ...(payload || {}) };
   Object.keys(out).forEach((key) => {
@@ -57,6 +59,61 @@ function cleanPayload (payload) {
   return out;
 }
 
+function hintRssUrls (urls) {
+  const list = Array.isArray(urls) ? urls.map(url => String(url || '').trim()).filter(Boolean) : [];
+  const kept = list.filter(url => !/^https?:\/\//i.test(url));
+  return kept.length ? kept : [RSS_URL_HINT];
+}
+
+function applyTaskDefaults (body) {
+  body.enable = false;
+  body.clientSortBy = body.clientSortBy || 'leechingCount';
+  body.allocateRule = body.allocateRule || 'builtin:original';
+  body.rssUrls = hintRssUrls(body.rssUrls);
+  body.cookie = '';
+  body.clientArr = [];
+  body.reseedClients = [];
+  body.sameServerClients = [];
+  return body;
+}
+
+function fillExistingTask (task) {
+  if (!task || !task.id) return false;
+  let changed = false;
+  const next = { ...task };
+  if (!next.clientSortBy) {
+    next.clientSortBy = 'leechingCount';
+    changed = true;
+  }
+  if (!next.allocateRule) {
+    next.allocateRule = 'builtin:original';
+    changed = true;
+  }
+  const urls = Array.isArray(next.rssUrls) ? next.rssUrls.map(url => String(url || '').trim()).filter(Boolean) : [];
+  if (!urls.length) {
+    next.rssUrls = [RSS_URL_HINT];
+    changed = true;
+  }
+  if (changed) rssMod.modify(next);
+  return changed;
+}
+
+function fillExistingSelect (rule) {
+  if (!rule || !rule.id) return false;
+  let changed = false;
+  const next = { ...rule };
+  if (!next.sortBy) {
+    next.sortBy = 'time';
+    changed = true;
+  }
+  if (!next.sortType) {
+    next.sortType = 'desc';
+    changed = true;
+  }
+  if (changed) raceRuleMod.modify(next);
+  return changed;
+}
+
 function addKind (kind, payload) {
   const body = cleanPayload(payload);
   if (kind === 'delete') {
@@ -64,14 +121,11 @@ function addKind (kind, payload) {
   } else if (kind === 'rss') {
     rssRuleMod.add(body);
   } else if (kind === 'select') {
+    if (!body.sortBy) body.sortBy = 'time';
+    if (!body.sortType) body.sortType = 'desc';
     raceRuleMod.add(body);
   } else if (kind === 'task') {
-    body.enable = false;
-    body.rssUrls = [];
-    body.cookie = '';
-    body.clientArr = [];
-    body.reseedClients = [];
-    body.sameServerClients = [];
+    applyTaskDefaults(body);
     rssMod.add(body);
   } else if (kind === 'client') {
     body.enable = false;
@@ -139,6 +193,8 @@ class PresetMod {
       if (!item) return '';
       const hit = findByAlias(item.kind, item.alias);
       if (hit) {
+        if (item.kind === 'task') fillExistingTask(hit);
+        if (item.kind === 'select') fillExistingSelect(hit);
         idMap[presetId] = hit.id;
         reused.push({ kind: item.kind, alias: item.alias, id: hit.id });
         return hit.id;
@@ -179,6 +235,9 @@ class PresetMod {
       if (!item) return;
       if (item.kind === 'task' || item.kind === 'client') ensure(item.id);
     });
+
+    existingList('task').forEach(fillExistingTask);
+    existingList('select').forEach(fillExistingSelect);
 
     return {
       created,
@@ -269,10 +328,7 @@ class PresetMod {
           const src = rows.find(r => r.kind === 'rss' && r.data.id === id);
           return src ? ensureArchiveRule('rss', id, src.data) : '';
         }).filter(Boolean);
-        data.enable = false;
-        data.rssUrls = [];
-        data.cookie = '';
-        data.clientArr = [];
+        applyTaskDefaults(data);
       }
       if (row.kind === 'client') {
         data.deleteRules = (data.deleteRules || []).map((id) => {
@@ -291,12 +347,16 @@ class PresetMod {
       }
       const hit = findByAlias(row.kind, data.alias);
       if (hit) {
+        if (row.kind === 'task') fillExistingTask(hit);
         reused.push({ kind: row.kind, alias: data.alias, id: hit.id });
         return;
       }
       const newId = addKind(row.kind, data);
       created.push({ kind: row.kind, alias: data.alias, id: newId });
     });
+
+    existingList('task').forEach(fillExistingTask);
+    existingList('select').forEach(fillExistingSelect);
 
     return {
       created,

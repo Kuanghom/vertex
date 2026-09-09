@@ -7,7 +7,8 @@
         placeholder="别名 / ID"
         @reset="resetListSearch"/>
       <template #toolbar>
-        <a-button @click="$goto('/guide/presets', $router)">从预设导入</a-button>
+        <a-button @click="$goto('/guide/presets?kind=rss&from=/rule/rss', $router)">从预设导入</a-button>
+        <fn-quick-size kind="rss" :existing="rssAliases" @added="listRssRule"/>
         <a-button type="primary" @click="openCreate">新增</a-button>
         <fn-column-settings
           :items="columnSettingItems"
@@ -187,8 +188,10 @@
 import { scrollToTop } from '../../util/scroll';
 import adminCrud from '../../mixins/adminCrud';
 import conditionUnit from '../../mixins/conditionUnit';
+import FnQuickSize from '../../components/FnQuickSize.vue';
 
 export default {
+  components: { FnQuickSize },
   mixins: [adminCrud, conditionUnit],
   data () {
     const columns = [
@@ -270,6 +273,11 @@ export default {
       downloaders: [],
       rssRuleList: []
     };
+  },
+  computed: {
+    rssAliases () {
+      return (this.rssRuleList || []).map(item => item.alias);
+    }
   },
   methods: {
     async listRssRule () {

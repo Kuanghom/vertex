@@ -2919,7 +2919,9 @@
         ],
         "alias": ">10G",
         "type": "normal",
-        "priority": "0"
+        "priority": "0",
+        "sortBy": "time",
+        "sortType": "desc"
       }
     },
     {
@@ -2942,7 +2944,9 @@
         ],
         "alias": ">1G",
         "type": "normal",
-        "priority": "0"
+        "priority": "0",
+        "sortBy": "time",
+        "sortType": "desc"
       }
     },
     {
@@ -2964,7 +2968,9 @@
         ],
         "alias": "猪猪专用-排除HR",
         "type": "normal",
-        "priority": "0"
+        "priority": "0",
+        "sortBy": "time",
+        "sortType": "desc"
       }
     },
     {
@@ -2987,7 +2993,9 @@
         ],
         "alias": "种子小于3g",
         "type": "normal",
-        "priority": "0"
+        "priority": "0",
+        "sortBy": "time",
+        "sortType": "desc"
       }
     },
     {
@@ -3010,7 +3018,9 @@
         ],
         "alias": ">40G",
         "type": "normal",
-        "priority": "0"
+        "priority": "0",
+        "sortBy": "time",
+        "sortType": "desc"
       }
     },
     {
@@ -3033,7 +3043,9 @@
         ],
         "alias": ">3G",
         "type": "normal",
-        "priority": "0"
+        "priority": "0",
+        "sortBy": "time",
+        "sortType": "desc"
       }
     },
     {
@@ -3056,7 +3068,9 @@
         ],
         "alias": ">20G",
         "type": "normal",
-        "priority": "0"
+        "priority": "0",
+        "sortBy": "time",
+        "sortType": "desc"
       }
     },
     {
@@ -3079,7 +3093,9 @@
         ],
         "alias": ">60G",
         "type": "normal",
-        "priority": "0"
+        "priority": "0",
+        "sortBy": "time",
+        "sortType": "desc"
       }
     },
     {
@@ -3101,7 +3117,9 @@
         ],
         "alias": "Ubits-排除HR",
         "type": "normal",
-        "priority": "0"
+        "priority": "0",
+        "sortBy": "time",
+        "sortType": "desc"
       }
     },
     {
@@ -3124,7 +3142,9 @@
         ],
         "alias": ">2G",
         "type": "normal",
-        "priority": "0"
+        "priority": "0",
+        "sortBy": "time",
+        "sortType": "desc"
       }
     },
     {
@@ -3147,7 +3167,9 @@
         ],
         "alias": ">30G",
         "type": "normal",
-        "priority": "0"
+        "priority": "0",
+        "sortBy": "time",
+        "sortType": "desc"
       }
     },
     {
@@ -3170,7 +3192,9 @@
         ],
         "alias": "种子大于150g",
         "type": "normal",
-        "priority": "0"
+        "priority": "0",
+        "sortBy": "time",
+        "sortType": "desc"
       }
     },
     {
@@ -3193,7 +3217,9 @@
         ],
         "alias": ">4G",
         "type": "normal",
-        "priority": "0"
+        "priority": "0",
+        "sortBy": "time",
+        "sortType": "desc"
       }
     },
     {
@@ -3216,7 +3242,9 @@
         ],
         "alias": "TTG",
         "type": "normal",
-        "priority": "0"
+        "priority": "0",
+        "sortBy": "time",
+        "sortType": "desc"
       }
     },
     {
@@ -3239,7 +3267,9 @@
         ],
         "alias": "种子小于5g",
         "type": "normal",
-        "priority": "0"
+        "priority": "0",
+        "sortBy": "time",
+        "sortType": "desc"
       }
     },
     {
@@ -3262,7 +3292,9 @@
         ],
         "alias": ">14G",
         "type": "normal",
-        "priority": "0"
+        "priority": "0",
+        "sortBy": "time",
+        "sortType": "desc"
       }
     },
     {
@@ -3284,7 +3316,9 @@
         ],
         "alias": "红叶拒绝官种",
         "type": "normal",
-        "priority": "0"
+        "priority": "0",
+        "sortBy": "time",
+        "sortType": "desc"
       }
     },
     {
@@ -3307,7 +3341,9 @@
         ],
         "alias": ">50G",
         "type": "normal",
-        "priority": "0"
+        "priority": "0",
+        "sortBy": "time",
+        "sortType": "desc"
       }
     },
     {
@@ -3330,7 +3366,9 @@
         ],
         "alias": "种子小于10g",
         "type": "normal",
-        "priority": "0"
+        "priority": "0",
+        "sortBy": "time",
+        "sortType": "desc"
       }
     },
     {
@@ -3358,7 +3396,9 @@
         ],
         "alias": "种子3-40g",
         "type": "normal",
-        "priority": "0"
+        "priority": "0",
+        "sortBy": "time",
+        "sortType": "desc"
       }
     },
     {
@@ -3391,7 +3431,9 @@
         "onlyReseed": false,
         "maxSleepTime": 600,
         "enable": false,
-        "rssUrls": [],
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
         "cookie": "",
         "clientArr": [],
         "reseedClients": [],
@@ -3401,7 +3443,9 @@
         "_acceptPreset": [],
         "_rejectPreset": [
           "rss:红叶拒绝官种"
-        ]
+        ],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
       }
     },
     {
@@ -3432,7 +3476,9 @@
         "onlyReseed": false,
         "maxSleepTime": 600,
         "enable": false,
-        "rssUrls": [],
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
         "cookie": "",
         "clientArr": [],
         "reseedClients": [],
@@ -3440,7 +3486,9 @@
         "acceptRules": [],
         "rejectRules": [],
         "_acceptPreset": [],
-        "_rejectPreset": []
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
       }
     },
     {
@@ -3471,7 +3519,9 @@
         "onlyReseed": false,
         "maxSleepTime": 600,
         "enable": false,
-        "rssUrls": [],
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
         "cookie": "",
         "clientArr": [],
         "reseedClients": [],
@@ -3479,7 +3529,9 @@
         "acceptRules": [],
         "rejectRules": [],
         "_acceptPreset": [],
-        "_rejectPreset": []
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
       }
     },
     {
@@ -3510,7 +3562,9 @@
         "onlyReseed": false,
         "maxSleepTime": "600",
         "enable": false,
-        "rssUrls": [],
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
         "cookie": "",
         "clientArr": [],
         "reseedClients": [],
@@ -3518,7 +3572,9 @@
         "acceptRules": [],
         "rejectRules": [],
         "_acceptPreset": [],
-        "_rejectPreset": []
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
       }
     },
     {
@@ -3549,7 +3605,9 @@
         "onlyReseed": false,
         "maxSleepTime": "600",
         "enable": false,
-        "rssUrls": [],
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
         "cookie": "",
         "clientArr": [],
         "reseedClients": [],
@@ -3557,7 +3615,9 @@
         "acceptRules": [],
         "rejectRules": [],
         "_acceptPreset": [],
-        "_rejectPreset": []
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
       }
     },
     {
@@ -3588,7 +3648,9 @@
         "onlyReseed": false,
         "maxSleepTime": 600,
         "enable": false,
-        "rssUrls": [],
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
         "cookie": "",
         "clientArr": [],
         "reseedClients": [],
@@ -3596,7 +3658,9 @@
         "acceptRules": [],
         "rejectRules": [],
         "_acceptPreset": [],
-        "_rejectPreset": []
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
       }
     },
     {
@@ -3627,7 +3691,9 @@
         "onlyReseed": false,
         "maxSleepTime": "600",
         "enable": false,
-        "rssUrls": [],
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
         "cookie": "",
         "clientArr": [],
         "reseedClients": [],
@@ -3635,7 +3701,9 @@
         "acceptRules": [],
         "rejectRules": [],
         "_acceptPreset": [],
-        "_rejectPreset": []
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
       }
     },
     {
@@ -3666,7 +3734,9 @@
         "onlyReseed": false,
         "maxSleepTime": "600",
         "enable": false,
-        "rssUrls": [],
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
         "cookie": "",
         "clientArr": [],
         "reseedClients": [],
@@ -3674,7 +3744,9 @@
         "acceptRules": [],
         "rejectRules": [],
         "_acceptPreset": [],
-        "_rejectPreset": []
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
       }
     },
     {
@@ -3705,7 +3777,9 @@
         "onlyReseed": false,
         "maxSleepTime": 600,
         "enable": false,
-        "rssUrls": [],
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
         "cookie": "",
         "clientArr": [],
         "reseedClients": [],
@@ -3713,7 +3787,9 @@
         "acceptRules": [],
         "rejectRules": [],
         "_acceptPreset": [],
-        "_rejectPreset": []
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
       }
     },
     {
@@ -3744,7 +3820,9 @@
         "onlyReseed": false,
         "maxSleepTime": "9999999999",
         "enable": false,
-        "rssUrls": [],
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
         "cookie": "",
         "clientArr": [],
         "reseedClients": [],
@@ -3752,7 +3830,9 @@
         "acceptRules": [],
         "rejectRules": [],
         "_acceptPreset": [],
-        "_rejectPreset": []
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
       }
     },
     {
@@ -3783,7 +3863,9 @@
         "onlyReseed": false,
         "maxSleepTime": 600,
         "enable": false,
-        "rssUrls": [],
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
         "cookie": "",
         "clientArr": [],
         "reseedClients": [],
@@ -3791,7 +3873,9 @@
         "acceptRules": [],
         "rejectRules": [],
         "_acceptPreset": [],
-        "_rejectPreset": []
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
       }
     },
     {
@@ -3826,7 +3910,9 @@
         "onlyReseed": false,
         "maxSleepTime": "600",
         "enable": false,
-        "rssUrls": [],
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
         "cookie": "",
         "clientArr": [],
         "reseedClients": [],
@@ -3839,7 +3925,9 @@
         "_rejectPreset": [
           "rss:>60G",
           "rss:猫站-拒绝老种子"
-        ]
+        ],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
       }
     },
     {
@@ -3870,7 +3958,9 @@
         "onlyReseed": false,
         "maxSleepTime": "600",
         "enable": false,
-        "rssUrls": [],
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
         "cookie": "",
         "clientArr": [],
         "reseedClients": [],
@@ -3878,7 +3968,9 @@
         "acceptRules": [],
         "rejectRules": [],
         "_acceptPreset": [],
-        "_rejectPreset": []
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
       }
     },
     {
@@ -3909,7 +4001,9 @@
         "onlyReseed": false,
         "maxSleepTime": 600,
         "enable": false,
-        "rssUrls": [],
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
         "cookie": "",
         "clientArr": [],
         "reseedClients": [],
@@ -3917,7 +4011,9 @@
         "acceptRules": [],
         "rejectRules": [],
         "_acceptPreset": [],
-        "_rejectPreset": []
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
       }
     },
     {
@@ -3951,7 +4047,9 @@
         "onlyReseed": false,
         "maxSleepTime": "600",
         "enable": false,
-        "rssUrls": [],
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
         "cookie": "",
         "clientArr": [],
         "reseedClients": [],
@@ -3961,7 +4059,9 @@
         "_acceptPreset": [
           "rss:北洋选种"
         ],
-        "_rejectPreset": []
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
       }
     },
     {
@@ -3992,7 +4092,9 @@
         "onlyReseed": false,
         "maxSleepTime": "9999999999",
         "enable": false,
-        "rssUrls": [],
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
         "cookie": "",
         "clientArr": [],
         "reseedClients": [],
@@ -4000,7 +4102,9 @@
         "acceptRules": [],
         "rejectRules": [],
         "_acceptPreset": [],
-        "_rejectPreset": []
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
       }
     },
     {
@@ -4033,7 +4137,9 @@
         "onlyReseed": false,
         "maxSleepTime": 600,
         "enable": false,
-        "rssUrls": [],
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
         "cookie": "",
         "clientArr": [],
         "reseedClients": [],
@@ -4043,7 +4149,9 @@
         "_acceptPreset": [
           "rss:>3G"
         ],
-        "_rejectPreset": []
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
       }
     },
     {
@@ -4074,7 +4182,9 @@
         "onlyReseed": false,
         "maxSleepTime": "600",
         "enable": false,
-        "rssUrls": [],
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
         "cookie": "",
         "clientArr": [],
         "reseedClients": [],
@@ -4082,7 +4192,9 @@
         "acceptRules": [],
         "rejectRules": [],
         "_acceptPreset": [],
-        "_rejectPreset": []
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
       }
     },
     {
@@ -4113,7 +4225,9 @@
         "onlyReseed": false,
         "maxSleepTime": "600",
         "enable": false,
-        "rssUrls": [],
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
         "cookie": "",
         "clientArr": [],
         "reseedClients": [],
@@ -4121,7 +4235,9 @@
         "acceptRules": [],
         "rejectRules": [],
         "_acceptPreset": [],
-        "_rejectPreset": []
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
       }
     },
     {
@@ -4152,7 +4268,9 @@
         "onlyReseed": false,
         "maxSleepTime": "9999999999",
         "enable": false,
-        "rssUrls": [],
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
         "cookie": "",
         "clientArr": [],
         "reseedClients": [],
@@ -4160,7 +4278,9 @@
         "acceptRules": [],
         "rejectRules": [],
         "_acceptPreset": [],
-        "_rejectPreset": []
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
       }
     },
     {
@@ -4191,7 +4311,9 @@
         "onlyReseed": false,
         "maxSleepTime": "600",
         "enable": false,
-        "rssUrls": [],
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
         "cookie": "",
         "clientArr": [],
         "reseedClients": [],
@@ -4199,7 +4321,9 @@
         "acceptRules": [],
         "rejectRules": [],
         "_acceptPreset": [],
-        "_rejectPreset": []
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
       }
     },
     {
@@ -4230,7 +4354,9 @@
         "onlyReseed": false,
         "maxSleepTime": "600",
         "enable": false,
-        "rssUrls": [],
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
         "cookie": "",
         "clientArr": [],
         "reseedClients": [],
@@ -4238,7 +4364,9 @@
         "acceptRules": [],
         "rejectRules": [],
         "_acceptPreset": [],
-        "_rejectPreset": []
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
       }
     },
     {
@@ -4269,7 +4397,9 @@
         "onlyReseed": false,
         "maxSleepTime": "600",
         "enable": false,
-        "rssUrls": [],
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
         "cookie": "",
         "clientArr": [],
         "reseedClients": [],
@@ -4277,7 +4407,9 @@
         "acceptRules": [],
         "rejectRules": [],
         "_acceptPreset": [],
-        "_rejectPreset": []
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
       }
     },
     {
@@ -4310,7 +4442,9 @@
         "onlyReseed": false,
         "maxSleepTime": 600,
         "enable": false,
-        "rssUrls": [],
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
         "cookie": "",
         "clientArr": [],
         "reseedClients": [],
@@ -4320,7 +4454,9 @@
         "_acceptPreset": [
           "rss:>3G"
         ],
-        "_rejectPreset": []
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
       }
     },
     {
@@ -4351,7 +4487,9 @@
         "onlyReseed": false,
         "maxSleepTime": "600",
         "enable": false,
-        "rssUrls": [],
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
         "cookie": "",
         "clientArr": [],
         "reseedClients": [],
@@ -4359,7 +4497,9 @@
         "acceptRules": [],
         "rejectRules": [],
         "_acceptPreset": [],
-        "_rejectPreset": []
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
       }
     },
     {
@@ -4390,7 +4530,9 @@
         "onlyReseed": false,
         "maxSleepTime": "600",
         "enable": false,
-        "rssUrls": [],
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
         "cookie": "",
         "clientArr": [],
         "reseedClients": [],
@@ -4398,7 +4540,9 @@
         "acceptRules": [],
         "rejectRules": [],
         "_acceptPreset": [],
-        "_rejectPreset": []
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
       }
     },
     {
@@ -4429,7 +4573,9 @@
         "onlyReseed": false,
         "maxSleepTime": "600",
         "enable": false,
-        "rssUrls": [],
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
         "cookie": "",
         "clientArr": [],
         "reseedClients": [],
@@ -4437,7 +4583,9 @@
         "acceptRules": [],
         "rejectRules": [],
         "_acceptPreset": [],
-        "_rejectPreset": []
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
       }
     },
     {
@@ -4468,7 +4616,9 @@
         "onlyReseed": false,
         "maxSleepTime": "600",
         "enable": false,
-        "rssUrls": [],
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
         "cookie": "",
         "clientArr": [],
         "reseedClients": [],
@@ -4476,7 +4626,9 @@
         "acceptRules": [],
         "rejectRules": [],
         "_acceptPreset": [],
-        "_rejectPreset": []
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
       }
     },
     {
@@ -4507,7 +4659,9 @@
         "onlyReseed": false,
         "maxSleepTime": 600,
         "enable": false,
-        "rssUrls": [],
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
         "cookie": "",
         "clientArr": [],
         "reseedClients": [],
@@ -4515,7 +4669,9 @@
         "acceptRules": [],
         "rejectRules": [],
         "_acceptPreset": [],
-        "_rejectPreset": []
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
       }
     },
     {
@@ -4546,7 +4702,9 @@
         "onlyReseed": false,
         "maxSleepTime": "600",
         "enable": false,
-        "rssUrls": [],
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
         "cookie": "",
         "clientArr": [],
         "reseedClients": [],
@@ -4554,7 +4712,9 @@
         "acceptRules": [],
         "rejectRules": [],
         "_acceptPreset": [],
-        "_rejectPreset": []
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
       }
     },
     {
@@ -4585,7 +4745,9 @@
         "onlyReseed": false,
         "maxSleepTime": "600",
         "enable": false,
-        "rssUrls": [],
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
         "cookie": "",
         "clientArr": [],
         "reseedClients": [],
@@ -4593,7 +4755,9 @@
         "acceptRules": [],
         "rejectRules": [],
         "_acceptPreset": [],
-        "_rejectPreset": []
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
       }
     },
     {
@@ -4624,7 +4788,9 @@
         "onlyReseed": false,
         "maxSleepTime": "600",
         "enable": false,
-        "rssUrls": [],
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
         "cookie": "",
         "clientArr": [],
         "reseedClients": [],
@@ -4632,7 +4798,9 @@
         "acceptRules": [],
         "rejectRules": [],
         "_acceptPreset": [],
-        "_rejectPreset": []
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
       }
     },
     {
@@ -4663,7 +4831,9 @@
         "onlyReseed": false,
         "maxSleepTime": 600,
         "enable": false,
-        "rssUrls": [],
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
         "cookie": "",
         "clientArr": [],
         "reseedClients": [],
@@ -4671,7 +4841,9 @@
         "acceptRules": [],
         "rejectRules": [],
         "_acceptPreset": [],
-        "_rejectPreset": []
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
       }
     },
     {
@@ -4702,7 +4874,9 @@
         "onlyReseed": false,
         "maxSleepTime": "600",
         "enable": false,
-        "rssUrls": [],
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
         "cookie": "",
         "clientArr": [],
         "reseedClients": [],
@@ -4710,7 +4884,9 @@
         "acceptRules": [],
         "rejectRules": [],
         "_acceptPreset": [],
-        "_rejectPreset": []
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
       }
     },
     {
@@ -4741,7 +4917,9 @@
         "onlyReseed": false,
         "maxSleepTime": "600",
         "enable": false,
-        "rssUrls": [],
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
         "cookie": "",
         "clientArr": [],
         "reseedClients": [],
@@ -4749,7 +4927,9 @@
         "acceptRules": [],
         "rejectRules": [],
         "_acceptPreset": [],
-        "_rejectPreset": []
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
       }
     },
     {
@@ -4782,7 +4962,9 @@
         "onlyReseed": false,
         "maxSleepTime": 600,
         "enable": false,
-        "rssUrls": [],
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
         "cookie": "",
         "clientArr": [],
         "reseedClients": [],
@@ -4792,7 +4974,9 @@
         "_acceptPreset": [],
         "_rejectPreset": [
           "rss:猪猪专用-排除HR"
-        ]
+        ],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
       }
     },
     {
@@ -4823,7 +5007,9 @@
         "onlyReseed": false,
         "maxSleepTime": 600,
         "enable": false,
-        "rssUrls": [],
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
         "cookie": "",
         "clientArr": [],
         "reseedClients": [],
@@ -4831,7 +5017,9 @@
         "acceptRules": [],
         "rejectRules": [],
         "_acceptPreset": [],
-        "_rejectPreset": []
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
       }
     },
     {
@@ -4862,7 +5050,9 @@
         "onlyReseed": false,
         "maxSleepTime": "600",
         "enable": false,
-        "rssUrls": [],
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
         "cookie": "",
         "clientArr": [],
         "reseedClients": [],
@@ -4870,7 +5060,9 @@
         "acceptRules": [],
         "rejectRules": [],
         "_acceptPreset": [],
-        "_rejectPreset": []
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
       }
     },
     {
@@ -4901,7 +5093,9 @@
         "onlyReseed": false,
         "maxSleepTime": "600",
         "enable": false,
-        "rssUrls": [],
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
         "cookie": "",
         "clientArr": [],
         "reseedClients": [],
@@ -4909,7 +5103,9 @@
         "acceptRules": [],
         "rejectRules": [],
         "_acceptPreset": [],
-        "_rejectPreset": []
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
       }
     },
     {
@@ -4940,7 +5136,9 @@
         "onlyReseed": false,
         "maxSleepTime": "600",
         "enable": false,
-        "rssUrls": [],
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
         "cookie": "",
         "clientArr": [],
         "reseedClients": [],
@@ -4948,7 +5146,9 @@
         "acceptRules": [],
         "rejectRules": [],
         "_acceptPreset": [],
-        "_rejectPreset": []
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
       }
     },
     {
@@ -4979,7 +5179,9 @@
         "onlyReseed": false,
         "maxSleepTime": "600",
         "enable": false,
-        "rssUrls": [],
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
         "cookie": "",
         "clientArr": [],
         "reseedClients": [],
@@ -4987,7 +5189,9 @@
         "acceptRules": [],
         "rejectRules": [],
         "_acceptPreset": [],
-        "_rejectPreset": []
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
       }
     },
     {
@@ -5018,7 +5222,9 @@
         "onlyReseed": false,
         "maxSleepTime": "600",
         "enable": false,
-        "rssUrls": [],
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
         "cookie": "",
         "clientArr": [],
         "reseedClients": [],
@@ -5026,7 +5232,9 @@
         "acceptRules": [],
         "rejectRules": [],
         "_acceptPreset": [],
-        "_rejectPreset": []
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
       }
     },
     {
@@ -5057,7 +5265,9 @@
         "onlyReseed": false,
         "maxSleepTime": 600,
         "enable": false,
-        "rssUrls": [],
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
         "cookie": "",
         "clientArr": [],
         "reseedClients": [],
@@ -5065,7 +5275,9 @@
         "acceptRules": [],
         "rejectRules": [],
         "_acceptPreset": [],
-        "_rejectPreset": []
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
       }
     },
     {
@@ -5096,7 +5308,9 @@
         "onlyReseed": false,
         "maxSleepTime": 600,
         "enable": false,
-        "rssUrls": [],
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
         "cookie": "",
         "clientArr": [],
         "reseedClients": [],
@@ -5104,7 +5318,9 @@
         "acceptRules": [],
         "rejectRules": [],
         "_acceptPreset": [],
-        "_rejectPreset": []
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
       }
     },
     {

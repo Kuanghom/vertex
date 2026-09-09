@@ -64,7 +64,7 @@
         <div
           v-if="!downloaders.length"
           class="dash-row">
-          <div class="data-rect-2" style="cursor: pointer;" @click="$goto('/guide/presets', $router)">
+          <div class="data-rect-2" style="cursor: pointer;" @click="$goto('/guide/presets?from=/index', $router)">
             <div class="data-rect-body">
               <div>还没有下载器和规则</div>
               <div class="data-rect-sub">去任务引导 → 快速导入，一键加上推荐套餐</div>
@@ -270,18 +270,6 @@ export default {
       try {
         const res = await this.$api().setting.getRunInfo();
         this.runInfo = res.data;
-        for (const error of this.runInfo.errors.reverse()) {
-          await this.$notification().error({
-            message: '存在错误信息, 请检查日志',
-            description: error.map(item => {
-              if (typeof item === 'object') {
-                return item.message || item.code || item.description;
-              }
-              return item;
-            }).join(', '),
-            duration: 0
-          });
-        }
       } catch (e) {
         await this.$message().error(e.message);
       }

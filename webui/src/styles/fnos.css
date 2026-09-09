@@ -203,6 +203,117 @@ html.dark .fn-titlebar {
 .fn-icon-btn:hover { background: var(--blue-soft); color: var(--blue-deep); }
 .fn-icon-btn:focus,
 .fn-icon-btn:focus-visible { outline: none; box-shadow: none; }
+.fn-notice-btn { position: relative; }
+.fn-notice-badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 8px;
+  background: var(--bad);
+  color: #fff;
+  font-size: 11px;
+  line-height: 16px;
+  font-weight: 700;
+  text-align: center;
+}
+.fn-notice-pop .ant-popover-inner-content {
+  padding: 0 !important;
+}
+.fn-notice-panel {
+  width: 360px;
+  max-width: 100%;
+}
+.fn-notice-head,
+.fn-notice-group-head,
+.fn-notice-card-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.fn-notice-head {
+  justify-content: space-between;
+  padding: 12px 14px 8px;
+}
+.fn-notice-clear,
+.fn-notice-x,
+.fn-notice-log,
+.fn-notice-group-head {
+  border: 0;
+  background: none;
+  color: var(--text-2);
+  cursor: pointer;
+  padding: 0;
+  font-size: 13px;
+}
+.fn-notice-clear,
+.fn-notice-log {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.fn-notice-clear:hover,
+.fn-notice-x:hover,
+.fn-notice-log:hover,
+.fn-notice-group-head:hover {
+  color: var(--blue);
+}
+.fn-notice-empty {
+  padding: 28px 16px;
+  text-align: center;
+  color: var(--text-3);
+  font-size: 13px;
+}
+.fn-notice-list {
+  max-height: 420px;
+  overflow: auto;
+  padding: 0 12px 8px;
+}
+.fn-notice-group + .fn-notice-group {
+  margin-top: 8px;
+}
+.fn-notice-group-head {
+  width: 100%;
+  justify-content: space-between;
+  padding: 6px 4px;
+  font-weight: 600;
+  color: var(--text);
+}
+.fn-notice-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  margin-bottom: 8px;
+}
+.fn-notice-card.read {
+  opacity: 0.72;
+}
+.fn-notice-title {
+  font-weight: 600;
+  color: var(--text);
+  flex: 1;
+  min-width: 0;
+}
+.fn-notice-time {
+  color: var(--text-3);
+  font-size: 12px;
+  white-space: nowrap;
+}
+.fn-notice-body {
+  margin: 6px 0 0;
+  color: var(--text-2);
+  font-size: 13px;
+  line-height: 1.55;
+}
+.fn-notice-log {
+  width: 100%;
+  justify-content: center;
+  padding: 10px 0 12px;
+  border-top: 1px solid var(--line);
+}
 .fn-logout-btn {
   display: inline-flex;
   align-items: center;
