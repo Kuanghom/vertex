@@ -17,6 +17,8 @@ RUN \
 COPY app /app/vertex/app
 COPY docker/start.sh /app/vertex/docker/start.sh
 RUN \
+  sed -i 's/\r$//' /app/vertex/docker/start.sh && \
+  chmod +x /app/vertex/docker/start.sh && \
   mkdir /vertex && \
   ln -s /vertex/data /app/vertex/app/data && \
   ln -s /vertex/db /app/vertex/app/db && \
