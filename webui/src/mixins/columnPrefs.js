@@ -135,7 +135,7 @@ export default {
       const locked = isLocked(col);
       const next = { ...col };
       const savedWidth = Number(this.columnWidths[key]);
-      if (savedWidth >= 64 && !(locked && savedWidth < 248)) next.width = savedWidth;
+      if (savedWidth >= 64 && !(locked && savedWidth < 96)) next.width = savedWidth;
 
       if (!next.customRender && (next.dataIndex === 'alias' || next.dataIndex === 'name')) {
         if (!(savedWidth >= 64)) next.width = Math.max(Number(next.width) || 0, 220);

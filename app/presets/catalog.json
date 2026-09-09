@@ -1,0 +1,5560 @@
+{
+  "packs": {
+    "recommended": [
+      "delete:NC-种子进度0.2分享低于0.1",
+      "delete:NC-剩余空间5g上传小于130M",
+      "delete:NC-种子错误",
+      "delete:NC-种子进度0.5分享低于0.2",
+      "delete:NC-剩余空间40g上传小于5M",
+      "delete:A最长下载时间",
+      "delete:NC-慢车",
+      "delete:NC-慢车（删种厉害）",
+      "delete:NC-剩余空间30g上传小于8M",
+      "delete:剩余空间100g上传小于8M",
+      "delete:NC-剩余空间20g上传小于50M",
+      "delete:NC-剩余空间50g上传小于1M",
+      "delete:A长时间未开始",
+      "delete:A慢车",
+      "delete:A中途停车",
+      "delete:NC-剩余空间10g上传小于80M",
+      "rss:种子小于10g",
+      "rss:>60G",
+      "rss:种子3-40g",
+      "rss:种子小于3g",
+      "rss:>3G",
+      "rss:>1G",
+      "rss:种子小于5g",
+      "client:刷流",
+      "delete:NC-分享率3倍删种-憨憨-天空",
+      "delete:拒绝删种-猫专用",
+      "delete:拒绝删种-北洋专用"
+    ],
+    "all": [
+      "delete:拆包删种(硬盘空间小于10G,上传速度小于3M)",
+      "delete:NC-种子进度0.2分享低于0.1",
+      "delete:NC-剩余空间5g上传小于130M",
+      "delete:拆包删种(BUG大种)",
+      "delete:不可说2-低速低比率",
+      "delete:甲骨文NC-6小时未下载完",
+      "delete:NC-种子错误",
+      "delete:A出种",
+      "delete:拒绝删种-猫专用",
+      "delete:甲骨文-上传速度小于50k持续2分钟删除",
+      "delete:拆包删种-甲骨文(硬盘空间小于500G,上传速度小于100K)",
+      "delete:拆包删种(硬盘空间小于30G,上传速度小于200K)",
+      "delete:甲骨文-500G剩余硬盘时速度小于100K",
+      "delete:A出种-2",
+      "delete:天空暂停一小时",
+      "delete:NC-种子进度0.5分享低于0.2",
+      "delete:拆包删种(分享率3倍)",
+      "delete:A黑车1",
+      "delete:A无效做种",
+      "delete:NC-低收益",
+      "delete:NC-剩余空间40g上传小于5M",
+      "delete:甲骨文NC-出种-完全没速度",
+      "delete:A最长下载时间",
+      "delete:NC-慢车",
+      "delete:北洋-hr请求",
+      "delete:拆包删种-甲骨文（BUG大种天空馒头）",
+      "delete:NC-慢车（删种厉害）",
+      "delete:甲骨文-学校分享率到1.2上传小于100K",
+      "delete:天空暂停一小时（新）",
+      "delete:拆包删种-甲骨文(添加大于2小时，上传小于50K，没速度)",
+      "delete:拆包删种(硬盘空间小于40G,上传速度小于100K)",
+      "delete:做种上传<50k持续1分钟",
+      "delete:NC-剩余空间30g上传小于8M",
+      "delete:NC-瓷器非免跳车",
+      "delete:3倍分享率跳车",
+      "delete:不可说3-Torrent",
+      "delete:甲骨文-皇后删种（需把分类改为keep）",
+      "delete:A3倍分享率",
+      "delete:剩余空间100g上传小于8M",
+      "delete:速度低于800k持续1分钟",
+      "delete:A低收益",
+      "delete:NC-剩余空间20g上传小于50M",
+      "delete:北洋DLC6",
+      "delete:北洋-种子删选",
+      "delete:NC-空间剩余100g上传速度低于50k持续1分钟",
+      "delete:拆包删种(垃圾种)",
+      "delete:NC-剩余空间50g上传小于1M",
+      "delete:A长时间未开始",
+      "delete:D",
+      "delete:甲骨文-学校21小时删种",
+      "delete:A慢车",
+      "delete:NC-上传速度小于200k持续60秒删除",
+      "delete:nc-黑车（删种厉害）",
+      "delete:甲骨文-U2删种（需把分类改为keep）",
+      "delete:拒绝删种-北洋专用",
+      "delete:A错误",
+      "delete:NC-分享率3倍删种-憨憨-天空",
+      "delete:A中途停车",
+      "delete:拆包删种(硬盘空间小于5G,上传速度小于10M)",
+      "delete:甲骨文-岛非免跳车",
+      "delete:NC-剩余空间10g上传小于80M",
+      "delete:A黑车2",
+      "delete:不可说1-分享4完成60",
+      "delete:甲骨文-36小时无人做种",
+      "delete:甲骨文-剩余空间100g上传小于8M",
+      "delete:拆包删种(添加大于20小时，上传小于50K，不出种)",
+      "delete:馒头三倍删种",
+      "rss:>20G",
+      "rss:种子小于10g",
+      "rss:>4G",
+      "rss:TTG",
+      "rss:猪猪专用-排除HR",
+      "rss:>2G",
+      "rss:>60G",
+      "rss:>10G",
+      "rss:种子3-40g",
+      "rss:种子小于3g",
+      "rss:>14G",
+      "rss:种子大于150g",
+      "rss:>3G",
+      "rss:北洋选种",
+      "rss:>1G",
+      "rss:>30G",
+      "rss:种子小于5g",
+      "rss:Ubits-排除HR",
+      "rss:>50G",
+      "rss:猫站-拒绝老种子",
+      "rss:>40G",
+      "rss:红叶拒绝官种",
+      "select:>10G",
+      "select:>1G",
+      "select:猪猪专用-排除HR",
+      "select:种子小于3g",
+      "select:>40G",
+      "select:>3G",
+      "select:>20G",
+      "select:>60G",
+      "select:Ubits-排除HR",
+      "select:>2G",
+      "select:>30G",
+      "select:种子大于150g",
+      "select:>4G",
+      "select:TTG",
+      "select:种子小于5g",
+      "select:>14G",
+      "select:红叶拒绝官种",
+      "select:>50G",
+      "select:种子小于10g",
+      "select:种子3-40g",
+      "task:32.leaves红叶",
+      "task:55.不限速自定义",
+      "task:20.discfan碟粉",
+      "task:02.hdsky天空-需vip",
+      "task:31.qingwapt青蛙",
+      "task:05.hhanclub憨憨-需vip",
+      "task:23.hddolby杜比-需vip",
+      "task:06.hdhome家园-需vip",
+      "task:44.hdvideo-HDV",
+      "task:01.m-team馒头-需vip",
+      "task:36.agsv末日",
+      "task:11.pterclub猫",
+      "task:04.lemonhd柠檬",
+      "task:40.soulvoice聆音",
+      "task:19.tjupt北洋园",
+      "task:12.panda熊猫",
+      "task:05.hhanclub憨憨-保种区-需vip",
+      "task:13.pthome铂金家",
+      "task:30.btschool学校",
+      "task:35.pttime-PTT",
+      "task:25.u2dmhyU2",
+      "task:07.ourbits我堡-需vip",
+      "task:17.totheglory套-需v",
+      "task:00.自动刷流",
+      "task:26.nicept老师",
+      "task:27.et8-TCCF",
+      "task:42.dajiao打胶",
+      "task:39.nextpt",
+      "task:16.rousipt肉丝-需vip",
+      "task:38.azusa梓喵",
+      "task:22.hdfans红豆饭",
+      "task:15.hdtime时光",
+      "task:54.95限速自定义hdu-咖啡-海豹-蟹黄堡",
+      "task:33.ptsbao烧包",
+      "task:08.springsunday不可说",
+      "task:29.piggo猪猪-需备案",
+      "task:48.zhuque朱雀",
+      "task:09.ptchdbits彩虹岛-有vip全站",
+      "task:34.zmpt织梦",
+      "task:09.ptchdbits彩虹岛-复活区-没vip选这个",
+      "task:10.keepfrds月月",
+      "task:45.hdkylin麒麟",
+      "task:14.hdarea好大",
+      "task:37.starspace星空影",
+      "client:负载",
+      "client:不可说",
+      "client:刷流",
+      "client:拆包"
+    ]
+  },
+  "groups": [
+    {
+      "kind": "client",
+      "title": "下载器"
+    },
+    {
+      "kind": "delete",
+      "title": "删种规则"
+    },
+    {
+      "kind": "rss",
+      "title": "RSS 规则"
+    },
+    {
+      "kind": "select",
+      "title": "选种规则"
+    },
+    {
+      "kind": "task",
+      "title": "RSS 任务"
+    }
+  ],
+  "items": [
+    {
+      "id": "delete:拆包删种(硬盘空间小于10G,上传速度小于3M)",
+      "kind": "delete",
+      "alias": "拆包删种(硬盘空间小于10G, 上传速度小于3M)",
+      "hint": "category contain KEEP | freeSpace smaller 10*1024*1024*1024 | uploadSpeed smaller 3*1024*1024 | progress bigger 0.01",
+      "tags": [
+        "空间",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "category",
+            "compareType": "contain",
+            "value": "KEEP"
+          },
+          {
+            "key": "freeSpace",
+            "compareType": "smaller",
+            "value": "10*1024*1024*1024"
+          },
+          {
+            "key": "uploadSpeed",
+            "compareType": "smaller",
+            "value": "3*1024*1024"
+          },
+          {
+            "key": "progress",
+            "compareType": "bigger",
+            "value": "0.01"
+          }
+        ],
+        "alias": "拆包删种(硬盘空间小于10G, 上传速度小于3M)",
+        "type": "normal",
+        "priority": 0,
+        "code": "(maindata, torrent) => {\n  return false;\n}",
+        "fitTime": "60",
+        "deleteNum": "30"
+      }
+    },
+    {
+      "id": "delete:NC-种子进度0.2分享低于0.1",
+      "kind": "delete",
+      "alias": "NC-种子进度0.2分享低于0.1",
+      "hint": "progress bigger 0.2 | ratio smaller 0.1 | category notIncludeIn KEEP,keep,SKY",
+      "tags": [
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "progress",
+            "compareType": "bigger",
+            "value": "0.2"
+          },
+          {
+            "key": "ratio",
+            "compareType": "smaller",
+            "value": "0.1"
+          },
+          {
+            "key": "category",
+            "compareType": "notIncludeIn",
+            "value": "KEEP,keep,SKY"
+          }
+        ],
+        "alias": "NC-种子进度0.2分享低于0.1",
+        "type": "normal",
+        "code": "(maindata, torrent) => {\n  return false;\n}",
+        "deleteNum": "10",
+        "priority": "0"
+      }
+    },
+    {
+      "id": "delete:NC-剩余空间5g上传小于130M",
+      "kind": "delete",
+      "alias": "NC-剩余空间5g上传小于130M",
+      "hint": "uploadSpeed smaller 1024*1024*130 | freeSpace smaller 1024*1024*1024*5 | progress bigger 0.1 | category notIncludeIn KEEP,keep",
+      "tags": [
+        "空间",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "uploadSpeed",
+            "compareType": "smaller",
+            "value": "1024*1024*130"
+          },
+          {
+            "key": "freeSpace",
+            "compareType": "smaller",
+            "value": "1024*1024*1024*5"
+          },
+          {
+            "key": "progress",
+            "compareType": "bigger",
+            "value": "0.1"
+          },
+          {
+            "key": "category",
+            "compareType": "notIncludeIn",
+            "value": "KEEP,keep"
+          }
+        ],
+        "code": "(maindata, torrent) => {\n  return false;\n}",
+        "alias": "NC-剩余空间5g上传小于130M",
+        "type": "normal",
+        "deleteNum": "30",
+        "fitTime": "10",
+        "priority": "0"
+      }
+    },
+    {
+      "id": "delete:拆包删种(BUG大种)",
+      "kind": "delete",
+      "alias": "拆包删种(BUG大种)",
+      "hint": "category contain KEEP | size bigger 30*1024*1024*1024 | uploadSpeed smaller 10*1024*1024 | freeSpace smaller 50*1024*1024*1024",
+      "tags": [
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "category",
+            "compareType": "contain",
+            "value": "KEEP"
+          },
+          {
+            "key": "size",
+            "compareType": "bigger",
+            "value": "30*1024*1024*1024"
+          },
+          {
+            "key": "uploadSpeed",
+            "compareType": "smaller",
+            "value": "10*1024*1024"
+          },
+          {
+            "key": "freeSpace",
+            "compareType": "smaller",
+            "value": "50*1024*1024*1024"
+          }
+        ],
+        "alias": "拆包删种(BUG大种)",
+        "type": "normal",
+        "priority": 0,
+        "code": "(maindata, torrent) => {\n  return false;\n}",
+        "fitTime": "40",
+        "deleteNum": "30"
+      }
+    },
+    {
+      "id": "delete:不可说2-低速低比率",
+      "kind": "delete",
+      "alias": "不可说2-低速低比率",
+      "hint": "completedTime bigger 1200 | ratio3 smaller 4.1 | uploadSpeed smaller 1*1024*1024 | category contain SD",
+      "tags": [
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "completedTime",
+            "compareType": "bigger",
+            "value": "1200"
+          },
+          {
+            "key": "ratio3",
+            "compareType": "smaller",
+            "value": "4.1"
+          },
+          {
+            "key": "uploadSpeed",
+            "compareType": "smaller",
+            "value": "1*1024*1024"
+          },
+          {
+            "key": "category",
+            "compareType": "contain",
+            "value": "SD"
+          }
+        ],
+        "alias": "不可说2-低速低比率",
+        "type": "normal",
+        "priority": 0,
+        "code": "(maindata, torrent) => {\n  return false;\n}"
+      }
+    },
+    {
+      "id": "delete:甲骨文NC-6小时未下载完",
+      "kind": "delete",
+      "alias": "甲骨文 NC-6小时未下载完",
+      "hint": "  ",
+      "tags": [
+        "JS",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "",
+            "compareType": "",
+            "value": ""
+          }
+        ],
+        "alias": "甲骨文 NC-6小时未下载完",
+        "type": "javascript",
+        "priority": 0,
+        "code": "(maindata, torrent) => {\n  const categoryList = [\"keep\",\"KEEP\",\"BTS\"];\n  const stateList = [\"downloading\", \"stalledDL\"];\n  const { state, addedTime, category, uploadSpeed } = torrent;\n  if (categoryList.indexOf(category) !== -1) {\n    return false;\n  }\n  if (\n    stateList.indexOf(state) !== -1 &&\n    moment().unix() - addedTime >= 21600 &&\n    uploadSpeed <= util.calSize(5, \"MiB\")\n  ) {\n    return true;\n  }\n\n  return false;\n};\n"
+      }
+    },
+    {
+      "id": "delete:NC-种子错误",
+      "kind": "delete",
+      "alias": "NC-种子错误",
+      "hint": "state equals error | progress bigger 0.1 | name notContain keep,KEEP",
+      "tags": [
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "state",
+            "compareType": "equals",
+            "value": "error"
+          },
+          {
+            "key": "progress",
+            "compareType": "bigger",
+            "value": "0.1"
+          },
+          {
+            "key": "name",
+            "compareType": "notContain",
+            "value": "keep,KEEP"
+          }
+        ],
+        "alias": "NC-种子错误",
+        "type": "normal",
+        "priority": 0,
+        "code": "(maindata, torrent) => {\n  return false;\n}",
+        "fitTime": "180",
+        "deleteNum": "30"
+      }
+    },
+    {
+      "id": "delete:A出种",
+      "kind": "delete",
+      "alias": "A出种",
+      "hint": "  ",
+      "tags": [
+        "JS",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "",
+            "compareType": "",
+            "value": ""
+          }
+        ],
+        "alias": "A出种",
+        "type": "javascript",
+        "priority": 0,
+        "code": "(maindata, torrent) => {\n  const categoryList = [\"keep\"];\n  const stateList = [\"downloading\", \"stalledDL\"];\n  const { state, category, progress, downloadSpeed, uploadSpeed, seeder } =\n    torrent;\n  if (categoryList.indexOf(category) !== -1) {\n    return false;\n  }\n  if (\n    stateList.indexOf(state) !== -1 &&\n    seeder >= 5 &&\n    progress >= 0.5 &&\n    progress <= 0.9 &&\n    downloadSpeed / uploadSpeed >= 2\n  ) {\n    return true;\n  }\n\n  return false;\n};"
+      }
+    },
+    {
+      "id": "delete:拒绝删种-猫专用",
+      "kind": "delete",
+      "alias": "拒绝删种-猫专用",
+      "hint": "progress smaller 1 | category contain CAT",
+      "tags": [
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "progress",
+            "compareType": "smaller",
+            "value": "1"
+          },
+          {
+            "key": "category",
+            "compareType": "contain",
+            "value": "CAT"
+          }
+        ],
+        "alias": "拒绝删种-猫专用",
+        "type": "normal",
+        "priority": 0,
+        "code": "(maindata, torrent) => {\n  return false;\n}",
+        "pause": false
+      }
+    },
+    {
+      "id": "delete:甲骨文-上传速度小于50k持续2分钟删除",
+      "kind": "delete",
+      "alias": "甲骨文-上传速度小于50k持续2分钟删除",
+      "hint": "uploadSpeed smaller 1024*50 | progress bigger 0.05 | category notContain KEEP,keep,BTS",
+      "tags": [
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "uploadSpeed",
+            "compareType": "smaller",
+            "value": "1024*50"
+          },
+          {
+            "key": "progress",
+            "compareType": "bigger",
+            "value": "0.05"
+          },
+          {
+            "key": "category",
+            "compareType": "notContain",
+            "value": "KEEP,keep,BTS"
+          }
+        ],
+        "alias": "甲骨文-上传速度小于50k持续2分钟删除",
+        "type": "normal",
+        "code": "(maindata, torrent) => {\n  return false;\n}",
+        "fitTime": "120",
+        "deleteNum": "10"
+      }
+    },
+    {
+      "id": "delete:拆包删种-甲骨文(硬盘空间小于500G,上传速度小于100K)",
+      "kind": "delete",
+      "alias": "拆包删种-甲骨文(硬盘空间小于500G, 上传速度小于100K)",
+      "hint": "category contain KEEP | freeSpace smaller 500*1024*1024*1024 | uploadSpeed smaller 100*1024 | progress bigger 0.01",
+      "tags": [
+        "空间",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "category",
+            "compareType": "contain",
+            "value": "KEEP"
+          },
+          {
+            "key": "freeSpace",
+            "compareType": "smaller",
+            "value": "500*1024*1024*1024"
+          },
+          {
+            "key": "uploadSpeed",
+            "compareType": "smaller",
+            "value": "100*1024"
+          },
+          {
+            "key": "progress",
+            "compareType": "bigger",
+            "value": "0.01"
+          }
+        ],
+        "alias": "拆包删种-甲骨文(硬盘空间小于500G, 上传速度小于100K)",
+        "type": "normal",
+        "priority": 0,
+        "code": "(maindata, torrent) => {\n  return false;\n}",
+        "fitTime": "60",
+        "deleteNum": "30"
+      }
+    },
+    {
+      "id": "delete:拆包删种(硬盘空间小于30G,上传速度小于200K)",
+      "kind": "delete",
+      "alias": "拆包删种(硬盘空间小于30G, 上传速度小于200K)",
+      "hint": "category contain KEEP | freeSpace smaller 30*1024*1024*1024 | uploadSpeed smaller 200*1024 | progress bigger 0.01",
+      "tags": [
+        "空间",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "category",
+            "compareType": "contain",
+            "value": "KEEP"
+          },
+          {
+            "key": "freeSpace",
+            "compareType": "smaller",
+            "value": "30*1024*1024*1024"
+          },
+          {
+            "key": "uploadSpeed",
+            "compareType": "smaller",
+            "value": "200*1024"
+          },
+          {
+            "key": "progress",
+            "compareType": "bigger",
+            "value": "0.01"
+          }
+        ],
+        "alias": "拆包删种(硬盘空间小于30G, 上传速度小于200K)",
+        "type": "normal",
+        "priority": 0,
+        "code": "(maindata, torrent) => {\n  return false;\n}",
+        "fitTime": "60",
+        "deleteNum": "30"
+      }
+    },
+    {
+      "id": "delete:甲骨文-500G剩余硬盘时速度小于100K",
+      "kind": "delete",
+      "alias": "甲骨文-500G剩余硬盘时速度小于100K",
+      "hint": "category notContain KEEP,keep,BTS | freeSpace smaller 1024*1024*1024*500 | uploadSpeed smaller 1024*100",
+      "tags": [
+        "空间",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "category",
+            "compareType": "notContain",
+            "value": "KEEP,keep,BTS"
+          },
+          {
+            "key": "freeSpace",
+            "compareType": "smaller",
+            "value": "1024*1024*1024*500"
+          },
+          {
+            "key": "uploadSpeed",
+            "compareType": "smaller",
+            "value": "1024*100"
+          }
+        ],
+        "alias": "甲骨文-500G剩余硬盘时速度小于100K",
+        "type": "normal",
+        "priority": 0,
+        "code": "(maindata, torrent) => {\n  return false;\n}",
+        "fitTime": "120"
+      }
+    },
+    {
+      "id": "delete:A出种-2",
+      "kind": "delete",
+      "alias": "A出种",
+      "hint": "  ",
+      "tags": [
+        "JS",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "",
+            "compareType": "",
+            "value": ""
+          }
+        ],
+        "alias": "A出种",
+        "type": "javascript",
+        "code": "(maindata, torrent) => {\n  const categoryList = [\"keep\"];\n  const stateList = [\"downloading\", \"stalledDL\"];\n  const { state, category, progress, downloadSpeed, uploadSpeed, seeder } =\n    torrent;\n  if (categoryList.indexOf(category) !== -1) {\n    return false;\n  }\n  if (\n    stateList.indexOf(state) !== -1 &&\n    seeder >= 5 &&\n    progress >= 0.5 &&\n    progress <= 0.9 &&\n    downloadSpeed / uploadSpeed >= 2\n  ) {\n    return true;\n  }\n\n  return false;\n};",
+        "deleteNum": "5"
+      }
+    },
+    {
+      "id": "delete:天空暂停一小时",
+      "kind": "delete",
+      "alias": "天空暂停一小时",
+      "hint": "  ",
+      "tags": [
+        "JS",
+        "进阶"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "",
+            "compareType": "",
+            "value": ""
+          }
+        ],
+        "alias": "天空暂停一小时",
+        "type": "javascript",
+        "priority": 0,
+        "code": "(maindata, torrent) => {\n  const http = require('http');\n  let urlList = '/api/v2/torrents/info?filter=paused&sort=ratio&category=SKY';\n  let urlResume = '/api/v2/torrents/resume?hashes=';\n  http.get(urlList, (res) => {\n    let rawData = \"\";\n    res.on(\"data\", (chunk) => {\n        rawData += chunk;\n    });\n    res.on(\"end\", () => {\n      let obj = JSON.parse(rawData);\n      obj.map((value,index)=>{\n        if(Date.now()/1000 - value['added_on'] > 3570){\n          urlResume = urlResume + value['hash'] + '|';\n          http.get(urlResume, function (res2) {\n\n          });\n        }\n      })\n    });\n  });\n  return false;\n}",
+        "deleteNum": "10"
+      }
+    },
+    {
+      "id": "delete:NC-种子进度0.5分享低于0.2",
+      "kind": "delete",
+      "alias": "NC-种子进度0.5分享低于0.2",
+      "hint": "progress bigger 0.5 | ratio smaller 0.2 | category notContain KEEP,keep",
+      "tags": [
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "progress",
+            "compareType": "bigger",
+            "value": "0.5"
+          },
+          {
+            "key": "ratio",
+            "compareType": "smaller",
+            "value": "0.2"
+          },
+          {
+            "key": "category",
+            "compareType": "notContain",
+            "value": "KEEP,keep"
+          }
+        ],
+        "alias": "NC-种子进度0.5分享低于0.2",
+        "type": "normal",
+        "priority": 0,
+        "code": "(maindata, torrent) => {\n  return false;\n}",
+        "deleteNum": "30"
+      }
+    },
+    {
+      "id": "delete:拆包删种(分享率3倍)",
+      "kind": "delete",
+      "alias": "拆包删种(分享率3倍)",
+      "hint": "category contain KEEP | ratio3 bigger 3 | tracker contain m-team,hdsky,hhanclub,hdhome,totheglory",
+      "tags": [
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "category",
+            "compareType": "contain",
+            "value": "KEEP"
+          },
+          {
+            "key": "ratio3",
+            "compareType": "bigger",
+            "value": "3"
+          },
+          {
+            "key": "tracker",
+            "compareType": "contain",
+            "value": "m-team,hdsky,hhanclub,hdhome,totheglory"
+          }
+        ],
+        "alias": "拆包删种(分享率3倍)",
+        "type": "normal",
+        "priority": 0,
+        "code": "(maindata, torrent) => {\n  return false;\n}",
+        "deleteNum": "30"
+      }
+    },
+    {
+      "id": "delete:A黑车1",
+      "kind": "delete",
+      "alias": "A黑车1",
+      "hint": "  ",
+      "tags": [
+        "JS",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "",
+            "compareType": "",
+            "value": ""
+          }
+        ],
+        "alias": "A黑车1",
+        "type": "javascript",
+        "priority": 0,
+        "code": "(maindata, torrent) => {\n  const categoryList = [\"keep\"];\n  let ruleData = [\n    { down: 10, up: 2 },\n    { down: 5, up: 1 },\n  ];\n  const { state, category, uploadSpeed, downloadSpeed } = torrent;\n  if (categoryList.indexOf(category) !== -1) {\n    return false;\n  }\n  for (const rule of ruleData) {\n    if (\n      state == \"downloading\" &&\n      downloadSpeed >= util.calSize(rule.down, \"MiB\") &&\n      uploadSpeed <= util.calSize(rule.up, \"MiB\")\n    ) {\n      return true;\n    }\n  }\n\n  return false;\n};",
+        "fitTime": "20",
+        "deleteNum": "5"
+      }
+    },
+    {
+      "id": "delete:A无效做种",
+      "kind": "delete",
+      "alias": "A无效做种",
+      "hint": "  ",
+      "tags": [
+        "JS",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "",
+            "compareType": "",
+            "value": ""
+          }
+        ],
+        "alias": "A无效做种",
+        "type": "javascript",
+        "priority": 0,
+        "code": "(maindata, torrent) => {\n  const categoryList = [\"keep\"];\n  const stateList = [\"uploading\", \"stalledUP\"];\n  const { state, uploadSpeed, category, completedTime } = torrent;\n  if (categoryList.indexOf(category) !== -1) {\n    return false;\n  }\n  if (\n    stateList.indexOf(state) !== -1 &&\n    uploadSpeed <= util.calSize(512, \"KiB\") &&\n    moment().unix() - completedTime >= 5400\n  ) {\n    return true;\n  }\n\n  return false;\n};",
+        "deleteNum": "5"
+      }
+    },
+    {
+      "id": "delete:NC-低收益",
+      "kind": "delete",
+      "alias": "NC-低收益",
+      "hint": "  ",
+      "tags": [
+        "JS",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "",
+            "compareType": "",
+            "value": ""
+          }
+        ],
+        "alias": "NC-低收益",
+        "type": "javascript",
+        "code": "(maindata, torrent) => {\n  const categoryList = [\"keep\",\"KEEP\"];\n  const stateList = [\"downloading\", \"stalledDL\"];\n  const { state, ratio, progress, category, uploadSpeed, downloadSpeed } =\n    torrent;\n  if (categoryList.indexOf(category) !== -1 || maindata.leechingCount <= 10) {\n    return false;\n  }\n  if (\n    stateList.indexOf(state) !== -1 &&\n    progress >= 0.2 &&\n    progress <= 0.3 &&\n    ratio <= 0.4 &&\n    uploadSpeed <= util.calSize(1, \"MiB\")\n  ) {\n    return true;\n  }\n\n  return false;\n};"
+      }
+    },
+    {
+      "id": "delete:NC-剩余空间40g上传小于5M",
+      "kind": "delete",
+      "alias": "NC-剩余空间40g上传小于5M",
+      "hint": "progress bigger 0.1 | freeSpace smaller 1024*1024*1024*40 | uploadSpeed smaller 1024*1024*5 | category notContain keep,KEEP",
+      "tags": [
+        "空间",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "progress",
+            "compareType": "bigger",
+            "value": "0.1"
+          },
+          {
+            "key": "freeSpace",
+            "compareType": "smaller",
+            "value": "1024*1024*1024*40"
+          },
+          {
+            "key": "uploadSpeed",
+            "compareType": "smaller",
+            "value": "1024*1024*5"
+          },
+          {
+            "key": "category",
+            "compareType": "notContain",
+            "value": "keep,KEEP"
+          }
+        ],
+        "alias": "NC-剩余空间40g上传小于5M",
+        "type": "normal",
+        "priority": 0,
+        "code": "(maindata, torrent) => {\n  return false;\n}",
+        "fitTime": "10",
+        "deleteNum": "30"
+      }
+    },
+    {
+      "id": "delete:甲骨文NC-出种-完全没速度",
+      "kind": "delete",
+      "alias": "甲骨文 NC-出种-完全没速度",
+      "hint": "state equals stalledUP | category notContain BTS,KEEP,keep,TTG,CHD,BTS,SKY",
+      "tags": [
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "state",
+            "compareType": "equals",
+            "value": "stalledUP"
+          },
+          {
+            "key": "category",
+            "compareType": "notContain",
+            "value": "BTS,KEEP,keep,TTG,CHD,BTS,SKY"
+          }
+        ],
+        "alias": "甲骨文 NC-出种-完全没速度",
+        "type": "normal",
+        "priority": "0",
+        "code": "(maindata, torrent) => {\n  return false;\n}",
+        "fitTime": "15",
+        "deleteNum": "10",
+        "pause": false
+      }
+    },
+    {
+      "id": "delete:A最长下载时间",
+      "kind": "delete",
+      "alias": "A最长下载时间",
+      "hint": "  ",
+      "tags": [
+        "JS",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "",
+            "compareType": "",
+            "value": ""
+          }
+        ],
+        "alias": "A最长下载时间",
+        "type": "javascript",
+        "code": "(maindata, torrent) => {\n  const categoryList = [\"keep\"];\n  const stateList = [\"downloading\", \"stalledDL\"];\n  const { state, addedTime, category, uploadSpeed } = torrent;\n  if (categoryList.indexOf(category) !== -1) {\n    return false;\n  }\n  if (\n    stateList.indexOf(state) !== -1 &&\n    moment().unix() - addedTime >= 57600 &&\n    uploadSpeed <= util.calSize(5, \"MiB\")\n  ) {\n    return true;\n  }\n\n  return false;\n};",
+        "deleteNum": "5"
+      }
+    },
+    {
+      "id": "delete:NC-慢车",
+      "kind": "delete",
+      "alias": "NC-慢车",
+      "hint": "  ",
+      "tags": [
+        "JS",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "",
+            "compareType": "",
+            "value": ""
+          }
+        ],
+        "alias": "NC-慢车",
+        "type": "javascript",
+        "priority": 0,
+        "code": "(maindata, torrent) => {\n  const categoryList = [\"keep\",\"KEEP\",\"SKY\"];\n  const stateList = [\"downloading\", \"stalledDL\"];\n  const { state, uploadSpeed, progress, category, leecher } = torrent;\n  if (categoryList.indexOf(category) !== -1) {\n    return false;\n  }\n  if (\n    (moment().hour() >= 0 && moment().hour() <= 8) ||\n    maindata.leechingCount <= 10 ||\n    leecher >= 100\n  ) {\n    return false;\n  }\n  if (\n    stateList.indexOf(state) !== -1 &&\n    uploadSpeed <= util.calSize(250, \"KiB\") &&\n    progress >= 0.1\n  ) {\n    return true;\n  }\n\n  return false;\n};\n",
+        "fitTime": "40"
+      }
+    },
+    {
+      "id": "delete:北洋-hr请求",
+      "kind": "delete",
+      "alias": "北洋-hr请求",
+      "hint": "  ",
+      "tags": [
+        "JS",
+        "进阶"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "",
+            "compareType": "",
+            "value": ""
+          }
+        ],
+        "alias": "北洋-hr请求",
+        "type": "javascript",
+        "priority": 0,
+        "code": "const axios = require('axios');\nconst querystring = require('querystring');\nconst apiToken = \"\";  // 请替换为实际API令牌（非passkey），https://tjupt.org/usercp.php?action=user_api_token\nconst MAX_HASH_COUNT = 35; // 每次请求的最大hash数量\nconst COMPLETE_CATEGORY = \"TJU_Complete\";\nconst KEEP_CATEGORY = \"TJU\";\nconst TJU_CATEGORY = \"TJU\";\nasync function getHashes() {\n    const clients = {};\n\n    Object.entries(global.runningClient).forEach(([key, client]) => {\n        if (!client.maindata || !client.maindata.torrents) {\n            logger.warn(`下载器：${client.alias} 中没有找到种子信息`);\n            return; // 如果没有torrents，跳过这个客户端\n        }\n\n        const tjuTorrents = [];\n        // 状态为下载完成的种子\n        for (const torrent of client.maindata.torrents) {\n            if (torrent.category === TJU_CATEGORY) {\n                logger.info(`种子：${torrent.name} 上传量：${torrent.uploaded} 下载量：${torrent.size} 上传速度：${torrent.uploadSpeed} 状态：${torrent.state}`);\n                if (torrent.state === 'stalledUP' || torrent.state === 'forcedUP' || torrent.state === 'pausedUP' || torrent.state === 'uploading') {\n                    tjuTorrents.push(torrent.hash);\n                }\n            }\n        }\n\n        if (tjuTorrents.length > 0) {\n            logger.info(`下载器：${client.alias} 中tju分类种子数量：${tjuTorrents.length}`);\n\n            clients[client.id] = {\n                url: client.clientUrl,\n                clientCookie: client.cookie,\n                torrents: tjuTorrents\n            };\n        }\n    });\n\n    return clients;\n}\n\n\nasync function setTorrentsCategory(clientUrl, cookie, hashes, category) {\n    const path = \"/api/v2/torrents/setCategory\";\n    const apiUrl = clientUrl + path;\n    const headers = { 'Cookie': cookie, 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', 'Accept': 'text/javascript, text/html, application/xml, text/xml, */*' };\n\n    const getRequest = async (url) => {\n        return axios.get(url, { headers }).then(response => response.data);\n    };\n\n    logger.info(`设置分类：${category} 到种子：${hashes.join('|')}`);\n\n    const setCategory = async () => {\n        try {\n            const hashesStr = hashes.join('|');\n            await axios.post(apiUrl, querystring.stringify({\n                hashes: hashesStr,\n                category: category\n            }), { headers });\n\n\n        } catch (error) {\n            handleSetCategoryError(error);\n        }\n    };\n\n    const handleSetCategoryError = async (error) => {\n        logger.info('设置分类错误:', error.message, error);\n\n        // 检查错误代码是否是 409 - 分类不存在\n        if (error.response && (error.response.status === 409 || error.response.status === 400)) {\n            try {\n                const categories = await getRequest(`${clientUrl}/api/v2/torrents/categories`);\n                logger.info('分类列表:', categories);\n\n                if (!categories[category]) {\n                    logger.info(`分类 \"${category}\" 不存在，创建中...`);\n\n                    await axios.post(`${clientUrl}/api/v2/torrents/createCategory`, querystring.stringify({\n                        category: category\n                    }), { headers });\n\n                    logger.info('分类创建成功.');\n\n                    // 重试设置分类\n                    await setCategory();\n                } else {\n                    logger.info('分类存在，但其他问题导致设置错误:', error.message);\n                }\n            } catch (catError) {\n                logger.info('分类列表或创建过程出错:', catError.message);\n            }\n        }\n    };\n\n    // 执行设置分类的流程\n    await setCategory();\n}\n\n\nfunction parseHR(result) {\n    // 0\t未触发？？？？？？\n    // 1\t24h等待期\n    // 5\t下载考核中\n    // 6\t下载考核中(过半)\n    // 10\t做种考核中\n    // 11\t做种考核中(过半)\n    // 12\t未达标\n    // 20\t已达标\n    // 21\t后达标\n    // 40\t种子被删取消\n    // 41\t未成功下载取消\n    // 42\t管理员取消\n    // 43\t自行放弃\n    // 44\t冗余考核\n    const completeStatusCodes = [20, 21, 40, 41, 42, 43, 44];\n    try {\n        // 达标种子hash\n        const completeTorrentHashes = [];\n        // 未达标种子hash\n        const otherTorrentHashes = [];\n\n        for (const item of result.data) {\n            logger.info('种子信息:', item.torrent.name, item.torrent.info_hash, item.status.hnr_status, item.status.hnr_status_code);\n            if (completeStatusCodes.includes(item.status.hnr_status_code)) {\n                completeTorrentHashes.push(item.torrent.info_hash);\n                logger.info('达标种子:' + item.status.hnr_status + item.status.hnr_status_code + ' ' + item.torrent.name);\n            } else {\n                logger.info('未达标种子:' + item.status.hnr_status + item.status.hnr_status_code + ' ' + item.torrent.name);\n                otherTorrentHashes.push(item.torrent.info_hash);\n            }\n        }\n\n        return {\n            completeTorrentHashes: completeTorrentHashes,\n            otherTorrentHashes: otherTorrentHashes\n        };\n\n    } catch (e) {\n        return null;\n    }\n}\n\n\n\nasync function getTorrents(hashes) {\n    const hnrUrl = \"https://tjupt.org/api/v1/hnr.php\";\n\n    const headers = {\n        'Content-Type': 'application/json',\n        'Authorization': 'Bearer ' + apiToken\n    };\n\n    const data = {\n        \"info_hash\": hashes\n    };\n    logger.info('请求数据:', data);\n\n    try {\n        const response = await axios.post(hnrUrl, data, { headers });\n        logger.info('响应数据:', response.data);\n        const result = response.data;\n        const parsedResult = parseHR(result);\n        return parsedResult;\n    } catch (error) {\n        throw new Error('请求错误: ' + error.message);\n    }\n}\n\n\n\n(async () => {\n\n    // 使用 await 关键字等待 getHashes 返回的结果\n    const tjuHashByClient = await getHashes();\n    const hashes = Object.values(tjuHashByClient).flatMap(client => client.torrents);\n\n    if (hashes.length === 0) {\n        return logger.info('没有种子');\n    }\n\n    const hashGroups = [];\n    for (let i = 0; i < hashes.length; i += MAX_HASH_COUNT) {\n        hashGroups.push(hashes.slice(i, i + MAX_HASH_COUNT));\n    }\n    logger.info('分组后的hash:', hashGroups);\n\n\n    // 达标种子hash\n    const totalCompleteTorrentHashes = [];\n    // 未达标种子hash\n    const totalOtherTorrentHashes = [];\n\n    for (const hashGroup of hashGroups) {\n        try {\n            const result = await getTorrents(hashGroup);\n            // 获得达标种子hash\n            const completeTorrentHashes = result.completeTorrentHashes;\n            // 获得未达标种子hash\n            const otherTorrentHashes = result.otherTorrentHashes;\n            totalCompleteTorrentHashes.push(...completeTorrentHashes);\n            totalOtherTorrentHashes.push(...otherTorrentHashes);\n\n            // logger.info('响应数据:', result);\n            logger.info('响应数据:', result);\n        } catch (error) {\n            // console.error('发生错误:', error.message);\n            logger.error('发生错误:', error.message);\n        }\n    }\n\n    // 遍历下载器种子hash，获得每个下载器中达标的种子\n    for (const [key, clientData] of Object.entries(tjuHashByClient)) {\n        const completeTorrentHashes = [];\n        const otherTorrentHashes = [];\n\n        for (const hash of clientData.torrents) {\n            (totalCompleteTorrentHashes.includes(hash) ? completeTorrentHashes : otherTorrentHashes).push(hash);\n        }\n\n        if (completeTorrentHashes.length > 0) {\n            await setTorrentsCategory(clientData.url, clientData.clientCookie, completeTorrentHashes, COMPLETE_CATEGORY);\n        }\n\n        if (otherTorrentHashes.length > 0) {\n            await setTorrentsCategory(clientData.url, clientData.clientCookie, otherTorrentHashes, KEEP_CATEGORY);\n        }\n    }\n\n\n})();"
+      }
+    },
+    {
+      "id": "delete:拆包删种-甲骨文（BUG大种天空馒头）",
+      "kind": "delete",
+      "alias": "拆包删种-甲骨文（BUG大种 天空馒头）",
+      "hint": "category contain KEEP | tracker contain m-team,hdsky | size bigger 50*1024*1024*1024",
+      "tags": [
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "category",
+            "compareType": "contain",
+            "value": "KEEP"
+          },
+          {
+            "key": "tracker",
+            "compareType": "contain",
+            "value": "m-team,hdsky"
+          },
+          {
+            "key": "size",
+            "compareType": "bigger",
+            "value": "50*1024*1024*1024"
+          }
+        ],
+        "alias": "拆包删种-甲骨文（BUG大种 天空馒头）",
+        "type": "normal",
+        "priority": 0,
+        "code": "(maindata, torrent) => {\n  return false;\n}",
+        "fitTime": "0",
+        "deleteNum": "30"
+      }
+    },
+    {
+      "id": "delete:NC-慢车（删种厉害）",
+      "kind": "delete",
+      "alias": "NC-慢车（删种厉害）",
+      "hint": "  ",
+      "tags": [
+        "JS",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "",
+            "compareType": "",
+            "value": ""
+          }
+        ],
+        "alias": "NC-慢车（删种厉害）",
+        "type": "javascript",
+        "priority": 0,
+        "code": "(maindata, torrent) => {\n  const categoryList = [\"keep\"];\n  const stateList = [\"downloading\", \"stalledUP\", \"uploading\"];\n  const { state, uploadSpeed, progress, category} = torrent;\n  if (categoryList.indexOf(category) !== -1) {\n    return false;\n  }\nif (\n    maindata.leechingCount <= 4\n  ) {\n    return false;\n  }\n  if (\n    stateList.indexOf(state) !== -1 &&\n    uploadSpeed <= util.calSize(800, \"KiB\")\n  ) {\n    return true;\n  }\n\n  return false;\n};",
+        "fitTime": "20"
+      }
+    },
+    {
+      "id": "delete:甲骨文-学校分享率到1.2上传小于100K",
+      "kind": "delete",
+      "alias": "甲骨文-学校分享率到1.2上传小于100K",
+      "hint": "progress equals 1 | uploadSpeed smaller 1024*100 | downloadSpeed smaller 1024*1024 | ratio bigger 1.2",
+      "tags": [
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "progress",
+            "compareType": "equals",
+            "value": "1"
+          },
+          {
+            "key": "uploadSpeed",
+            "compareType": "smaller",
+            "value": "1024*100"
+          },
+          {
+            "key": "downloadSpeed",
+            "compareType": "smaller",
+            "value": "1024*1024"
+          },
+          {
+            "key": "ratio",
+            "compareType": "bigger",
+            "value": "1.2"
+          },
+          {
+            "key": "category",
+            "compareType": "includeIn",
+            "value": "BTS"
+          }
+        ],
+        "alias": "甲骨文-学校分享率到1.2上传小于100K",
+        "type": "normal",
+        "code": "(maindata, torrent) => {\n  return false;\n}",
+        "fitTime": "300",
+        "pause": false
+      }
+    },
+    {
+      "id": "delete:天空暂停一小时（新）",
+      "kind": "delete",
+      "alias": "天空暂停一小时（新）",
+      "hint": "  ",
+      "tags": [
+        "JS",
+        "进阶"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "",
+            "compareType": "",
+            "value": ""
+          }
+        ],
+        "alias": "天空暂停一小时（新）",
+        "type": "javascript",
+        "priority": 0,
+        "code": "(maindata, torrent) => {\n  const http = require('http');\n  const urlList = '/api/v2/torrents/info?filter=paused&sort=ratio&category=SKY';\n  \n  http.get(urlList, (res) => {\n    let rawData = \"\";\n    res.on(\"data\", (chunk) => {\n      rawData += chunk;\n    });\n    \n    res.on(\"end\", () => {\n      try {\n        const obj = JSON.parse(rawData);\n        const hashes = obj\n          .filter(value => Date.now()/1000 - value.added_on > 3570)\n          .map(value => value.hash)\n          .join('|');\n        \n        if (hashes) {\n          const urlResume = `/api/v2/torrents/resume?hashes=${hashes}`;\n          http.get(urlResume, (res2) => {\n            res2.on('data', () => {});\n            res2.on('end', () => {});\n          }).on('error', (err) => {\n            console.error('Resume request error:', err);\n          });\n        }\n      } catch (err) {\n        console.error('Error processing response:', err);\n      }\n    });\n    \n    res.on('error', (err) => {\n      console.error('List request error:', err);\n    });\n  });\n  \n  return false;\n}",
+        "deleteNum": "10"
+      }
+    },
+    {
+      "id": "delete:拆包删种-甲骨文(添加大于2小时，上传小于50K，没速度)",
+      "kind": "delete",
+      "alias": "拆包删种-甲骨文(添加大于2小时，上传小于50K，没速度)",
+      "hint": "category contain KEEP | addedTime bigger 2*3600 | uploadSpeed smaller 50*1024 | progress bigger 0.01",
+      "tags": [
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "category",
+            "compareType": "contain",
+            "value": "KEEP"
+          },
+          {
+            "key": "addedTime",
+            "compareType": "bigger",
+            "value": "2*3600"
+          },
+          {
+            "key": "uploadSpeed",
+            "compareType": "smaller",
+            "value": "50*1024"
+          },
+          {
+            "key": "progress",
+            "compareType": "bigger",
+            "value": "0.01"
+          }
+        ],
+        "alias": "拆包删种-甲骨文(添加大于2小时，上传小于50K，没速度)",
+        "type": "normal",
+        "priority": 0,
+        "code": "(maindata, torrent) => {\n  return false;\n}",
+        "fitTime": "120",
+        "deleteNum": "30"
+      }
+    },
+    {
+      "id": "delete:拆包删种(硬盘空间小于40G,上传速度小于100K)",
+      "kind": "delete",
+      "alias": "拆包删种(硬盘空间小于40G, 上传速度小于100K)",
+      "hint": "category contain KEEP | freeSpace smaller 40*1024*1024*1024 | uploadSpeed smaller 100*1024 | progress bigger 0.01",
+      "tags": [
+        "空间",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "category",
+            "compareType": "contain",
+            "value": "KEEP"
+          },
+          {
+            "key": "freeSpace",
+            "compareType": "smaller",
+            "value": "40*1024*1024*1024"
+          },
+          {
+            "key": "uploadSpeed",
+            "compareType": "smaller",
+            "value": "100*1024"
+          },
+          {
+            "key": "progress",
+            "compareType": "bigger",
+            "value": "0.01"
+          }
+        ],
+        "alias": "拆包删种(硬盘空间小于40G, 上传速度小于100K)",
+        "type": "normal",
+        "priority": 0,
+        "code": "(maindata, torrent) => {\n  return false;\n}",
+        "fitTime": "300",
+        "deleteNum": "30"
+      }
+    },
+    {
+      "id": "delete:做种上传<50k持续1分钟",
+      "kind": "delete",
+      "alias": "做种上传<50k持续1分钟",
+      "hint": "uploadSpeed smaller 50*1024 | progress equals 1 | category notContain BTS,KEEP,keep",
+      "tags": [
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "uploadSpeed",
+            "compareType": "smaller",
+            "value": "50*1024"
+          },
+          {
+            "key": "progress",
+            "compareType": "equals",
+            "value": "1"
+          },
+          {
+            "key": "category",
+            "compareType": "notContain",
+            "value": "BTS,KEEP,keep"
+          }
+        ],
+        "alias": "做种上传<50k持续1分钟",
+        "type": "normal",
+        "priority": 0,
+        "code": "(maindata, torrent) => {\n  return false;\n}",
+        "fitTime": "60",
+        "deleteNum": "10",
+        "pause": false
+      }
+    },
+    {
+      "id": "delete:NC-剩余空间30g上传小于8M",
+      "kind": "delete",
+      "alias": "NC-剩余空间30g上传小于8M",
+      "hint": "progress bigger 0.1 | uploadSpeed smaller 8*1024*1024 | category notContain KEEP,keep | freeSpace smaller 30*1024*1024*1024",
+      "tags": [
+        "空间",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "progress",
+            "compareType": "bigger",
+            "value": "0.1"
+          },
+          {
+            "key": "uploadSpeed",
+            "compareType": "smaller",
+            "value": "8*1024*1024"
+          },
+          {
+            "key": "category",
+            "compareType": "notContain",
+            "value": "KEEP,keep"
+          },
+          {
+            "key": "freeSpace",
+            "compareType": "smaller",
+            "value": "30*1024*1024*1024"
+          }
+        ],
+        "alias": "NC-剩余空间30g上传小于8M",
+        "type": "normal",
+        "priority": 0,
+        "code": "(maindata, torrent) => {\n  return false;\n}",
+        "fitTime": "10",
+        "deleteNum": "30"
+      }
+    },
+    {
+      "id": "delete:NC-瓷器非免跳车",
+      "kind": "delete",
+      "alias": "NC-瓷器非免跳车",
+      "hint": "  ",
+      "tags": [
+        "JS",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "",
+            "compareType": "",
+            "value": ""
+          }
+        ],
+        "alias": "NC-瓷器非免跳车",
+        "type": "javascript",
+        "code": "(maindata, torrent) => {\n  const categoryList = [\"keep\",\"KEEP\"];\n  const { state, category, addedTime } = torrent;\n  const { num_incomplete } = torrent.originProp;\n  if (categoryList.indexOf(category) !== -1) {\n    return false;\n  }\n  if (state == 'downloading' && category == 'HDC' && moment().unix() - addedTime >= 180 && num_incomplete <= 19) {\n    return true;\n  }\n\n  return false;\n};\n",
+        "deleteNum": "2"
+      }
+    },
+    {
+      "id": "delete:3倍分享率跳车",
+      "kind": "delete",
+      "alias": "3倍分享率跳车",
+      "hint": "  ",
+      "tags": [
+        "JS",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "",
+            "compareType": "",
+            "value": ""
+          }
+        ],
+        "alias": "3倍分享率跳车",
+        "type": "javascript",
+        "priority": 0,
+        "code": "(maindata, torrent) => {\n  const categoryList = [\n    \"keep\",\"KEEP\",\n    \"chdbits\",\n    \"ourbits\",\n    \"hdhome\",\n    \"lemonhd\",\n    \"pter\",\n    \"audiences\",\n    \"hdchina\",\n    \"hdsky\",\n    \"改站点\",\n  ];\n  const { uploaded, size, category } = torrent;\n  if (categoryList.indexOf(category) !== -1) {\n    return false;\n  }\n  if (uploaded / size >= 3) {\n    return true;\n  }\n\n  return false;\n};\n",
+        "deleteNum": "10"
+      }
+    },
+    {
+      "id": "delete:不可说3-Torrent",
+      "kind": "delete",
+      "alias": "不可说3-Torrent",
+      "hint": "trackerStatus contain Torrent | category contain SD",
+      "tags": [
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "trackerStatus",
+            "compareType": "contain",
+            "value": "Torrent"
+          },
+          {
+            "key": "category",
+            "compareType": "contain",
+            "value": "SD"
+          }
+        ],
+        "alias": "不可说3-Torrent",
+        "type": "normal",
+        "priority": 0,
+        "code": "(maindata, torrent) => {\n  return false;\n}"
+      }
+    },
+    {
+      "id": "delete:甲骨文-皇后删种（需把分类改为keep）",
+      "kind": "delete",
+      "alias": "甲骨文-皇后删种（需把分类改为keep）",
+      "hint": "completedTime bigger 40*3600 | category contain keep | uploadSpeed smaller 30*1024 | tracker contain open",
+      "tags": [
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "completedTime",
+            "compareType": "bigger",
+            "value": "40*3600"
+          },
+          {
+            "key": "category",
+            "compareType": "contain",
+            "value": "keep"
+          },
+          {
+            "key": "uploadSpeed",
+            "compareType": "smaller",
+            "value": "30*1024"
+          },
+          {
+            "key": "tracker",
+            "compareType": "contain",
+            "value": "open"
+          }
+        ],
+        "alias": "甲骨文-皇后删种（需把分类改为keep）",
+        "type": "normal",
+        "priority": 0,
+        "code": "(maindata, torrent) => {\n  return false;\n}",
+        "fitTime": "120"
+      }
+    },
+    {
+      "id": "delete:A3倍分享率",
+      "kind": "delete",
+      "alias": "A3倍分享率",
+      "hint": "  ",
+      "tags": [
+        "JS",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "",
+            "compareType": "",
+            "value": ""
+          }
+        ],
+        "alias": "A3倍分享率",
+        "type": "javascript",
+        "code": "(maindata, torrent) => {\n  const categoryList = [\n    \"keep\",\n    \"chdbits\",\n    \"ourbits\",\n    \"hdhome\",\n    \"lemonhd\",\n    \"pter\",\n    \"audiences\",\n    \"hdchina\",\n    \"hdsky\",\n    \"hddolby\",\n  ];\n  const { uploaded, size, category } = torrent;\n  if (categoryList.indexOf(category) !== -1) {\n    return false;\n  }\n  if (uploaded / size >= 3) {\n    return true;\n  }\n\n  return false;\n};",
+        "deleteNum": "5"
+      }
+    },
+    {
+      "id": "delete:剩余空间100g上传小于8M",
+      "kind": "delete",
+      "alias": "剩余空间100g上传小于8M",
+      "hint": "progress bigger 0 | freeSpace smaller 1024*1024*1024*100 | uploadSpeed smaller 1024*1024*8 | category notIncludeIn KEEP,keep",
+      "tags": [
+        "空间",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "progress",
+            "compareType": "bigger",
+            "value": "0"
+          },
+          {
+            "key": "freeSpace",
+            "compareType": "smaller",
+            "value": "1024*1024*1024*100"
+          },
+          {
+            "key": "uploadSpeed",
+            "compareType": "smaller",
+            "value": "1024*1024*8"
+          },
+          {
+            "key": "category",
+            "compareType": "notIncludeIn",
+            "value": "KEEP,keep"
+          }
+        ],
+        "alias": "剩余空间100g上传小于8M",
+        "type": "normal",
+        "code": "(maindata, torrent) => {\n  return false;\n}",
+        "fitTime": "5",
+        "deleteNum": "10"
+      }
+    },
+    {
+      "id": "delete:速度低于800k持续1分钟",
+      "kind": "delete",
+      "alias": "速度低于800k持续1分钟",
+      "hint": "progress bigger 0.05 | uploadSpeed smaller 800*1024",
+      "tags": [
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "progress",
+            "compareType": "bigger",
+            "value": "0.05"
+          },
+          {
+            "key": "uploadSpeed",
+            "compareType": "smaller",
+            "value": "800*1024"
+          }
+        ],
+        "alias": "速度低于800k持续1分钟",
+        "type": "normal",
+        "priority": 0,
+        "code": "(maindata, torrent) => {\n  return false;\n}",
+        "fitTime": "60",
+        "deleteNum": "3"
+      }
+    },
+    {
+      "id": "delete:A低收益",
+      "kind": "delete",
+      "alias": "A低收益",
+      "hint": "  ",
+      "tags": [
+        "JS",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "",
+            "compareType": "",
+            "value": ""
+          }
+        ],
+        "alias": "A低收益",
+        "type": "javascript",
+        "code": "(maindata, torrent) => {\n  const categoryList = [\"keep\"];\n  const stateList = [\"downloading\", \"stalledDL\"];\n  const { state, ratio, progress, category, uploadSpeed, downloadSpeed } =\n    torrent;\n  if (categoryList.indexOf(category) !== -1 || maindata.leechingCount <= 10) {\n    return false;\n  }\n  if (\n    stateList.indexOf(state) !== -1 &&\n    progress >= 0.2 &&\n    progress <= 0.3 &&\n    ratio <= 0.7 &&\n    uploadSpeed <= util.calSize(3, \"MiB\")\n  ) {\n    return true;\n  }\n\n  return false;\n};",
+        "deleteNum": "5"
+      }
+    },
+    {
+      "id": "delete:NC-剩余空间20g上传小于50M",
+      "kind": "delete",
+      "alias": "NC-剩余空间20g上传小于50M",
+      "hint": "progress bigger 0.1 | freeSpace smaller 1024*1024*1024*20 | uploadSpeed smaller 1024*1024*50 | category notContain KEEP,keep",
+      "tags": [
+        "空间",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "progress",
+            "compareType": "bigger",
+            "value": "0.1"
+          },
+          {
+            "key": "freeSpace",
+            "compareType": "smaller",
+            "value": "1024*1024*1024*20"
+          },
+          {
+            "key": "uploadSpeed",
+            "compareType": "smaller",
+            "value": "1024*1024*50"
+          },
+          {
+            "key": "category",
+            "compareType": "notContain",
+            "value": "KEEP,keep"
+          }
+        ],
+        "alias": "NC-剩余空间20g上传小于50M",
+        "type": "normal",
+        "code": "(maindata, torrent) => {\n  return false;\n}",
+        "fitTime": "10",
+        "deleteNum": "30",
+        "priority": "0"
+      }
+    },
+    {
+      "id": "delete:北洋DLC6",
+      "kind": "delete",
+      "alias": "北洋DLC6",
+      "hint": "progress smaller 0.08 | downloadSpeed bigger 6*1024*1024 | trueRatio smaller 1 | progress bigger 0.01",
+      "tags": [
+        "进阶"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "progress",
+            "compareType": "smaller",
+            "value": "0.08"
+          },
+          {
+            "key": "downloadSpeed",
+            "compareType": "bigger",
+            "value": "6*1024*1024"
+          },
+          {
+            "key": "trueRatio",
+            "compareType": "smaller",
+            "value": "1"
+          },
+          {
+            "key": "progress",
+            "compareType": "bigger",
+            "value": "0.01"
+          },
+          {
+            "key": "category",
+            "compareType": "contain",
+            "value": "TJU"
+          }
+        ],
+        "alias": "北洋DLC6",
+        "type": "normal",
+        "priority": 0,
+        "code": "(maindata, torrent) => {\n  return false;\n}"
+      }
+    },
+    {
+      "id": "delete:北洋-种子删选",
+      "kind": "delete",
+      "alias": "北洋-种子删选",
+      "hint": "  ",
+      "tags": [
+        "JS",
+        "进阶"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "",
+            "compareType": "",
+            "value": ""
+          }
+        ],
+        "alias": "北洋-种子删选",
+        "type": "javascript",
+        "priority": 0,
+        "code": "(maindata, torrent) => {\n  const { size, category, uploaded, downloaded, upspeed, downspeed, progress, num_seeds, num_leechs } = torrent.originProp;\n\n  // 检查种子类别是否包含 \"TJU\"\n  if (!category.includes(\"TJU\")) {\n    return false; // 不删除\n  }\n\n  // 计算分享率\n  const ratio = downloaded > 0 ? uploaded / downloaded : 0;\n\n  // 进度检查，根据不同大小的种子设置不同的进度范围\n  if (size <= util.calSize(10, \"GiB\")) {\n    if (progress < 0.085 || progress > 0.090) {\n      return false; // 不删除\n    }\n  } else if (size <= util.calSize(20, \"GiB\")) {\n    if (progress < 0.085 || progress > 0.090) {\n      return false; // 不删除\n    }\n  } else if (size <= util.calSize(30, \"GiB\")) {\n    if (progress < 0.088 || progress > 0.090) {\n      return false; // 不删除\n    }\n  } else if (size <= util.calSize(40, \"GiB\")) {\n    if (progress < 0.089 || progress > 0.091) {\n      return false; // 不删除\n    }\n  } else if (size <= util.calSize(50, \"GiB\")) {\n    if (progress < 0.090 || progress > 0.092) {\n      return false; // 不删除\n    }\n  } else {\n    if (progress < 0.090 || progress > 0.096) {\n      return false; // 不删除\n    }\n  }\n\n  // 特殊条件检查\n  // 如果种子大小小于10 GiB且分享率大于等于1，则不删除\n  if (size < util.calSize(10, \"GiB\") && ratio >= 1) {\n    return false; // 不删除\n  } \n  // 如果种子大小小于20 GiB，做种数量是吸血者数量的3倍且分享率大于等于2.5，上传速度大于等于下载速度，则不删除\n  else if (size < util.calSize(20, \"GiB\") && num_seeds >= 3 * num_leechs && ratio >= 2.5 && upspeed >= downspeed) {\n    return false; // 不删除\n  } \n  // 删除条件\n  else if (\n    (size < util.calSize(10, \"GiB\") && upspeed < util.calSize(500, \"KiB\")) || // 小于10 GiB且上传速度小于500 KiB/s\n    (size >= util.calSize(10, \"GiB\") && upspeed < util.calSize(1, \"MiB\") && num_seeds >= num_leechs && (upspeed <= downspeed || ratio < 1)) || // 大于等于10 GiB且上传速度小于1 MiB/s且做种数量大于等于吸血者数量，且（上传速度小于等于下载速度，或分享率小于1）\n    ((size > 0 && size < util.calSize(8, \"GiB\")) || // 大小在0到8 GiB之间\n     (size > util.calSize(10, \"GiB\") && size <= util.calSize(13, \"GiB\") && ratio <= 2.0 && uploaded <= downloaded)) // 大小在10到13 GiB之间且分享率小于等于2.0且上传量小于等于下载量\n  ) {\n    return true; // 删除\n  }\n\n  return false; // 默认不删除\n};"
+      }
+    },
+    {
+      "id": "delete:NC-空间剩余100g上传速度低于50k持续1分钟",
+      "kind": "delete",
+      "alias": "NC-空间剩余100g上传速度低于50k持续1分钟",
+      "hint": "uploadSpeed smaller 50*1024 | progress bigger 0.9 | category notContain keep,KEEP | freeSpace smaller 100*1024*1024*1024",
+      "tags": [
+        "空间",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "uploadSpeed",
+            "compareType": "smaller",
+            "value": "50*1024"
+          },
+          {
+            "key": "progress",
+            "compareType": "bigger",
+            "value": "0.9"
+          },
+          {
+            "key": "category",
+            "compareType": "notContain",
+            "value": "keep,KEEP"
+          },
+          {
+            "key": "freeSpace",
+            "compareType": "smaller",
+            "value": "100*1024*1024*1024"
+          }
+        ],
+        "alias": "NC-空间剩余100g上传速度低于50k持续1分钟",
+        "type": "normal",
+        "priority": 0,
+        "code": "(maindata, torrent) => {\n  return false;\n}",
+        "deleteNum": "30",
+        "fitTime": "60"
+      }
+    },
+    {
+      "id": "delete:拆包删种(垃圾种)",
+      "kind": "delete",
+      "alias": "拆包删种(垃圾种)",
+      "hint": "category contain KEEP | size smaller 100*1024*1024 | uploadSpeed smaller 50*1024",
+      "tags": [
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "category",
+            "compareType": "contain",
+            "value": "KEEP"
+          },
+          {
+            "key": "size",
+            "compareType": "smaller",
+            "value": "100*1024*1024"
+          },
+          {
+            "key": "uploadSpeed",
+            "compareType": "smaller",
+            "value": "50*1024"
+          }
+        ],
+        "alias": "拆包删种(垃圾种)",
+        "type": "normal",
+        "priority": 0,
+        "code": "(maindata, torrent) => {\n  return false;\n}",
+        "deleteNum": "30"
+      }
+    },
+    {
+      "id": "delete:NC-剩余空间50g上传小于1M",
+      "kind": "delete",
+      "alias": "NC-剩余空间50g上传小于1M",
+      "hint": "freeSpace smaller 50*1024*1024*1024 | progress bigger 0.1 | uploadSpeed smaller 1*1024*1024 | category notContain keep,KEEP",
+      "tags": [
+        "空间",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "freeSpace",
+            "compareType": "smaller",
+            "value": "50*1024*1024*1024"
+          },
+          {
+            "key": "progress",
+            "compareType": "bigger",
+            "value": "0.1"
+          },
+          {
+            "key": "uploadSpeed",
+            "compareType": "smaller",
+            "value": "1*1024*1024"
+          },
+          {
+            "key": "category",
+            "compareType": "notContain",
+            "value": "keep,KEEP"
+          }
+        ],
+        "alias": "NC-剩余空间50g上传小于1M",
+        "type": "normal",
+        "priority": 0,
+        "code": "(maindata, torrent) => {\n  return false;\n}",
+        "fitTime": "10",
+        "deleteNum": "30"
+      }
+    },
+    {
+      "id": "delete:A长时间未开始",
+      "kind": "delete",
+      "alias": "A长时间未开始",
+      "hint": "  ",
+      "tags": [
+        "JS",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "",
+            "compareType": "",
+            "value": ""
+          }
+        ],
+        "alias": "A长时间未开始",
+        "type": "javascript",
+        "code": "(maindata, torrent) => {\n  const categoryList = [\"keep\"];\n  const { state, category, progress, addedTime } = torrent;\n  if (categoryList.indexOf(category) !== -1) {\n    return false;\n  }\n  if (\n    moment().hour() >= 0 &&\n    moment().hour() <= 8 &&\n    state == \"stalledDL\" &&\n    progress <= 0.05 &&\n    moment().unix() - addedTime >= 18000\n  ) {\n    return true;\n  }\n  if (\n    state == \"stalledDL\" &&\n    progress <= 0.05 &&\n    moment().unix() - addedTime >= 14400\n  ) {\n    return true;\n  }\n\n  return false;\n};",
+        "deleteNum": "5"
+      }
+    },
+    {
+      "id": "delete:D",
+      "kind": "delete",
+      "alias": "D",
+      "hint": "category equals D",
+      "tags": [
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "category",
+            "compareType": "equals",
+            "value": "D"
+          }
+        ],
+        "alias": "D",
+        "type": "normal",
+        "priority": 0,
+        "code": "(maindata, torrent) => {\n  return false;\n}",
+        "deleteNum": "10"
+      }
+    },
+    {
+      "id": "delete:甲骨文-学校21小时删种",
+      "kind": "delete",
+      "alias": "甲骨文-学校21小时删种",
+      "hint": "completedTime bigger 75600 | category contain BTS | uploadSpeed smaller 100*1024",
+      "tags": [
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "completedTime",
+            "compareType": "bigger",
+            "value": "75600"
+          },
+          {
+            "key": "category",
+            "compareType": "contain",
+            "value": "BTS"
+          },
+          {
+            "key": "uploadSpeed",
+            "compareType": "smaller",
+            "value": "100*1024"
+          }
+        ],
+        "alias": "甲骨文-学校21小时删种",
+        "type": "normal",
+        "priority": 0,
+        "code": "(maindata, torrent) => {\n  return false;\n}",
+        "pause": false,
+        "fitTime": "120"
+      }
+    },
+    {
+      "id": "delete:A慢车",
+      "kind": "delete",
+      "alias": "A慢车",
+      "hint": "  ",
+      "tags": [
+        "JS",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "",
+            "compareType": "",
+            "value": ""
+          }
+        ],
+        "alias": "A慢车",
+        "type": "javascript",
+        "code": "(maindata, torrent) => {\n  const categoryList = [\"keep\"];\n  const stateList = [\"downloading\", \"stalledDL\"];\n  const { state, uploadSpeed, progress, category, leecher } = torrent;\n  if (categoryList.indexOf(category) !== -1) {\n    return false;\n  }\n  if (\n    (moment().hour() >= 0 && moment().hour() <= 8) ||\n    maindata.leechingCount <= 10 ||\n    leecher >= 100\n  ) {\n    return false;\n  }\n  if (\n    stateList.indexOf(state) !== -1 &&\n    uploadSpeed <= util.calSize(250, \"KiB\") &&\n    progress >= 0.1\n  ) {\n    return true;\n  }\n\n  return false;\n};",
+        "fitTime": "40",
+        "deleteNum": "5"
+      }
+    },
+    {
+      "id": "delete:NC-上传速度小于200k持续60秒删除",
+      "kind": "delete",
+      "alias": "NC-上传速度小于200k 持续60秒删除",
+      "hint": "uploadSpeed smaller 1024*100 | progress bigger 0.5 | category notIncludeIn KEEP,keep",
+      "tags": [
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "uploadSpeed",
+            "compareType": "smaller",
+            "value": "1024*100"
+          },
+          {
+            "key": "progress",
+            "compareType": "bigger",
+            "value": "0.5"
+          },
+          {
+            "key": "category",
+            "compareType": "notIncludeIn",
+            "value": "KEEP,keep"
+          }
+        ],
+        "code": "(maindata, torrent) => {\n  return false;\n}",
+        "alias": "NC-上传速度小于200k 持续60秒删除",
+        "fitTime": "60",
+        "type": "normal",
+        "deleteNum": "30"
+      }
+    },
+    {
+      "id": "delete:nc-黑车（删种厉害）",
+      "kind": "delete",
+      "alias": "nc-黑车（删种厉害）",
+      "hint": "  ",
+      "tags": [
+        "JS",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "",
+            "compareType": "",
+            "value": ""
+          }
+        ],
+        "alias": "nc-黑车（删种厉害）",
+        "type": "javascript",
+        "priority": 0,
+        "code": "(maindata, torrent) => {\n  const categoryList = [\"keep\"];\n  const { state, category, uploadSpeed, downloadSpeed } = torrent;\n  if (categoryList.indexOf(category) !== -1) {\n    return false;\n  }\nif (\n    maindata.leechingCount <= 4\n  ) {\n    return false;\n  }\n  if (\n    state == \"downloading\" &&\n    downloadSpeed >= util.calSize(4, \"MiB\") &&\n    downloadSpeed / uploadSpeed >= 2\n  ) {\n    return true;\n  }\n\n  return false;\n};",
+        "fitTime": "20"
+      }
+    },
+    {
+      "id": "delete:甲骨文-U2删种（需把分类改为keep）",
+      "kind": "delete",
+      "alias": "甲骨文-U2删种（需把分类改为keep）",
+      "hint": "uploadSpeed smaller 50*1024 | category equals keep | tracker contain dmhy | addedTime bigger 2*3600",
+      "tags": [
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "uploadSpeed",
+            "compareType": "smaller",
+            "value": "50*1024"
+          },
+          {
+            "key": "category",
+            "compareType": "equals",
+            "value": "keep"
+          },
+          {
+            "key": "tracker",
+            "compareType": "contain",
+            "value": "dmhy"
+          },
+          {
+            "key": "addedTime",
+            "compareType": "bigger",
+            "value": "2*3600"
+          }
+        ],
+        "alias": "甲骨文-U2删种（需把分类改为keep）",
+        "type": "normal",
+        "priority": 0,
+        "code": "(maindata, torrent) => {\n  return false;\n}",
+        "fitTime": "90"
+      }
+    },
+    {
+      "id": "delete:拒绝删种-北洋专用",
+      "kind": "delete",
+      "alias": "拒绝删种-北洋专用",
+      "hint": "category equals TJU | progress bigger 0.09",
+      "tags": [
+        "进阶"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "category",
+            "compareType": "equals",
+            "value": "TJU"
+          },
+          {
+            "key": "progress",
+            "compareType": "bigger",
+            "value": "0.09"
+          }
+        ],
+        "alias": "拒绝删种-北洋专用",
+        "type": "normal",
+        "priority": 0,
+        "code": "(maindata, torrent) => {\n  return false;\n}",
+        "deleteNum": "1"
+      }
+    },
+    {
+      "id": "delete:A错误",
+      "kind": "delete",
+      "alias": "A错误",
+      "hint": "category notIncludeIn keep | state equals error | uploadSpeed smaller 5*1024*1024",
+      "tags": [
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "category",
+            "compareType": "notIncludeIn",
+            "value": "keep"
+          },
+          {
+            "key": "state",
+            "compareType": "equals",
+            "value": "error"
+          },
+          {
+            "key": "uploadSpeed",
+            "compareType": "smaller",
+            "value": "5*1024*1024"
+          }
+        ],
+        "alias": "A错误",
+        "type": "normal",
+        "code": "(maindata, torrent) => {\n  return false;\n}",
+        "fitTime": "33",
+        "deleteNum": "5"
+      }
+    },
+    {
+      "id": "delete:NC-分享率3倍删种-憨憨-天空",
+      "kind": "delete",
+      "alias": "NC-分享率3倍删种-憨憨-天空",
+      "hint": "ratio3 bigger 3.1 | category notContain keep,KEEP | category contain HH,SKY,MTV | progress equals 1",
+      "tags": [
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "ratio3",
+            "compareType": "bigger",
+            "value": "3.1"
+          },
+          {
+            "key": "category",
+            "compareType": "notContain",
+            "value": "keep,KEEP"
+          },
+          {
+            "key": "category",
+            "compareType": "contain",
+            "value": "HH,SKY,MTV"
+          },
+          {
+            "key": "progress",
+            "compareType": "equals",
+            "value": "1"
+          }
+        ],
+        "alias": "NC-分享率3倍删种-憨憨-天空",
+        "type": "normal",
+        "priority": 0,
+        "code": "(maindata, torrent) => {\n  return false;\n}",
+        "deleteNum": "30"
+      }
+    },
+    {
+      "id": "delete:A中途停车",
+      "kind": "delete",
+      "alias": "A中途停车",
+      "hint": "  ",
+      "tags": [
+        "JS",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "",
+            "compareType": "",
+            "value": ""
+          }
+        ],
+        "alias": "A中途停车",
+        "type": "javascript",
+        "priority": 0,
+        "code": "(maindata, torrent) => {\n  const categoryList = [\"keep\"];\n  const stateList = [\"stalledDL\"];\n  const { state, category, leecher, uploadSpeed, progress } = torrent;\n  if (categoryList.indexOf(category) !== -1) {\n    return false;\n  }\n  if (stateList.indexOf(state) !== -1 && uploadSpeed <= 0 && progress >= 0.05) {\n    return true;\n  }\n\n  return false;\n};",
+        "deleteNum": "5"
+      }
+    },
+    {
+      "id": "delete:拆包删种(硬盘空间小于5G,上传速度小于10M)",
+      "kind": "delete",
+      "alias": "拆包删种(硬盘空间小于5G, 上传速度小于10M)",
+      "hint": "category contain KEEP | freeSpace smaller 5*1024*1024*1024 | uploadSpeed smaller 10*1024*1024 | progress bigger 0.01",
+      "tags": [
+        "空间",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "category",
+            "compareType": "contain",
+            "value": "KEEP"
+          },
+          {
+            "key": "freeSpace",
+            "compareType": "smaller",
+            "value": "5*1024*1024*1024"
+          },
+          {
+            "key": "uploadSpeed",
+            "compareType": "smaller",
+            "value": "10*1024*1024"
+          },
+          {
+            "key": "progress",
+            "compareType": "bigger",
+            "value": "0.01"
+          }
+        ],
+        "alias": "拆包删种(硬盘空间小于5G, 上传速度小于10M)",
+        "type": "normal",
+        "priority": 0,
+        "code": "(maindata, torrent) => {\n  return false;\n}",
+        "fitTime": "60",
+        "deleteNum": "30"
+      }
+    },
+    {
+      "id": "delete:甲骨文-岛非免跳车",
+      "kind": "delete",
+      "alias": "甲骨文-岛非免跳车",
+      "hint": "  ",
+      "tags": [
+        "JS",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "",
+            "compareType": "",
+            "value": ""
+          }
+        ],
+        "alias": "甲骨文-岛非免跳车",
+        "type": "javascript",
+        "priority": 0,
+        "code": "(maindata, torrent) => {\n  const categoryList = [\"keep\",\"BTS\",\"SKY\"];\n  const { state, category, addedTime, tracker} = torrent;\n  const { num_incomplete } = torrent.originProp;\n  if (categoryList.indexOf(category) !== -1) {\n    return false;\n  }\n  if (state == 'downloading' && tracker == 'chdbits.xyz' && moment().unix() - addedTime >= 180 && num_incomplete <= 39) {\n    return true;\n  }\n\n  return false;\n};\n",
+        "deleteNum": "10"
+      }
+    },
+    {
+      "id": "delete:NC-剩余空间10g上传小于80M",
+      "kind": "delete",
+      "alias": "NC-剩余空间10g上传小于80M",
+      "hint": "freeSpace smaller 1024*1024*1024*10 | progress bigger 0.1 | category notContain KEEP,keep",
+      "tags": [
+        "空间",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "freeSpace",
+            "compareType": "smaller",
+            "value": "1024*1024*1024*10"
+          },
+          {
+            "key": "progress",
+            "compareType": "bigger",
+            "value": "0.1"
+          },
+          {
+            "key": "category",
+            "compareType": "notContain",
+            "value": "KEEP,keep"
+          }
+        ],
+        "code": "(maindata, torrent) => {\n  return false;\n}",
+        "alias": "NC-剩余空间10g上传小于80M",
+        "type": "normal",
+        "deleteNum": "30",
+        "fitTime": "10",
+        "priority": "0"
+      }
+    },
+    {
+      "id": "delete:A黑车2",
+      "kind": "delete",
+      "alias": "A黑车2",
+      "hint": "  ",
+      "tags": [
+        "JS",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "",
+            "compareType": "",
+            "value": ""
+          }
+        ],
+        "alias": "A黑车2",
+        "type": "javascript",
+        "code": "(maindata, torrent) => {\n  const categoryList = [\"keep\"];\n  const { state, category, uploadSpeed, downloadSpeed } = torrent;\n  if (categoryList.indexOf(category) !== -1) {\n    return false;\n  }\n  if (\n    state == \"downloading\" &&\n    downloadSpeed >= util.calSize(10, \"MiB\") &&\n    downloadSpeed / uploadSpeed >= 1.8\n  ) {\n    return true;\n  }\n\n  return false;\n};",
+        "fitTime": "20",
+        "deleteNum": "5"
+      }
+    },
+    {
+      "id": "delete:不可说1-分享4完成60",
+      "kind": "delete",
+      "alias": "不可说1-分享4完成60",
+      "hint": "ratio3 bigger 4.1 | completedTime bigger 3600 | category contain SD",
+      "tags": [
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "ratio3",
+            "compareType": "bigger",
+            "value": "4.1"
+          },
+          {
+            "key": "completedTime",
+            "compareType": "bigger",
+            "value": "3600"
+          },
+          {
+            "key": "category",
+            "compareType": "contain",
+            "value": "SD"
+          }
+        ],
+        "alias": "不可说1-分享4完成60",
+        "type": "normal",
+        "priority": 0,
+        "code": "(maindata, torrent) => {\n  return false;\n}"
+      }
+    },
+    {
+      "id": "delete:甲骨文-36小时无人做种",
+      "kind": "delete",
+      "alias": "甲骨文-36小时无人做种",
+      "hint": "progress equals 0 | category notContain KEEP,keep,BTS | addedTime bigger 36*3600 | uploadSpeed smaller 50*1024",
+      "tags": [
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "progress",
+            "compareType": "equals",
+            "value": "0"
+          },
+          {
+            "key": "category",
+            "compareType": "notContain",
+            "value": "KEEP,keep,BTS"
+          },
+          {
+            "key": "addedTime",
+            "compareType": "bigger",
+            "value": "36*3600"
+          },
+          {
+            "key": "uploadSpeed",
+            "compareType": "smaller",
+            "value": "50*1024"
+          }
+        ],
+        "alias": "甲骨文-36小时无人做种",
+        "type": "normal",
+        "priority": 0,
+        "code": "(maindata, torrent) => {\n  return false;\n}"
+      }
+    },
+    {
+      "id": "delete:甲骨文-剩余空间100g上传小于8M",
+      "kind": "delete",
+      "alias": "甲骨文-剩余空间100g上传小于8M",
+      "hint": "progress bigger 0 | freeSpace smaller 1024*1024*1024*100 | uploadSpeed smaller 1024*1024*8 | category notContain KEEP,keep,BTS",
+      "tags": [
+        "空间",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "progress",
+            "compareType": "bigger",
+            "value": "0"
+          },
+          {
+            "key": "freeSpace",
+            "compareType": "smaller",
+            "value": "1024*1024*1024*100"
+          },
+          {
+            "key": "uploadSpeed",
+            "compareType": "smaller",
+            "value": "1024*1024*8"
+          },
+          {
+            "key": "category",
+            "compareType": "notContain",
+            "value": "KEEP,keep,BTS"
+          }
+        ],
+        "alias": "甲骨文-剩余空间100g上传小于8M",
+        "type": "normal",
+        "priority": 0,
+        "code": "(maindata, torrent) => {\n  return false;\n}",
+        "fitTime": "5",
+        "deleteNum": "4"
+      }
+    },
+    {
+      "id": "delete:拆包删种(添加大于20小时，上传小于50K，不出种)",
+      "kind": "delete",
+      "alias": "拆包删种(添加大于20小时，上传小于50K，不出种)",
+      "hint": "category contain KEEP | addedTime bigger 20*3600 | uploadSpeed smaller 50*1024",
+      "tags": [
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "category",
+            "compareType": "contain",
+            "value": "KEEP"
+          },
+          {
+            "key": "addedTime",
+            "compareType": "bigger",
+            "value": "20*3600"
+          },
+          {
+            "key": "uploadSpeed",
+            "compareType": "smaller",
+            "value": "50*1024"
+          }
+        ],
+        "alias": "拆包删种(添加大于20小时，上传小于50K，不出种)",
+        "type": "normal",
+        "priority": 0,
+        "code": "(maindata, torrent) => {\n  return false;\n}",
+        "fitTime": "120",
+        "deleteNum": "30"
+      }
+    },
+    {
+      "id": "delete:馒头三倍删种",
+      "kind": "delete",
+      "alias": "馒头三倍删种",
+      "hint": "ratio3 bigger 3.5 | category contain MTV | category notContain keep",
+      "tags": [
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "ratio3",
+            "compareType": "bigger",
+            "value": "3.5"
+          },
+          {
+            "key": "category",
+            "compareType": "contain",
+            "value": "MTV"
+          },
+          {
+            "key": "category",
+            "compareType": "notContain",
+            "value": "keep"
+          }
+        ],
+        "alias": "馒头三倍删种",
+        "type": "normal",
+        "priority": 0,
+        "code": "(maindata, torrent) => {\n  return false;\n}",
+        "deleteNum": "30"
+      }
+    },
+    {
+      "id": "rss:>20G",
+      "kind": "rss",
+      "alias": ">20G",
+      "hint": "size bigger 20*1024*1024*1024",
+      "tags": [
+        "体积",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "size",
+            "compareType": "bigger",
+            "value": "20*1024*1024*1024"
+          }
+        ],
+        "alias": ">20G",
+        "type": "normal",
+        "code": "(torrent) => {\n  return false;\n}"
+      }
+    },
+    {
+      "id": "rss:种子小于10g",
+      "kind": "rss",
+      "alias": "种子小于10g",
+      "hint": "size smaller 1024*1024*1024*10",
+      "tags": [
+        "体积",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "size",
+            "compareType": "smaller",
+            "value": "1024*1024*1024*10"
+          }
+        ],
+        "alias": "种子小于10g",
+        "type": "normal",
+        "code": "(torrent) => {\n  return false;\n}"
+      }
+    },
+    {
+      "id": "rss:>4G",
+      "kind": "rss",
+      "alias": ">4G",
+      "hint": "size bigger 4*1024*1024*1024",
+      "tags": [
+        "体积",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "size",
+            "compareType": "bigger",
+            "value": "4*1024*1024*1024"
+          }
+        ],
+        "alias": ">4G",
+        "type": "normal",
+        "code": "(torrent) => {\n  return false;\n}"
+      }
+    },
+    {
+      "id": "rss:TTG",
+      "kind": "rss",
+      "alias": "TTG",
+      "hint": "name contain TTG,WiKi,NGB,SweetDreamDay,cfandora,ARiN,doraemon,zyn1998,Dave,951,NTSC,PERFECT FLAC",
+      "tags": [
+        "体积",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "name",
+            "compareType": "contain",
+            "value": "TTG,WiKi,NGB,SweetDreamDay,cfandora,ARiN,doraemon,zyn1998,Dave,951,NTSC,PERFECT FLAC"
+          }
+        ],
+        "alias": "TTG",
+        "type": "normal",
+        "code": "(torrent) => {\n  return false;\n}"
+      }
+    },
+    {
+      "id": "rss:猪猪专用-排除HR",
+      "kind": "rss",
+      "alias": "猪猪专用-排除HR",
+      "hint": "name contain 3D",
+      "tags": [
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "name",
+            "compareType": "contain",
+            "value": "3D"
+          }
+        ],
+        "alias": "猪猪专用-排除HR",
+        "type": "normal",
+        "code": "(torrent) => {\n  return false;\n}"
+      }
+    },
+    {
+      "id": "rss:>2G",
+      "kind": "rss",
+      "alias": ">2G",
+      "hint": "size bigger 2*1024*1024*1024",
+      "tags": [
+        "体积",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "size",
+            "compareType": "bigger",
+            "value": "2*1024*1024*1024"
+          }
+        ],
+        "alias": ">2G",
+        "type": "normal",
+        "code": "(torrent) => {\n  return false;\n}"
+      }
+    },
+    {
+      "id": "rss:>60G",
+      "kind": "rss",
+      "alias": ">60G",
+      "hint": "size bigger 60*1024*1024*1024",
+      "tags": [
+        "体积",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "size",
+            "compareType": "bigger",
+            "value": "60*1024*1024*1024"
+          }
+        ],
+        "alias": ">60G",
+        "type": "normal",
+        "code": "(torrent) => {\n  return false;\n}"
+      }
+    },
+    {
+      "id": "rss:>10G",
+      "kind": "rss",
+      "alias": ">10G",
+      "hint": "size bigger 10*1024*1024*1024",
+      "tags": [
+        "体积",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "size",
+            "compareType": "bigger",
+            "value": "10*1024*1024*1024"
+          }
+        ],
+        "alias": ">10G",
+        "type": "normal",
+        "code": "(torrent) => {\n  return false;\n}"
+      }
+    },
+    {
+      "id": "rss:种子3-40g",
+      "kind": "rss",
+      "alias": "种子3-40g",
+      "hint": "size bigger 1024*1024*1024*3 | size smaller 1024*1024*1024*40",
+      "tags": [
+        "体积",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "size",
+            "compareType": "bigger",
+            "value": "1024*1024*1024*3"
+          },
+          {
+            "key": "size",
+            "compareType": "smaller",
+            "value": "1024*1024*1024*40"
+          }
+        ],
+        "alias": "种子3-40g",
+        "type": "normal",
+        "code": "(torrent) => {\n  return false;\n}"
+      }
+    },
+    {
+      "id": "rss:种子小于3g",
+      "kind": "rss",
+      "alias": "种子小于3g",
+      "hint": "size smaller 1024*1024*1024*3",
+      "tags": [
+        "体积",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "size",
+            "compareType": "smaller",
+            "value": "1024*1024*1024*3"
+          }
+        ],
+        "alias": "种子小于3g",
+        "type": "normal",
+        "code": "(torrent) => {\n  return false;\n}"
+      }
+    },
+    {
+      "id": "rss:>14G",
+      "kind": "rss",
+      "alias": ">14G",
+      "hint": "size bigger 1024*1024*1024*14",
+      "tags": [
+        "体积",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "size",
+            "compareType": "bigger",
+            "value": "1024*1024*1024*14"
+          }
+        ],
+        "alias": ">14G",
+        "type": "normal",
+        "code": "(torrent) => {\n  return false;\n}"
+      }
+    },
+    {
+      "id": "rss:种子大于150g",
+      "kind": "rss",
+      "alias": "种子大于150g",
+      "hint": "size bigger 1024*1024*1024*150",
+      "tags": [
+        "体积",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "size",
+            "compareType": "bigger",
+            "value": "1024*1024*1024*150"
+          }
+        ],
+        "alias": "种子大于150g",
+        "type": "normal",
+        "code": "(torrent) => {\n  return false;\n}"
+      }
+    },
+    {
+      "id": "rss:>3G",
+      "kind": "rss",
+      "alias": ">3G",
+      "hint": "size bigger 3*1024*1024*1024",
+      "tags": [
+        "体积",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "size",
+            "compareType": "bigger",
+            "value": "3*1024*1024*1024"
+          }
+        ],
+        "alias": ">3G",
+        "type": "normal",
+        "code": "(torrent) => {\n  return false;\n}"
+      }
+    },
+    {
+      "id": "rss:北洋选种",
+      "kind": "rss",
+      "alias": "北洋选种",
+      "hint": "  ",
+      "tags": [
+        "JS",
+        "进阶"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "",
+            "compareType": "",
+            "value": ""
+          }
+        ],
+        "alias": "北洋选种",
+        "type": "javascript",
+        "code": "(torrent) => {\n    // 配置参数：指定下载器ID列表 [ 'id1', 'id2', 'id3' ]\n    const clientIds = this.clientIds || [];\n    const diskSpace = this.diskSpace || 320 * 1024 * 1024 * 1024; // 允许配置总磁盘空间\n    const uploadLimit = 85 * 1024 * 1024; \n    const downloadLimit = 32 * 1024 * 1024; \n    const { size, name, hash, url, link, savePath } = torrent;\n    logger.info(\"获取到种子：\" + name);\n    logger.info(\"当前种子大小：\" + (size/1024/1024/1024).toFixed(2) + \"GB\");\n\n\n\n    for (const clientId of clientIds) {\n        const client = global.runningClient[clientId];\n        if (!client) {\n            logger.error(`下载器 ${clientId} 不存在`);\n            continue;\n        }\n\n        if (client.status == 'false') {\n            logger.info(`下载器 ${client.alias} 已禁用，跳过`);\n            continue;\n        }\n\n        let allTorrentSize = 0;\n        if (client.maindata?.torrents?.length > 0) {\n            for (const torrent of client.maindata.torrents) {\n                allTorrentSize += torrent.size;\n            }\n        }\n        const availableDiskSpace = diskSpace - allTorrentSize;\n        logger.info(`下载器：${client.alias} 已占用空间：${(allTorrentSize/1024/1024/1024).toFixed(2)}GB`);\n        logger.info(`下载器：${client.alias} 计算可用空间：${(availableDiskSpace/1024/1024/1024).toFixed(2)}GB`);\n\n        if (availableDiskSpace > size) {\n            logger.info(\"剩余空间满足，添加种子！\");\n            client.addTorrent(\n                url,\n                hash,\n                false,\n                uploadLimit,\n                downloadLimit,\n                savePath,\n                this.category,\n                this.autoTMM,\n                this.paused\n            );\n            \n            util.runRecord('INSERT INTO torrents (hash, name, size, rss_id, link, category, record_time, add_time, record_type, record_note) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',\n                [hash, name, size, this.id, link, this.category, moment().unix(), moment().unix(), 1, '添加种子']);\n            \n            break; // 添加成功，终止执行\n        } else {\n            logger.info(`下载器 ${client.alias} 剩余空间不足（需要 ${(size/1024/1024/1024).toFixed(2)}GB），跳过`);\n            \n        }\n    }\n    \n    return false;\n}"
+      }
+    },
+    {
+      "id": "rss:>1G",
+      "kind": "rss",
+      "alias": ">1G",
+      "hint": "size bigger 1*1024*1024*1024",
+      "tags": [
+        "体积",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "size",
+            "compareType": "bigger",
+            "value": "1*1024*1024*1024"
+          }
+        ],
+        "alias": ">1G",
+        "type": "normal",
+        "code": "(torrent) => {\n  return false;\n}"
+      }
+    },
+    {
+      "id": "rss:>30G",
+      "kind": "rss",
+      "alias": ">30G",
+      "hint": "size bigger 30*1024*1024*1024",
+      "tags": [
+        "体积",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "size",
+            "compareType": "bigger",
+            "value": "30*1024*1024*1024"
+          }
+        ],
+        "alias": ">30G",
+        "type": "normal",
+        "code": "(torrent) => {\n  return false;\n}"
+      }
+    },
+    {
+      "id": "rss:种子小于5g",
+      "kind": "rss",
+      "alias": "种子小于5g",
+      "hint": "size smaller 1024*1024*1024*5",
+      "tags": [
+        "体积",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "size",
+            "compareType": "smaller",
+            "value": "1024*1024*1024*5"
+          }
+        ],
+        "alias": "种子小于5g",
+        "type": "normal",
+        "code": "(torrent) => {\n  return false;\n}"
+      }
+    },
+    {
+      "id": "rss:Ubits-排除HR",
+      "kind": "rss",
+      "alias": "Ubits-排除HR",
+      "hint": "name contain UBits",
+      "tags": [
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "name",
+            "compareType": "contain",
+            "value": "UBits"
+          }
+        ],
+        "alias": "Ubits-排除HR",
+        "type": "normal",
+        "code": "(torrent) => {\n  return false;\n}"
+      }
+    },
+    {
+      "id": "rss:>50G",
+      "kind": "rss",
+      "alias": ">50G",
+      "hint": "size bigger 50*1024*1024*1024",
+      "tags": [
+        "体积",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "size",
+            "compareType": "bigger",
+            "value": "50*1024*1024*1024"
+          }
+        ],
+        "alias": ">50G",
+        "type": "normal",
+        "code": "(torrent) => {\n  return false;\n}"
+      }
+    },
+    {
+      "id": "rss:猫站-拒绝老种子",
+      "kind": "rss",
+      "alias": "猫站-拒绝老种子",
+      "hint": "  ",
+      "tags": [
+        "JS",
+        "进阶"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "",
+            "compareType": "",
+            "value": ""
+          }
+        ],
+        "alias": "猫站-拒绝老种子",
+        "type": "javascript",
+        "code": "(torrent) => {\nconst { id } = torrent;\nconst minId = 0; // 填当前站老种分界 id，0 表示不按 id 拒绝\n    if (minId && id < minId) {\nreturn true;\n}\nreturn false;\n};"
+      }
+    },
+    {
+      "id": "rss:>40G",
+      "kind": "rss",
+      "alias": ">40G",
+      "hint": "size bigger 40*1024*1024*1024",
+      "tags": [
+        "体积",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "size",
+            "compareType": "bigger",
+            "value": "40*1024*1024*1024"
+          }
+        ],
+        "alias": ">40G",
+        "type": "normal",
+        "code": "(torrent) => {\n  return false;\n}"
+      }
+    },
+    {
+      "id": "rss:红叶拒绝官种",
+      "kind": "rss",
+      "alias": "红叶拒绝官种",
+      "hint": "name contain -RL",
+      "tags": [
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "name",
+            "compareType": "contain",
+            "value": "-RL"
+          }
+        ],
+        "alias": "红叶拒绝官种",
+        "type": "normal",
+        "code": "(torrent) => {\n  return false;\n}"
+      }
+    },
+    {
+      "id": "select:>10G",
+      "kind": "select",
+      "alias": ">10G",
+      "hint": "size bigger 10*1024*1024*1024",
+      "tags": [
+        "体积",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "size",
+            "compareType": "bigger",
+            "value": "10*1024*1024*1024"
+          }
+        ],
+        "alias": ">10G",
+        "type": "normal",
+        "priority": "0",
+        "sortBy": "time",
+        "sortType": "desc"
+      }
+    },
+    {
+      "id": "select:>1G",
+      "kind": "select",
+      "alias": ">1G",
+      "hint": "size bigger 1*1024*1024*1024",
+      "tags": [
+        "体积",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "size",
+            "compareType": "bigger",
+            "value": "1*1024*1024*1024"
+          }
+        ],
+        "alias": ">1G",
+        "type": "normal",
+        "priority": "0",
+        "sortBy": "time",
+        "sortType": "desc"
+      }
+    },
+    {
+      "id": "select:猪猪专用-排除HR",
+      "kind": "select",
+      "alias": "猪猪专用-排除HR",
+      "hint": "name contain 3D",
+      "tags": [
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "name",
+            "compareType": "contain",
+            "value": "3D"
+          }
+        ],
+        "alias": "猪猪专用-排除HR",
+        "type": "normal",
+        "priority": "0",
+        "sortBy": "time",
+        "sortType": "desc"
+      }
+    },
+    {
+      "id": "select:种子小于3g",
+      "kind": "select",
+      "alias": "种子小于3g",
+      "hint": "size smaller 1024*1024*1024*3",
+      "tags": [
+        "体积",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "size",
+            "compareType": "smaller",
+            "value": "1024*1024*1024*3"
+          }
+        ],
+        "alias": "种子小于3g",
+        "type": "normal",
+        "priority": "0",
+        "sortBy": "time",
+        "sortType": "desc"
+      }
+    },
+    {
+      "id": "select:>40G",
+      "kind": "select",
+      "alias": ">40G",
+      "hint": "size bigger 40*1024*1024*1024",
+      "tags": [
+        "体积",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "size",
+            "compareType": "bigger",
+            "value": "40*1024*1024*1024"
+          }
+        ],
+        "alias": ">40G",
+        "type": "normal",
+        "priority": "0",
+        "sortBy": "time",
+        "sortType": "desc"
+      }
+    },
+    {
+      "id": "select:>3G",
+      "kind": "select",
+      "alias": ">3G",
+      "hint": "size bigger 3*1024*1024*1024",
+      "tags": [
+        "体积",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "size",
+            "compareType": "bigger",
+            "value": "3*1024*1024*1024"
+          }
+        ],
+        "alias": ">3G",
+        "type": "normal",
+        "priority": "0",
+        "sortBy": "time",
+        "sortType": "desc"
+      }
+    },
+    {
+      "id": "select:>20G",
+      "kind": "select",
+      "alias": ">20G",
+      "hint": "size bigger 20*1024*1024*1024",
+      "tags": [
+        "体积",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "size",
+            "compareType": "bigger",
+            "value": "20*1024*1024*1024"
+          }
+        ],
+        "alias": ">20G",
+        "type": "normal",
+        "priority": "0",
+        "sortBy": "time",
+        "sortType": "desc"
+      }
+    },
+    {
+      "id": "select:>60G",
+      "kind": "select",
+      "alias": ">60G",
+      "hint": "size bigger 60*1024*1024*1024",
+      "tags": [
+        "体积",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "size",
+            "compareType": "bigger",
+            "value": "60*1024*1024*1024"
+          }
+        ],
+        "alias": ">60G",
+        "type": "normal",
+        "priority": "0",
+        "sortBy": "time",
+        "sortType": "desc"
+      }
+    },
+    {
+      "id": "select:Ubits-排除HR",
+      "kind": "select",
+      "alias": "Ubits-排除HR",
+      "hint": "name contain UBits",
+      "tags": [
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "name",
+            "compareType": "contain",
+            "value": "UBits"
+          }
+        ],
+        "alias": "Ubits-排除HR",
+        "type": "normal",
+        "priority": "0",
+        "sortBy": "time",
+        "sortType": "desc"
+      }
+    },
+    {
+      "id": "select:>2G",
+      "kind": "select",
+      "alias": ">2G",
+      "hint": "size bigger 2*1024*1024*1024",
+      "tags": [
+        "体积",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "size",
+            "compareType": "bigger",
+            "value": "2*1024*1024*1024"
+          }
+        ],
+        "alias": ">2G",
+        "type": "normal",
+        "priority": "0",
+        "sortBy": "time",
+        "sortType": "desc"
+      }
+    },
+    {
+      "id": "select:>30G",
+      "kind": "select",
+      "alias": ">30G",
+      "hint": "size bigger 30*1024*1024*1024",
+      "tags": [
+        "体积",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "size",
+            "compareType": "bigger",
+            "value": "30*1024*1024*1024"
+          }
+        ],
+        "alias": ">30G",
+        "type": "normal",
+        "priority": "0",
+        "sortBy": "time",
+        "sortType": "desc"
+      }
+    },
+    {
+      "id": "select:种子大于150g",
+      "kind": "select",
+      "alias": "种子大于150g",
+      "hint": "size bigger 1024*1024*1024*150",
+      "tags": [
+        "体积",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "size",
+            "compareType": "bigger",
+            "value": "1024*1024*1024*150"
+          }
+        ],
+        "alias": "种子大于150g",
+        "type": "normal",
+        "priority": "0",
+        "sortBy": "time",
+        "sortType": "desc"
+      }
+    },
+    {
+      "id": "select:>4G",
+      "kind": "select",
+      "alias": ">4G",
+      "hint": "size bigger 4*1024*1024*1024",
+      "tags": [
+        "体积",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "size",
+            "compareType": "bigger",
+            "value": "4*1024*1024*1024"
+          }
+        ],
+        "alias": ">4G",
+        "type": "normal",
+        "priority": "0",
+        "sortBy": "time",
+        "sortType": "desc"
+      }
+    },
+    {
+      "id": "select:TTG",
+      "kind": "select",
+      "alias": "TTG",
+      "hint": "name contain TTG,WiKi,NGB,SweetDreamDay,cfandora,ARiN,doraemon,zyn1998,Dave,951,NTSC,PERFECT FLAC",
+      "tags": [
+        "体积",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "name",
+            "compareType": "contain",
+            "value": "TTG,WiKi,NGB,SweetDreamDay,cfandora,ARiN,doraemon,zyn1998,Dave,951,NTSC,PERFECT FLAC"
+          }
+        ],
+        "alias": "TTG",
+        "type": "normal",
+        "priority": "0",
+        "sortBy": "time",
+        "sortType": "desc"
+      }
+    },
+    {
+      "id": "select:种子小于5g",
+      "kind": "select",
+      "alias": "种子小于5g",
+      "hint": "size smaller 1024*1024*1024*5",
+      "tags": [
+        "体积",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "size",
+            "compareType": "smaller",
+            "value": "1024*1024*1024*5"
+          }
+        ],
+        "alias": "种子小于5g",
+        "type": "normal",
+        "priority": "0",
+        "sortBy": "time",
+        "sortType": "desc"
+      }
+    },
+    {
+      "id": "select:>14G",
+      "kind": "select",
+      "alias": ">14G",
+      "hint": "size bigger 1024*1024*1024*14",
+      "tags": [
+        "体积",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "size",
+            "compareType": "bigger",
+            "value": "1024*1024*1024*14"
+          }
+        ],
+        "alias": ">14G",
+        "type": "normal",
+        "priority": "0",
+        "sortBy": "time",
+        "sortType": "desc"
+      }
+    },
+    {
+      "id": "select:红叶拒绝官种",
+      "kind": "select",
+      "alias": "红叶拒绝官种",
+      "hint": "name contain -RL",
+      "tags": [
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "name",
+            "compareType": "contain",
+            "value": "-RL"
+          }
+        ],
+        "alias": "红叶拒绝官种",
+        "type": "normal",
+        "priority": "0",
+        "sortBy": "time",
+        "sortType": "desc"
+      }
+    },
+    {
+      "id": "select:>50G",
+      "kind": "select",
+      "alias": ">50G",
+      "hint": "size bigger 50*1024*1024*1024",
+      "tags": [
+        "体积",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "size",
+            "compareType": "bigger",
+            "value": "50*1024*1024*1024"
+          }
+        ],
+        "alias": ">50G",
+        "type": "normal",
+        "priority": "0",
+        "sortBy": "time",
+        "sortType": "desc"
+      }
+    },
+    {
+      "id": "select:种子小于10g",
+      "kind": "select",
+      "alias": "种子小于10g",
+      "hint": "size smaller 1024*1024*1024*10",
+      "tags": [
+        "体积",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "size",
+            "compareType": "smaller",
+            "value": "1024*1024*1024*10"
+          }
+        ],
+        "alias": "种子小于10g",
+        "type": "normal",
+        "priority": "0",
+        "sortBy": "time",
+        "sortType": "desc"
+      }
+    },
+    {
+      "id": "select:种子3-40g",
+      "kind": "select",
+      "alias": "种子3-40g",
+      "hint": "size bigger 1024*1024*1024*3 | size smaller 1024*1024*1024*40",
+      "tags": [
+        "体积",
+        "通用"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "conditions": [
+          {
+            "key": "size",
+            "compareType": "bigger",
+            "value": "1024*1024*1024*3"
+          },
+          {
+            "key": "size",
+            "compareType": "smaller",
+            "value": "1024*1024*1024*40"
+          }
+        ],
+        "alias": "种子3-40g",
+        "type": "normal",
+        "priority": "0",
+        "sortBy": "time",
+        "sortType": "desc"
+      }
+    },
+    {
+      "id": "task:32.leaves红叶",
+      "kind": "task",
+      "alias": "32.leaves红叶",
+      "hint": "启用时再填 RSS 地址和 Cookie，下载器后绑",
+      "tags": [
+        "站点"
+      ],
+      "ruleIds": [
+        "rss:红叶拒绝官种"
+      ],
+      "payload": {
+        "alias": "32.leaves红叶",
+        "category": "RL",
+        "scrapeFree": false,
+        "scrapeHr": false,
+        "cron": "* * * * *",
+        "addCountPerHour": "600",
+        "downloadLimit": "200",
+        "downloadLimitUnit": "MiB",
+        "uploadLimit": "0",
+        "uploadLimitUnit": "MiB",
+        "skipSameTorrent": false,
+        "paused": null,
+        "pushNotify": false,
+        "pushTorrentFile": false,
+        "autoReseed": false,
+        "onlyReseed": false,
+        "maxSleepTime": 600,
+        "enable": false,
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
+        "cookie": "",
+        "clientArr": [],
+        "reseedClients": [],
+        "sameServerClients": [],
+        "acceptRules": [],
+        "rejectRules": [],
+        "_acceptPreset": [],
+        "_rejectPreset": [
+          "rss:红叶拒绝官种"
+        ],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
+      }
+    },
+    {
+      "id": "task:55.不限速自定义",
+      "kind": "task",
+      "alias": "55.不限速 自定义",
+      "hint": "启用时再填 RSS 地址和 Cookie，下载器后绑",
+      "tags": [
+        "站点"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "alias": "55.不限速 自定义",
+        "category": "",
+        "scrapeFree": false,
+        "scrapeHr": false,
+        "cron": "* * * * *",
+        "addCountPerHour": "600",
+        "downloadLimit": "0",
+        "downloadLimitUnit": "MiB",
+        "uploadLimit": "0",
+        "uploadLimitUnit": "MiB",
+        "skipSameTorrent": false,
+        "paused": null,
+        "pushNotify": false,
+        "pushTorrentFile": false,
+        "autoReseed": false,
+        "onlyReseed": false,
+        "maxSleepTime": 600,
+        "enable": false,
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
+        "cookie": "",
+        "clientArr": [],
+        "reseedClients": [],
+        "sameServerClients": [],
+        "acceptRules": [],
+        "rejectRules": [],
+        "_acceptPreset": [],
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
+      }
+    },
+    {
+      "id": "task:20.discfan碟粉",
+      "kind": "task",
+      "alias": "20.discfan碟粉",
+      "hint": "启用时再填 RSS 地址和 Cookie，下载器后绑",
+      "tags": [
+        "站点"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "alias": "20.discfan碟粉",
+        "category": "DF",
+        "scrapeFree": true,
+        "scrapeHr": false,
+        "cron": "* * * * *",
+        "addCountPerHour": "600",
+        "downloadLimit": "0",
+        "downloadLimitUnit": null,
+        "uploadLimit": "95",
+        "uploadLimitUnit": "MiB",
+        "skipSameTorrent": false,
+        "paused": null,
+        "pushNotify": false,
+        "pushTorrentFile": false,
+        "autoReseed": false,
+        "onlyReseed": false,
+        "maxSleepTime": 600,
+        "enable": false,
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
+        "cookie": "",
+        "clientArr": [],
+        "reseedClients": [],
+        "sameServerClients": [],
+        "acceptRules": [],
+        "rejectRules": [],
+        "_acceptPreset": [],
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
+      }
+    },
+    {
+      "id": "task:02.hdsky天空-需vip",
+      "kind": "task",
+      "alias": "02.hdsky天空|需vip",
+      "hint": "需vip",
+      "tags": [
+        "站点"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "alias": "02.hdsky天空|需vip",
+        "category": "SKY",
+        "scrapeFree": false,
+        "scrapeHr": false,
+        "cron": "* * * * *",
+        "addCountPerHour": "600",
+        "downloadLimit": "0",
+        "downloadLimitUnit": null,
+        "uploadLimit": "0",
+        "uploadLimitUnit": "MiB",
+        "skipSameTorrent": false,
+        "paused": true,
+        "pushNotify": false,
+        "pushTorrentFile": false,
+        "autoReseed": false,
+        "onlyReseed": false,
+        "maxSleepTime": "600",
+        "enable": false,
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
+        "cookie": "",
+        "clientArr": [],
+        "reseedClients": [],
+        "sameServerClients": [],
+        "acceptRules": [],
+        "rejectRules": [],
+        "_acceptPreset": [],
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
+      }
+    },
+    {
+      "id": "task:31.qingwapt青蛙",
+      "kind": "task",
+      "alias": "31.qingwapt青蛙",
+      "hint": "启用时再填 RSS 地址和 Cookie，下载器后绑",
+      "tags": [
+        "站点"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "alias": "31.qingwapt青蛙",
+        "category": "青蛙",
+        "scrapeFree": false,
+        "scrapeHr": false,
+        "cron": "* * * * *",
+        "addCountPerHour": "600",
+        "downloadLimit": "0",
+        "downloadLimitUnit": null,
+        "uploadLimit": "95",
+        "uploadLimitUnit": "MiB",
+        "skipSameTorrent": false,
+        "paused": false,
+        "pushNotify": false,
+        "pushTorrentFile": true,
+        "autoReseed": false,
+        "onlyReseed": false,
+        "maxSleepTime": "600",
+        "enable": false,
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
+        "cookie": "",
+        "clientArr": [],
+        "reseedClients": [],
+        "sameServerClients": [],
+        "acceptRules": [],
+        "rejectRules": [],
+        "_acceptPreset": [],
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
+      }
+    },
+    {
+      "id": "task:05.hhanclub憨憨-需vip",
+      "kind": "task",
+      "alias": "05.hhanclub憨憨|需vip",
+      "hint": "需vip",
+      "tags": [
+        "站点"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "alias": "05.hhanclub憨憨|需vip",
+        "category": "HH",
+        "scrapeFree": false,
+        "scrapeHr": false,
+        "cron": "*/2 * * * * ",
+        "addCountPerHour": "600",
+        "downloadLimit": "100",
+        "downloadLimitUnit": "MiB",
+        "uploadLimit": "70",
+        "uploadLimitUnit": "MiB",
+        "skipSameTorrent": false,
+        "paused": null,
+        "pushNotify": false,
+        "pushTorrentFile": false,
+        "autoReseed": false,
+        "onlyReseed": false,
+        "maxSleepTime": 600,
+        "enable": false,
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
+        "cookie": "",
+        "clientArr": [],
+        "reseedClients": [],
+        "sameServerClients": [],
+        "acceptRules": [],
+        "rejectRules": [],
+        "_acceptPreset": [],
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
+      }
+    },
+    {
+      "id": "task:23.hddolby杜比-需vip",
+      "kind": "task",
+      "alias": "23.hddolby杜比|需vip",
+      "hint": "需vip",
+      "tags": [
+        "站点"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "alias": "23.hddolby杜比|需vip",
+        "category": "DB",
+        "scrapeFree": false,
+        "scrapeHr": false,
+        "cron": "* * * * *",
+        "addCountPerHour": "600",
+        "downloadLimit": "0",
+        "downloadLimitUnit": "MiB",
+        "uploadLimit": "90",
+        "uploadLimitUnit": "MiB",
+        "skipSameTorrent": false,
+        "paused": null,
+        "pushNotify": false,
+        "pushTorrentFile": false,
+        "autoReseed": false,
+        "onlyReseed": false,
+        "maxSleepTime": "600",
+        "enable": false,
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
+        "cookie": "",
+        "clientArr": [],
+        "reseedClients": [],
+        "sameServerClients": [],
+        "acceptRules": [],
+        "rejectRules": [],
+        "_acceptPreset": [],
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
+      }
+    },
+    {
+      "id": "task:06.hdhome家园-需vip",
+      "kind": "task",
+      "alias": "06.hdhome家园|需vip",
+      "hint": "需vip",
+      "tags": [
+        "站点"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "alias": "06.hdhome家园|需vip",
+        "category": "HDH",
+        "scrapeFree": false,
+        "scrapeHr": false,
+        "cron": "* * * * *",
+        "addCountPerHour": "600",
+        "downloadLimit": "0",
+        "downloadLimitUnit": null,
+        "uploadLimit": "0",
+        "uploadLimitUnit": null,
+        "skipSameTorrent": false,
+        "paused": null,
+        "pushNotify": false,
+        "pushTorrentFile": false,
+        "autoReseed": false,
+        "onlyReseed": false,
+        "maxSleepTime": "600",
+        "enable": false,
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
+        "cookie": "",
+        "clientArr": [],
+        "reseedClients": [],
+        "sameServerClients": [],
+        "acceptRules": [],
+        "rejectRules": [],
+        "_acceptPreset": [],
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
+      }
+    },
+    {
+      "id": "task:44.hdvideo-HDV",
+      "kind": "task",
+      "alias": "44.hdvideo|HDV",
+      "hint": "HDV",
+      "tags": [
+        "站点"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "alias": "44.hdvideo|HDV",
+        "category": "HDV",
+        "scrapeFree": false,
+        "scrapeHr": false,
+        "cron": "* * * * *",
+        "addCountPerHour": "600",
+        "downloadLimit": "0",
+        "downloadLimitUnit": null,
+        "uploadLimit": "80",
+        "uploadLimitUnit": "MiB",
+        "skipSameTorrent": false,
+        "paused": null,
+        "pushNotify": false,
+        "pushTorrentFile": false,
+        "autoReseed": false,
+        "onlyReseed": false,
+        "maxSleepTime": 600,
+        "enable": false,
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
+        "cookie": "",
+        "clientArr": [],
+        "reseedClients": [],
+        "sameServerClients": [],
+        "acceptRules": [],
+        "rejectRules": [],
+        "_acceptPreset": [],
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
+      }
+    },
+    {
+      "id": "task:01.m-team馒头-需vip",
+      "kind": "task",
+      "alias": "01.m-team馒头|需vip",
+      "hint": "需vip",
+      "tags": [
+        "站点"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "alias": "01.m-team馒头|需vip",
+        "category": "MTV",
+        "scrapeFree": false,
+        "scrapeHr": false,
+        "cron": "*/4 * * * *",
+        "addCountPerHour": "600",
+        "downloadLimit": "0",
+        "downloadLimitUnit": null,
+        "uploadLimit": "0",
+        "uploadLimitUnit": "MiB",
+        "skipSameTorrent": false,
+        "paused": null,
+        "pushNotify": false,
+        "pushTorrentFile": false,
+        "autoReseed": false,
+        "onlyReseed": false,
+        "maxSleepTime": "9999999999",
+        "enable": false,
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
+        "cookie": "",
+        "clientArr": [],
+        "reseedClients": [],
+        "sameServerClients": [],
+        "acceptRules": [],
+        "rejectRules": [],
+        "_acceptPreset": [],
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
+      }
+    },
+    {
+      "id": "task:36.agsv末日",
+      "kind": "task",
+      "alias": "36.agsv末日",
+      "hint": "启用时再填 RSS 地址和 Cookie，下载器后绑",
+      "tags": [
+        "站点"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "alias": "36.agsv末日",
+        "category": "AVG",
+        "scrapeFree": false,
+        "scrapeHr": false,
+        "cron": "*/5 * * * *",
+        "addCountPerHour": "600",
+        "downloadLimit": "0",
+        "downloadLimitUnit": null,
+        "uploadLimit": "70",
+        "uploadLimitUnit": "MiB",
+        "skipSameTorrent": false,
+        "paused": null,
+        "pushNotify": false,
+        "pushTorrentFile": true,
+        "autoReseed": false,
+        "onlyReseed": false,
+        "maxSleepTime": 600,
+        "enable": false,
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
+        "cookie": "",
+        "clientArr": [],
+        "reseedClients": [],
+        "sameServerClients": [],
+        "acceptRules": [],
+        "rejectRules": [],
+        "_acceptPreset": [],
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
+      }
+    },
+    {
+      "id": "task:11.pterclub猫",
+      "kind": "task",
+      "alias": "11.pterclub猫",
+      "hint": "启用时再填 RSS 地址和 Cookie，下载器后绑",
+      "tags": [
+        "站点"
+      ],
+      "ruleIds": [
+        "rss:>1G",
+        "rss:>60G",
+        "rss:猫站-拒绝老种子"
+      ],
+      "payload": {
+        "alias": "11.pterclub猫",
+        "category": "CAT",
+        "scrapeFree": false,
+        "scrapeHr": false,
+        "cron": "*/2 * * * *",
+        "addCountPerHour": "400",
+        "downloadLimit": "0",
+        "downloadLimitUnit": null,
+        "uploadLimit": "0",
+        "uploadLimitUnit": null,
+        "skipSameTorrent": false,
+        "paused": null,
+        "pushNotify": false,
+        "pushTorrentFile": true,
+        "autoReseed": false,
+        "onlyReseed": false,
+        "maxSleepTime": "600",
+        "enable": false,
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
+        "cookie": "",
+        "clientArr": [],
+        "reseedClients": [],
+        "sameServerClients": [],
+        "acceptRules": [],
+        "rejectRules": [],
+        "_acceptPreset": [
+          "rss:>1G"
+        ],
+        "_rejectPreset": [
+          "rss:>60G",
+          "rss:猫站-拒绝老种子"
+        ],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
+      }
+    },
+    {
+      "id": "task:04.lemonhd柠檬",
+      "kind": "task",
+      "alias": "04.lemonhd柠檬",
+      "hint": "启用时再填 RSS 地址和 Cookie，下载器后绑",
+      "tags": [
+        "站点"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "alias": "04.lemonhd柠檬",
+        "category": "NM",
+        "scrapeFree": false,
+        "scrapeHr": false,
+        "cron": "* * * * *",
+        "addCountPerHour": "600",
+        "downloadLimit": "0",
+        "downloadLimitUnit": "MiB",
+        "uploadLimit": "0",
+        "uploadLimitUnit": "MiB",
+        "skipSameTorrent": false,
+        "paused": null,
+        "pushNotify": false,
+        "pushTorrentFile": false,
+        "autoReseed": false,
+        "onlyReseed": false,
+        "maxSleepTime": "600",
+        "enable": false,
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
+        "cookie": "",
+        "clientArr": [],
+        "reseedClients": [],
+        "sameServerClients": [],
+        "acceptRules": [],
+        "rejectRules": [],
+        "_acceptPreset": [],
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
+      }
+    },
+    {
+      "id": "task:40.soulvoice聆音",
+      "kind": "task",
+      "alias": "40.soulvoice聆音",
+      "hint": "启用时再填 RSS 地址和 Cookie，下载器后绑",
+      "tags": [
+        "站点"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "alias": "40.soulvoice聆音",
+        "category": "SV",
+        "scrapeFree": false,
+        "scrapeHr": false,
+        "cron": "* * * * *",
+        "addCountPerHour": "300",
+        "downloadLimit": "0",
+        "downloadLimitUnit": null,
+        "uploadLimit": "15",
+        "uploadLimitUnit": "MiB",
+        "skipSameTorrent": false,
+        "paused": null,
+        "pushNotify": false,
+        "pushTorrentFile": false,
+        "autoReseed": false,
+        "onlyReseed": false,
+        "maxSleepTime": 600,
+        "enable": false,
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
+        "cookie": "",
+        "clientArr": [],
+        "reseedClients": [],
+        "sameServerClients": [],
+        "acceptRules": [],
+        "rejectRules": [],
+        "_acceptPreset": [],
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
+      }
+    },
+    {
+      "id": "task:19.tjupt北洋园",
+      "kind": "task",
+      "alias": "19.tjupt北洋园",
+      "hint": "启用时再填 RSS 地址和 Cookie，下载器后绑",
+      "tags": [
+        "进阶",
+        "站点"
+      ],
+      "ruleIds": [
+        "rss:北洋选种"
+      ],
+      "payload": {
+        "alias": "19.tjupt北洋园",
+        "category": "TJU",
+        "scrapeFree": false,
+        "scrapeHr": false,
+        "cron": "* * * * *",
+        "addCountPerHour": "600",
+        "downloadLimit": "32",
+        "downloadLimitUnit": "MiB",
+        "uploadLimit": "95",
+        "uploadLimitUnit": "MiB",
+        "skipSameTorrent": false,
+        "paused": null,
+        "pushNotify": false,
+        "pushTorrentFile": false,
+        "autoReseed": false,
+        "onlyReseed": false,
+        "maxSleepTime": "600",
+        "enable": false,
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
+        "cookie": "",
+        "clientArr": [],
+        "reseedClients": [],
+        "sameServerClients": [],
+        "acceptRules": [],
+        "rejectRules": [],
+        "_acceptPreset": [
+          "rss:北洋选种"
+        ],
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
+      }
+    },
+    {
+      "id": "task:12.panda熊猫",
+      "kind": "task",
+      "alias": "12.panda熊猫",
+      "hint": "启用时再填 RSS 地址和 Cookie，下载器后绑",
+      "tags": [
+        "站点"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "alias": "12.panda熊猫",
+        "category": "PD",
+        "scrapeFree": false,
+        "scrapeHr": false,
+        "cron": "* * * * *",
+        "addCountPerHour": "600",
+        "downloadLimit": "0",
+        "downloadLimitUnit": null,
+        "uploadLimit": "95",
+        "uploadLimitUnit": "MiB",
+        "skipSameTorrent": false,
+        "paused": null,
+        "pushNotify": false,
+        "pushTorrentFile": false,
+        "autoReseed": false,
+        "onlyReseed": false,
+        "maxSleepTime": "9999999999",
+        "enable": false,
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
+        "cookie": "",
+        "clientArr": [],
+        "reseedClients": [],
+        "sameServerClients": [],
+        "acceptRules": [],
+        "rejectRules": [],
+        "_acceptPreset": [],
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
+      }
+    },
+    {
+      "id": "task:05.hhanclub憨憨-保种区-需vip",
+      "kind": "task",
+      "alias": "05.hhanclub憨憨-保种区|需vip",
+      "hint": "需vip",
+      "tags": [
+        "站点"
+      ],
+      "ruleIds": [
+        "rss:>3G"
+      ],
+      "payload": {
+        "alias": "05.hhanclub憨憨-保种区|需vip",
+        "category": "HH",
+        "scrapeFree": false,
+        "scrapeHr": false,
+        "cron": "*/2 * * * * ",
+        "addCountPerHour": "600",
+        "downloadLimit": "100",
+        "downloadLimitUnit": "MiB",
+        "uploadLimit": "70",
+        "uploadLimitUnit": "MiB",
+        "skipSameTorrent": false,
+        "paused": null,
+        "pushNotify": false,
+        "pushTorrentFile": false,
+        "autoReseed": false,
+        "onlyReseed": false,
+        "maxSleepTime": 600,
+        "enable": false,
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
+        "cookie": "",
+        "clientArr": [],
+        "reseedClients": [],
+        "sameServerClients": [],
+        "acceptRules": [],
+        "rejectRules": [],
+        "_acceptPreset": [
+          "rss:>3G"
+        ],
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
+      }
+    },
+    {
+      "id": "task:13.pthome铂金家",
+      "kind": "task",
+      "alias": "13.pthome铂金家",
+      "hint": "启用时再填 RSS 地址和 Cookie，下载器后绑",
+      "tags": [
+        "站点"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "alias": "13.pthome铂金家",
+        "category": "KEEP",
+        "scrapeFree": false,
+        "scrapeHr": false,
+        "cron": "* * * * *",
+        "addCountPerHour": "600",
+        "downloadLimit": "0",
+        "downloadLimitUnit": null,
+        "uploadLimit": "80",
+        "uploadLimitUnit": "MiB",
+        "skipSameTorrent": false,
+        "paused": true,
+        "pushNotify": false,
+        "pushTorrentFile": false,
+        "autoReseed": false,
+        "onlyReseed": false,
+        "maxSleepTime": "600",
+        "enable": false,
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
+        "cookie": "",
+        "clientArr": [],
+        "reseedClients": [],
+        "sameServerClients": [],
+        "acceptRules": [],
+        "rejectRules": [],
+        "_acceptPreset": [],
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
+      }
+    },
+    {
+      "id": "task:30.btschool学校",
+      "kind": "task",
+      "alias": "30.btschool学校",
+      "hint": "启用时再填 RSS 地址和 Cookie，下载器后绑",
+      "tags": [
+        "站点"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "alias": "30.btschool学校",
+        "category": "KEEP",
+        "scrapeFree": false,
+        "scrapeHr": false,
+        "cron": "* * * * *",
+        "addCountPerHour": "600",
+        "downloadLimit": "0",
+        "downloadLimitUnit": null,
+        "uploadLimit": "22",
+        "uploadLimitUnit": "MiB",
+        "skipSameTorrent": false,
+        "paused": true,
+        "pushNotify": false,
+        "pushTorrentFile": false,
+        "autoReseed": false,
+        "onlyReseed": false,
+        "maxSleepTime": "600",
+        "enable": false,
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
+        "cookie": "",
+        "clientArr": [],
+        "reseedClients": [],
+        "sameServerClients": [],
+        "acceptRules": [],
+        "rejectRules": [],
+        "_acceptPreset": [],
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
+      }
+    },
+    {
+      "id": "task:35.pttime-PTT",
+      "kind": "task",
+      "alias": "35.pttime|PTT",
+      "hint": "PTT",
+      "tags": [
+        "站点"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "alias": "35.pttime|PTT",
+        "category": "PTT",
+        "scrapeFree": false,
+        "scrapeHr": false,
+        "cron": "*/6 * * * *",
+        "addCountPerHour": "600",
+        "downloadLimit": "0",
+        "downloadLimitUnit": null,
+        "uploadLimit": "95",
+        "uploadLimitUnit": "MiB",
+        "skipSameTorrent": false,
+        "paused": null,
+        "pushNotify": false,
+        "pushTorrentFile": false,
+        "autoReseed": false,
+        "onlyReseed": false,
+        "maxSleepTime": "9999999999",
+        "enable": false,
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
+        "cookie": "",
+        "clientArr": [],
+        "reseedClients": [],
+        "sameServerClients": [],
+        "acceptRules": [],
+        "rejectRules": [],
+        "_acceptPreset": [],
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
+      }
+    },
+    {
+      "id": "task:25.u2dmhyU2",
+      "kind": "task",
+      "alias": "25.u2dmhyU2",
+      "hint": "启用时再填 RSS 地址和 Cookie，下载器后绑",
+      "tags": [
+        "站点"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "alias": "25.u2dmhyU2",
+        "category": "U2",
+        "scrapeFree": false,
+        "scrapeHr": false,
+        "cron": "* * * * *",
+        "addCountPerHour": "600",
+        "downloadLimit": "0",
+        "downloadLimitUnit": null,
+        "uploadLimit": "50",
+        "uploadLimitUnit": "MiB",
+        "skipSameTorrent": false,
+        "paused": null,
+        "pushNotify": false,
+        "pushTorrentFile": false,
+        "autoReseed": false,
+        "onlyReseed": false,
+        "maxSleepTime": "600",
+        "enable": false,
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
+        "cookie": "",
+        "clientArr": [],
+        "reseedClients": [],
+        "sameServerClients": [],
+        "acceptRules": [],
+        "rejectRules": [],
+        "_acceptPreset": [],
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
+      }
+    },
+    {
+      "id": "task:07.ourbits我堡-需vip",
+      "kind": "task",
+      "alias": "07.ourbits我堡|需vip",
+      "hint": "需vip",
+      "tags": [
+        "站点"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "alias": "07.ourbits我堡|需vip",
+        "category": "OB",
+        "scrapeFree": false,
+        "scrapeHr": false,
+        "cron": "* * * * *",
+        "addCountPerHour": "20",
+        "downloadLimit": "0",
+        "downloadLimitUnit": null,
+        "uploadLimit": "0",
+        "uploadLimitUnit": "MiB",
+        "skipSameTorrent": false,
+        "paused": null,
+        "pushNotify": false,
+        "pushTorrentFile": false,
+        "autoReseed": false,
+        "onlyReseed": false,
+        "maxSleepTime": "600",
+        "enable": false,
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
+        "cookie": "",
+        "clientArr": [],
+        "reseedClients": [],
+        "sameServerClients": [],
+        "acceptRules": [],
+        "rejectRules": [],
+        "_acceptPreset": [],
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
+      }
+    },
+    {
+      "id": "task:17.totheglory套-需v",
+      "kind": "task",
+      "alias": "17.totheglory套|需v",
+      "hint": "需v",
+      "tags": [
+        "站点"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "alias": "17.totheglory套|需v",
+        "category": "HAR",
+        "scrapeFree": false,
+        "scrapeHr": false,
+        "cron": "* * * * *",
+        "addCountPerHour": "600",
+        "downloadLimit": "0",
+        "downloadLimitUnit": "MiB",
+        "uploadLimit": "95",
+        "uploadLimitUnit": "MiB",
+        "skipSameTorrent": false,
+        "paused": null,
+        "pushNotify": false,
+        "pushTorrentFile": false,
+        "autoReseed": false,
+        "onlyReseed": false,
+        "maxSleepTime": "600",
+        "enable": false,
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
+        "cookie": "",
+        "clientArr": [],
+        "reseedClients": [],
+        "sameServerClients": [],
+        "acceptRules": [],
+        "rejectRules": [],
+        "_acceptPreset": [],
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
+      }
+    },
+    {
+      "id": "task:00.自动刷流",
+      "kind": "task",
+      "alias": "00.自动刷流",
+      "hint": "启用时再填 RSS 地址和 Cookie，下载器后绑",
+      "tags": [
+        "站点"
+      ],
+      "ruleIds": [
+        "rss:>3G"
+      ],
+      "payload": {
+        "alias": "00.自动刷流",
+        "category": "KEEP",
+        "scrapeFree": false,
+        "scrapeHr": false,
+        "cron": "* * * * *",
+        "addCountPerHour": "",
+        "downloadLimit": "0",
+        "downloadLimitUnit": null,
+        "uploadLimit": "95",
+        "uploadLimitUnit": "MiB",
+        "skipSameTorrent": false,
+        "paused": true,
+        "pushNotify": false,
+        "pushTorrentFile": false,
+        "autoReseed": false,
+        "onlyReseed": false,
+        "maxSleepTime": 600,
+        "enable": false,
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
+        "cookie": "",
+        "clientArr": [],
+        "reseedClients": [],
+        "sameServerClients": [],
+        "acceptRules": [],
+        "rejectRules": [],
+        "_acceptPreset": [
+          "rss:>3G"
+        ],
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
+      }
+    },
+    {
+      "id": "task:26.nicept老师",
+      "kind": "task",
+      "alias": "26.nicept老师",
+      "hint": "启用时再填 RSS 地址和 Cookie，下载器后绑",
+      "tags": [
+        "站点"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "alias": "26.nicept老师",
+        "category": "ls",
+        "scrapeFree": false,
+        "scrapeHr": false,
+        "cron": "* * * * *",
+        "addCountPerHour": "600",
+        "downloadLimit": "0",
+        "downloadLimitUnit": null,
+        "uploadLimit": "12",
+        "uploadLimitUnit": "MiB",
+        "skipSameTorrent": false,
+        "paused": null,
+        "pushNotify": false,
+        "pushTorrentFile": false,
+        "autoReseed": false,
+        "onlyReseed": false,
+        "maxSleepTime": "600",
+        "enable": false,
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
+        "cookie": "",
+        "clientArr": [],
+        "reseedClients": [],
+        "sameServerClients": [],
+        "acceptRules": [],
+        "rejectRules": [],
+        "_acceptPreset": [],
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
+      }
+    },
+    {
+      "id": "task:27.et8-TCCF",
+      "kind": "task",
+      "alias": "27.et8|TCCF",
+      "hint": "TCCF",
+      "tags": [
+        "站点"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "alias": "27.et8|TCCF",
+        "category": "TCCF",
+        "scrapeFree": false,
+        "scrapeHr": false,
+        "cron": "* * * * *",
+        "addCountPerHour": "600",
+        "downloadLimit": "0",
+        "downloadLimitUnit": null,
+        "uploadLimit": "95",
+        "uploadLimitUnit": "MiB",
+        "skipSameTorrent": false,
+        "paused": null,
+        "pushNotify": false,
+        "pushTorrentFile": false,
+        "autoReseed": false,
+        "onlyReseed": false,
+        "maxSleepTime": "600",
+        "enable": false,
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
+        "cookie": "",
+        "clientArr": [],
+        "reseedClients": [],
+        "sameServerClients": [],
+        "acceptRules": [],
+        "rejectRules": [],
+        "_acceptPreset": [],
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
+      }
+    },
+    {
+      "id": "task:42.dajiao打胶",
+      "kind": "task",
+      "alias": "42.dajiao打胶",
+      "hint": "启用时再填 RSS 地址和 Cookie，下载器后绑",
+      "tags": [
+        "站点"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "alias": "42.dajiao打胶",
+        "category": "DJ",
+        "scrapeFree": false,
+        "scrapeHr": false,
+        "cron": "* * * * *",
+        "addCountPerHour": "600",
+        "downloadLimit": "0",
+        "downloadLimitUnit": "MiB",
+        "uploadLimit": "95",
+        "uploadLimitUnit": "MiB",
+        "skipSameTorrent": false,
+        "paused": null,
+        "pushNotify": false,
+        "pushTorrentFile": false,
+        "autoReseed": false,
+        "onlyReseed": false,
+        "maxSleepTime": "600",
+        "enable": false,
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
+        "cookie": "",
+        "clientArr": [],
+        "reseedClients": [],
+        "sameServerClients": [],
+        "acceptRules": [],
+        "rejectRules": [],
+        "_acceptPreset": [],
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
+      }
+    },
+    {
+      "id": "task:39.nextpt",
+      "kind": "task",
+      "alias": "39.nextpt",
+      "hint": "启用时再填 RSS 地址和 Cookie，下载器后绑",
+      "tags": [
+        "站点"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "alias": "39.nextpt",
+        "category": "",
+        "scrapeFree": false,
+        "scrapeHr": false,
+        "cron": "* * * * *",
+        "addCountPerHour": "600",
+        "downloadLimit": "0",
+        "downloadLimitUnit": "MiB",
+        "uploadLimit": "95",
+        "uploadLimitUnit": "MiB",
+        "skipSameTorrent": false,
+        "paused": null,
+        "pushNotify": false,
+        "pushTorrentFile": false,
+        "autoReseed": false,
+        "onlyReseed": false,
+        "maxSleepTime": "600",
+        "enable": false,
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
+        "cookie": "",
+        "clientArr": [],
+        "reseedClients": [],
+        "sameServerClients": [],
+        "acceptRules": [],
+        "rejectRules": [],
+        "_acceptPreset": [],
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
+      }
+    },
+    {
+      "id": "task:16.rousipt肉丝-需vip",
+      "kind": "task",
+      "alias": "16.rousipt肉丝|需vip",
+      "hint": "需vip",
+      "tags": [
+        "站点"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "alias": "16.rousipt肉丝|需vip",
+        "category": "RS",
+        "scrapeFree": false,
+        "scrapeHr": false,
+        "cron": "* * * * *",
+        "addCountPerHour": "100",
+        "downloadLimit": "0",
+        "downloadLimitUnit": "MiB",
+        "uploadLimit": "45",
+        "uploadLimitUnit": "MiB",
+        "skipSameTorrent": false,
+        "paused": null,
+        "pushNotify": false,
+        "pushTorrentFile": false,
+        "autoReseed": false,
+        "onlyReseed": false,
+        "maxSleepTime": 600,
+        "enable": false,
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
+        "cookie": "",
+        "clientArr": [],
+        "reseedClients": [],
+        "sameServerClients": [],
+        "acceptRules": [],
+        "rejectRules": [],
+        "_acceptPreset": [],
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
+      }
+    },
+    {
+      "id": "task:38.azusa梓喵",
+      "kind": "task",
+      "alias": "38.azusa梓喵",
+      "hint": "启用时再填 RSS 地址和 Cookie，下载器后绑",
+      "tags": [
+        "站点"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "alias": "38.azusa梓喵",
+        "category": "ZM",
+        "scrapeFree": false,
+        "scrapeHr": false,
+        "cron": "* * * * *",
+        "addCountPerHour": "600",
+        "downloadLimit": "0",
+        "downloadLimitUnit": null,
+        "uploadLimit": "95",
+        "uploadLimitUnit": "MiB",
+        "skipSameTorrent": false,
+        "paused": null,
+        "pushNotify": false,
+        "pushTorrentFile": false,
+        "autoReseed": false,
+        "onlyReseed": false,
+        "maxSleepTime": "600",
+        "enable": false,
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
+        "cookie": "",
+        "clientArr": [],
+        "reseedClients": [],
+        "sameServerClients": [],
+        "acceptRules": [],
+        "rejectRules": [],
+        "_acceptPreset": [],
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
+      }
+    },
+    {
+      "id": "task:22.hdfans红豆饭",
+      "kind": "task",
+      "alias": "22.hdfans红豆饭",
+      "hint": "启用时再填 RSS 地址和 Cookie，下载器后绑",
+      "tags": [
+        "站点"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "alias": "22.hdfans红豆饭",
+        "category": "HDF",
+        "scrapeFree": false,
+        "scrapeHr": false,
+        "cron": "* * * * *",
+        "addCountPerHour": "600",
+        "downloadLimit": "0",
+        "downloadLimitUnit": "MiB",
+        "uploadLimit": "22",
+        "uploadLimitUnit": "MiB",
+        "skipSameTorrent": false,
+        "paused": null,
+        "pushNotify": false,
+        "pushTorrentFile": false,
+        "autoReseed": false,
+        "onlyReseed": false,
+        "maxSleepTime": "600",
+        "enable": false,
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
+        "cookie": "",
+        "clientArr": [],
+        "reseedClients": [],
+        "sameServerClients": [],
+        "acceptRules": [],
+        "rejectRules": [],
+        "_acceptPreset": [],
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
+      }
+    },
+    {
+      "id": "task:15.hdtime时光",
+      "kind": "task",
+      "alias": "15.hdtime时光",
+      "hint": "启用时再填 RSS 地址和 Cookie，下载器后绑",
+      "tags": [
+        "站点"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "alias": "15.hdtime时光",
+        "category": "HDT",
+        "scrapeFree": false,
+        "scrapeHr": false,
+        "cron": "* * * * *",
+        "addCountPerHour": "600",
+        "downloadLimit": "0",
+        "downloadLimitUnit": "MiB",
+        "uploadLimit": "95",
+        "uploadLimitUnit": "MiB",
+        "skipSameTorrent": false,
+        "paused": null,
+        "pushNotify": false,
+        "pushTorrentFile": false,
+        "autoReseed": false,
+        "onlyReseed": false,
+        "maxSleepTime": "600",
+        "enable": false,
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
+        "cookie": "",
+        "clientArr": [],
+        "reseedClients": [],
+        "sameServerClients": [],
+        "acceptRules": [],
+        "rejectRules": [],
+        "_acceptPreset": [],
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
+      }
+    },
+    {
+      "id": "task:54.95限速自定义hdu-咖啡-海豹-蟹黄堡",
+      "kind": "task",
+      "alias": "54.95限速 自定义 hdu-咖啡-海豹-蟹黄堡",
+      "hint": "启用时再填 RSS 地址和 Cookie，下载器后绑",
+      "tags": [
+        "站点"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "alias": "54.95限速 自定义 hdu-咖啡-海豹-蟹黄堡",
+        "category": "",
+        "scrapeFree": false,
+        "scrapeHr": false,
+        "cron": "* * * * *",
+        "addCountPerHour": "600",
+        "downloadLimit": "0",
+        "downloadLimitUnit": "MiB",
+        "uploadLimit": "96",
+        "uploadLimitUnit": "MiB",
+        "skipSameTorrent": false,
+        "paused": null,
+        "pushNotify": false,
+        "pushTorrentFile": false,
+        "autoReseed": false,
+        "onlyReseed": false,
+        "maxSleepTime": 600,
+        "enable": false,
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
+        "cookie": "",
+        "clientArr": [],
+        "reseedClients": [],
+        "sameServerClients": [],
+        "acceptRules": [],
+        "rejectRules": [],
+        "_acceptPreset": [],
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
+      }
+    },
+    {
+      "id": "task:33.ptsbao烧包",
+      "kind": "task",
+      "alias": "33.ptsbao烧包",
+      "hint": "启用时再填 RSS 地址和 Cookie，下载器后绑",
+      "tags": [
+        "站点"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "alias": "33.ptsbao烧包",
+        "category": "PTS",
+        "scrapeFree": false,
+        "scrapeHr": false,
+        "cron": "* * * * *",
+        "addCountPerHour": "600",
+        "downloadLimit": "0",
+        "downloadLimitUnit": null,
+        "uploadLimit": "0",
+        "uploadLimitUnit": null,
+        "skipSameTorrent": false,
+        "paused": null,
+        "pushNotify": false,
+        "pushTorrentFile": false,
+        "autoReseed": false,
+        "onlyReseed": false,
+        "maxSleepTime": "600",
+        "enable": false,
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
+        "cookie": "",
+        "clientArr": [],
+        "reseedClients": [],
+        "sameServerClients": [],
+        "acceptRules": [],
+        "rejectRules": [],
+        "_acceptPreset": [],
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
+      }
+    },
+    {
+      "id": "task:08.springsunday不可说",
+      "kind": "task",
+      "alias": "08.springsunday不可说",
+      "hint": "启用时再填 RSS 地址和 Cookie，下载器后绑",
+      "tags": [
+        "站点"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "alias": "08.springsunday不可说",
+        "category": "SD",
+        "scrapeFree": false,
+        "scrapeHr": false,
+        "cron": "* * * * *",
+        "addCountPerHour": "600",
+        "downloadLimit": "0",
+        "downloadLimitUnit": null,
+        "uploadLimit": "90",
+        "uploadLimitUnit": "MiB",
+        "skipSameTorrent": false,
+        "paused": null,
+        "pushNotify": false,
+        "pushTorrentFile": false,
+        "autoReseed": false,
+        "onlyReseed": false,
+        "maxSleepTime": "600",
+        "enable": false,
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
+        "cookie": "",
+        "clientArr": [],
+        "reseedClients": [],
+        "sameServerClients": [],
+        "acceptRules": [],
+        "rejectRules": [],
+        "_acceptPreset": [],
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
+      }
+    },
+    {
+      "id": "task:29.piggo猪猪-需备案",
+      "kind": "task",
+      "alias": "29.piggo猪猪|需备案",
+      "hint": "需备案",
+      "tags": [
+        "站点"
+      ],
+      "ruleIds": [
+        "rss:猪猪专用-排除HR"
+      ],
+      "payload": {
+        "alias": "29.piggo猪猪|需备案",
+        "category": "PIG",
+        "scrapeFree": false,
+        "scrapeHr": false,
+        "cron": "* * * * *",
+        "addCountPerHour": "600",
+        "downloadLimit": "0",
+        "downloadLimitUnit": null,
+        "uploadLimit": "35",
+        "uploadLimitUnit": "MiB",
+        "skipSameTorrent": false,
+        "paused": null,
+        "pushNotify": false,
+        "pushTorrentFile": false,
+        "autoReseed": false,
+        "onlyReseed": false,
+        "maxSleepTime": 600,
+        "enable": false,
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
+        "cookie": "",
+        "clientArr": [],
+        "reseedClients": [],
+        "sameServerClients": [],
+        "acceptRules": [],
+        "rejectRules": [],
+        "_acceptPreset": [],
+        "_rejectPreset": [
+          "rss:猪猪专用-排除HR"
+        ],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
+      }
+    },
+    {
+      "id": "task:48.zhuque朱雀",
+      "kind": "task",
+      "alias": "48.zhuque朱雀",
+      "hint": "启用时再填 RSS 地址和 Cookie，下载器后绑",
+      "tags": [
+        "站点"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "alias": "48.zhuque朱雀",
+        "category": "ZQ",
+        "scrapeFree": false,
+        "scrapeHr": false,
+        "cron": "* * * * *",
+        "addCountPerHour": "600",
+        "downloadLimit": "0",
+        "downloadLimitUnit": null,
+        "uploadLimit": "50",
+        "uploadLimitUnit": "MiB",
+        "skipSameTorrent": false,
+        "paused": null,
+        "pushNotify": false,
+        "pushTorrentFile": false,
+        "autoReseed": false,
+        "onlyReseed": false,
+        "maxSleepTime": 600,
+        "enable": false,
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
+        "cookie": "",
+        "clientArr": [],
+        "reseedClients": [],
+        "sameServerClients": [],
+        "acceptRules": [],
+        "rejectRules": [],
+        "_acceptPreset": [],
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
+      }
+    },
+    {
+      "id": "task:09.ptchdbits彩虹岛-有vip全站",
+      "kind": "task",
+      "alias": "09.ptchdbits彩虹岛|有vip全站",
+      "hint": "有vip全站",
+      "tags": [
+        "站点"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "alias": "09.ptchdbits彩虹岛|有vip全站",
+        "category": "CHD",
+        "scrapeFree": true,
+        "scrapeHr": false,
+        "cron": "* * * * *",
+        "addCountPerHour": "600",
+        "downloadLimit": "0",
+        "downloadLimitUnit": "MiB",
+        "uploadLimit": "95",
+        "uploadLimitUnit": "MiB",
+        "skipSameTorrent": false,
+        "paused": null,
+        "pushNotify": false,
+        "pushTorrentFile": false,
+        "autoReseed": false,
+        "onlyReseed": false,
+        "maxSleepTime": "600",
+        "enable": false,
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
+        "cookie": "",
+        "clientArr": [],
+        "reseedClients": [],
+        "sameServerClients": [],
+        "acceptRules": [],
+        "rejectRules": [],
+        "_acceptPreset": [],
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
+      }
+    },
+    {
+      "id": "task:34.zmpt织梦",
+      "kind": "task",
+      "alias": "34.zmpt织梦",
+      "hint": "启用时再填 RSS 地址和 Cookie，下载器后绑",
+      "tags": [
+        "站点"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "alias": "34.zmpt织梦",
+        "category": "ZM",
+        "scrapeFree": false,
+        "scrapeHr": false,
+        "cron": "* * * * *",
+        "addCountPerHour": "600",
+        "downloadLimit": "0",
+        "downloadLimitUnit": null,
+        "uploadLimit": "80",
+        "uploadLimitUnit": "MiB",
+        "skipSameTorrent": false,
+        "paused": null,
+        "pushNotify": false,
+        "pushTorrentFile": false,
+        "autoReseed": false,
+        "onlyReseed": false,
+        "maxSleepTime": "600",
+        "enable": false,
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
+        "cookie": "",
+        "clientArr": [],
+        "reseedClients": [],
+        "sameServerClients": [],
+        "acceptRules": [],
+        "rejectRules": [],
+        "_acceptPreset": [],
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
+      }
+    },
+    {
+      "id": "task:09.ptchdbits彩虹岛-复活区-没vip选这个",
+      "kind": "task",
+      "alias": "09.ptchdbits彩虹岛-复活区|没vip选这个",
+      "hint": "没vip选这个",
+      "tags": [
+        "站点"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "alias": "09.ptchdbits彩虹岛-复活区|没vip选这个",
+        "category": "CHD",
+        "scrapeFree": false,
+        "scrapeHr": true,
+        "cron": "* * * * *",
+        "addCountPerHour": "600",
+        "downloadLimit": "0",
+        "downloadLimitUnit": "MiB",
+        "uploadLimit": "95",
+        "uploadLimitUnit": "MiB",
+        "skipSameTorrent": false,
+        "paused": null,
+        "pushNotify": false,
+        "pushTorrentFile": false,
+        "autoReseed": false,
+        "onlyReseed": false,
+        "maxSleepTime": "600",
+        "enable": false,
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
+        "cookie": "",
+        "clientArr": [],
+        "reseedClients": [],
+        "sameServerClients": [],
+        "acceptRules": [],
+        "rejectRules": [],
+        "_acceptPreset": [],
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
+      }
+    },
+    {
+      "id": "task:10.keepfrds月月",
+      "kind": "task",
+      "alias": "10.keepfrds月月",
+      "hint": "启用时再填 RSS 地址和 Cookie，下载器后绑",
+      "tags": [
+        "站点"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "alias": "10.keepfrds月月",
+        "category": "FRD",
+        "scrapeFree": false,
+        "scrapeHr": false,
+        "cron": "* * * * *",
+        "addCountPerHour": "600",
+        "downloadLimit": "0",
+        "downloadLimitUnit": "MiB",
+        "uploadLimit": "15",
+        "uploadLimitUnit": "MiB",
+        "skipSameTorrent": false,
+        "paused": null,
+        "pushNotify": false,
+        "pushTorrentFile": false,
+        "autoReseed": false,
+        "onlyReseed": false,
+        "maxSleepTime": "600",
+        "enable": false,
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
+        "cookie": "",
+        "clientArr": [],
+        "reseedClients": [],
+        "sameServerClients": [],
+        "acceptRules": [],
+        "rejectRules": [],
+        "_acceptPreset": [],
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
+      }
+    },
+    {
+      "id": "task:45.hdkylin麒麟",
+      "kind": "task",
+      "alias": "45.hdkylin麒麟",
+      "hint": "启用时再填 RSS 地址和 Cookie，下载器后绑",
+      "tags": [
+        "站点"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "alias": "45.hdkylin麒麟",
+        "category": "QL",
+        "scrapeFree": false,
+        "scrapeHr": false,
+        "cron": "* * * * *",
+        "addCountPerHour": "600",
+        "downloadLimit": "0",
+        "downloadLimitUnit": "MiB",
+        "uploadLimit": "60",
+        "uploadLimitUnit": "MiB",
+        "skipSameTorrent": false,
+        "paused": null,
+        "pushNotify": false,
+        "pushTorrentFile": false,
+        "autoReseed": false,
+        "onlyReseed": false,
+        "maxSleepTime": "600",
+        "enable": false,
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
+        "cookie": "",
+        "clientArr": [],
+        "reseedClients": [],
+        "sameServerClients": [],
+        "acceptRules": [],
+        "rejectRules": [],
+        "_acceptPreset": [],
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
+      }
+    },
+    {
+      "id": "task:14.hdarea好大",
+      "kind": "task",
+      "alias": "14.hdarea好大",
+      "hint": "启用时再填 RSS 地址和 Cookie，下载器后绑",
+      "tags": [
+        "站点"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "alias": "14.hdarea好大",
+        "category": "HDA",
+        "scrapeFree": true,
+        "scrapeHr": false,
+        "cron": "* * * * *",
+        "addCountPerHour": "600",
+        "downloadLimit": "0",
+        "downloadLimitUnit": null,
+        "uploadLimit": "180",
+        "uploadLimitUnit": "MiB",
+        "skipSameTorrent": false,
+        "paused": null,
+        "pushNotify": false,
+        "pushTorrentFile": false,
+        "autoReseed": false,
+        "onlyReseed": false,
+        "maxSleepTime": 600,
+        "enable": false,
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
+        "cookie": "",
+        "clientArr": [],
+        "reseedClients": [],
+        "sameServerClients": [],
+        "acceptRules": [],
+        "rejectRules": [],
+        "_acceptPreset": [],
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
+      }
+    },
+    {
+      "id": "task:37.starspace星空影",
+      "kind": "task",
+      "alias": "37.starspace星空影",
+      "hint": "启用时再填 RSS 地址和 Cookie，下载器后绑",
+      "tags": [
+        "站点"
+      ],
+      "ruleIds": [],
+      "payload": {
+        "alias": "37.starspace星空影",
+        "category": "XK",
+        "scrapeFree": false,
+        "scrapeHr": false,
+        "cron": "*/6 * * * *",
+        "addCountPerHour": "600",
+        "downloadLimit": "0",
+        "downloadLimitUnit": null,
+        "uploadLimit": "95",
+        "uploadLimitUnit": "MiB",
+        "skipSameTorrent": false,
+        "paused": null,
+        "pushNotify": false,
+        "pushTorrentFile": false,
+        "autoReseed": false,
+        "onlyReseed": false,
+        "maxSleepTime": 600,
+        "enable": false,
+        "rssUrls": [
+          "增加你的RSS地址"
+        ],
+        "cookie": "",
+        "clientArr": [],
+        "reseedClients": [],
+        "sameServerClients": [],
+        "acceptRules": [],
+        "rejectRules": [],
+        "_acceptPreset": [],
+        "_rejectPreset": [],
+        "clientSortBy": "leechingCount",
+        "allocateRule": "builtin:original"
+      }
+    },
+    {
+      "id": "client:负载",
+      "kind": "client",
+      "alias": "负载",
+      "hint": "启用时再填 WebUI 地址和账号",
+      "tags": [
+        "下载器"
+      ],
+      "ruleIds": [
+        "delete:NC-剩余空间5g上传小于130M",
+        "delete:NC-剩余空间30g上传小于8M",
+        "delete:NC-空间剩余100g上传速度低于50k持续1分钟",
+        "delete:NC-低收益",
+        "delete:甲骨文-上传速度小于50k持续2分钟删除",
+        "delete:甲骨文NC-6小时未下载完",
+        "delete:甲骨文NC-出种-完全没速度",
+        "delete:甲骨文-岛非免跳车",
+        "delete:D",
+        "delete:NC-慢车",
+        "delete:NC-剩余空间10g上传小于80M",
+        "delete:NC-剩余空间40g上传小于5M",
+        "delete:NC-瓷器非免跳车",
+        "delete:NC-剩余空间20g上传小于50M",
+        "delete:NC-剩余空间50g上传小于1M",
+        "delete:NC-种子进度0.2分享低于0.1"
+      ],
+      "payload": {
+        "alias": "负载",
+        "type": "qBittorrent",
+        "enable": false,
+        "host": "",
+        "port": "",
+        "username": "",
+        "password": "",
+        "cron": "*/4 * * * * *",
+        "autoDelete": true,
+        "autoDeleteCron": "* * * * *",
+        "autoReannounce": true,
+        "firstLastPiecePrio": false,
+        "pushNotify": false,
+        "pushMonitor": false,
+        "spaceAlarm": false,
+        "deleteRules": [],
+        "rejectDeleteRules": [],
+        "sameServerClients": [],
+        "minFreeSpace": null,
+        "maxLeechNum": null,
+        "_deletePreset": [
+          "delete:NC-剩余空间5g上传小于130M",
+          "delete:NC-剩余空间30g上传小于8M",
+          "delete:NC-空间剩余100g上传速度低于50k持续1分钟",
+          "delete:NC-低收益",
+          "delete:甲骨文-上传速度小于50k持续2分钟删除",
+          "delete:甲骨文NC-6小时未下载完",
+          "delete:甲骨文NC-出种-完全没速度",
+          "delete:甲骨文-岛非免跳车",
+          "delete:D",
+          "delete:NC-慢车",
+          "delete:NC-剩余空间10g上传小于80M",
+          "delete:NC-剩余空间40g上传小于5M",
+          "delete:NC-瓷器非免跳车",
+          "delete:NC-剩余空间20g上传小于50M",
+          "delete:NC-剩余空间50g上传小于1M",
+          "delete:NC-种子进度0.2分享低于0.1"
+        ],
+        "_rejectDeletePreset": []
+      }
+    },
+    {
+      "id": "client:不可说",
+      "kind": "client",
+      "alias": "不可说",
+      "hint": "启用时再填 WebUI 地址和账号",
+      "tags": [
+        "下载器"
+      ],
+      "ruleIds": [
+        "delete:不可说3-Torrent",
+        "delete:不可说1-分享4完成60",
+        "delete:不可说2-低速低比率"
+      ],
+      "payload": {
+        "alias": "不可说",
+        "type": "qBittorrent",
+        "enable": false,
+        "host": "",
+        "port": "",
+        "username": "",
+        "password": "",
+        "cron": "*/4 * * * * *",
+        "autoDelete": false,
+        "autoDeleteCron": "* * * * *",
+        "autoReannounce": true,
+        "firstLastPiecePrio": false,
+        "pushNotify": false,
+        "pushMonitor": false,
+        "spaceAlarm": false,
+        "deleteRules": [],
+        "rejectDeleteRules": [],
+        "sameServerClients": [],
+        "minFreeSpace": null,
+        "maxLeechNum": null,
+        "_deletePreset": [
+          "delete:不可说3-Torrent",
+          "delete:不可说1-分享4完成60",
+          "delete:不可说2-低速低比率"
+        ],
+        "_rejectDeletePreset": []
+      }
+    },
+    {
+      "id": "client:刷流",
+      "kind": "client",
+      "alias": "刷流",
+      "hint": "启用时再填 WebUI 地址和账号",
+      "tags": [
+        "下载器"
+      ],
+      "ruleIds": [
+        "delete:NC-种子进度0.5分享低于0.2",
+        "delete:NC-剩余空间5g上传小于130M",
+        "delete:NC-剩余空间30g上传小于8M",
+        "delete:A最长下载时间",
+        "delete:A长时间未开始",
+        "delete:NC-分享率3倍删种-憨憨-天空",
+        "delete:NC-慢车",
+        "delete:NC-剩余空间10g上传小于80M",
+        "delete:NC-剩余空间40g上传小于5M",
+        "delete:NC-种子错误",
+        "delete:A中途停车",
+        "delete:NC-剩余空间20g上传小于50M",
+        "delete:NC-剩余空间50g上传小于1M",
+        "delete:NC-种子进度0.2分享低于0.1",
+        "delete:拒绝删种-猫专用",
+        "delete:拒绝删种-北洋专用"
+      ],
+      "payload": {
+        "alias": "刷流",
+        "type": "qBittorrent",
+        "enable": false,
+        "host": "",
+        "port": "",
+        "username": "",
+        "password": "",
+        "cron": "*/4 * * * * *",
+        "autoDelete": true,
+        "autoDeleteCron": "* * * * *",
+        "autoReannounce": true,
+        "firstLastPiecePrio": true,
+        "pushNotify": false,
+        "pushMonitor": false,
+        "spaceAlarm": false,
+        "deleteRules": [],
+        "rejectDeleteRules": [],
+        "sameServerClients": [],
+        "minFreeSpace": "30",
+        "maxLeechNum": "12",
+        "_deletePreset": [
+          "delete:NC-种子进度0.5分享低于0.2",
+          "delete:NC-剩余空间5g上传小于130M",
+          "delete:NC-剩余空间30g上传小于8M",
+          "delete:A最长下载时间",
+          "delete:A长时间未开始",
+          "delete:NC-分享率3倍删种-憨憨-天空",
+          "delete:NC-慢车",
+          "delete:NC-剩余空间10g上传小于80M",
+          "delete:NC-剩余空间40g上传小于5M",
+          "delete:NC-种子错误",
+          "delete:A中途停车",
+          "delete:NC-剩余空间20g上传小于50M",
+          "delete:NC-剩余空间50g上传小于1M",
+          "delete:NC-种子进度0.2分享低于0.1"
+        ],
+        "_rejectDeletePreset": [
+          "delete:拒绝删种-猫专用",
+          "delete:拒绝删种-北洋专用"
+        ]
+      }
+    },
+    {
+      "id": "client:拆包",
+      "kind": "client",
+      "alias": "拆包",
+      "hint": "启用时再填 WebUI 地址和账号",
+      "tags": [
+        "下载器"
+      ],
+      "ruleIds": [
+        "delete:拆包删种-甲骨文（BUG大种天空馒头）",
+        "delete:拆包删种(添加大于20小时，上传小于50K，不出种)",
+        "delete:拆包删种(硬盘空间小于40G,上传速度小于100K)",
+        "delete:拆包删种(硬盘空间小于5G,上传速度小于10M)",
+        "delete:拆包删种(硬盘空间小于10G,上传速度小于3M)",
+        "delete:拆包删种-甲骨文(添加大于2小时，上传小于50K，没速度)",
+        "delete:拆包删种(垃圾种)",
+        "delete:拆包删种(硬盘空间小于30G,上传速度小于200K)",
+        "delete:拆包删种(BUG大种)"
+      ],
+      "payload": {
+        "alias": "拆包",
+        "type": "qBittorrent",
+        "enable": false,
+        "host": "",
+        "port": "",
+        "username": "",
+        "password": "",
+        "cron": "*/4 * * * * *",
+        "autoDelete": false,
+        "autoDeleteCron": "* * * * *",
+        "autoReannounce": true,
+        "firstLastPiecePrio": false,
+        "pushNotify": false,
+        "pushMonitor": false,
+        "spaceAlarm": false,
+        "deleteRules": [],
+        "rejectDeleteRules": [],
+        "sameServerClients": [],
+        "minFreeSpace": null,
+        "maxLeechNum": null,
+        "_deletePreset": [
+          "delete:拆包删种-甲骨文（BUG大种天空馒头）",
+          "delete:拆包删种(添加大于20小时，上传小于50K，不出种)",
+          "delete:拆包删种(硬盘空间小于40G,上传速度小于100K)",
+          "delete:拆包删种(硬盘空间小于5G,上传速度小于10M)",
+          "delete:拆包删种(硬盘空间小于10G,上传速度小于3M)",
+          "delete:拆包删种-甲骨文(添加大于2小时，上传小于50K，没速度)",
+          "delete:拆包删种(垃圾种)",
+          "delete:拆包删种(硬盘空间小于30G,上传速度小于200K)",
+          "delete:拆包删种(BUG大种)"
+        ],
+        "_rejectDeletePreset": []
+      }
+    }
+  ]
+}

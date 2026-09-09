@@ -1,14 +1,13 @@
+version: "3"
 services:
   vertex-lite:
-    build:
-      context: .
-      dockerfile: docker/Dockerfile
-    image: vertex-lite:local
     container_name: vertex-lite
-    restart: unless-stopped
-    ports:
-      - "3000:3000"
-    environment:
-      TZ: Asia/Shanghai
+    image: kuanghom/vertex:simple
+    restart: always
+    network_mode: bridge
     volumes:
       - ./vertex-lite-data:/vertex
+    environment:
+      - PORT=3000
+    ports:
+      - 3000:3000

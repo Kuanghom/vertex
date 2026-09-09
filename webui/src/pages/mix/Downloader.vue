@@ -80,7 +80,6 @@
           <fn-ops>
             <a-button type="link" @click="gotoDetail(record)">打开</a-button>
             <a-button type="link" @click="gotoDetail(record)">代理</a-button>
-            <a-button type="link" @click="gotoLink(record)">软/硬链接</a-button>
             <a-button type="link" danger @click="expandDel(record)">删除</a-button>
           </fn-ops>
         </template>
@@ -282,9 +281,6 @@ export default {
     async gotoDetail (record) {
       if (!record.link) return await this.$message().error('链接不存在');
       window.open(record.link);
-    },
-    async gotoLink (record) {
-      window.open('/task/link?hash=' + record.hash);
     },
     async expandDel (record) {
       this.modalVisible = true;

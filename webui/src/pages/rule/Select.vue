@@ -7,6 +7,8 @@
         placeholder="别名 / ID"
         @reset="resetListSearch"/>
       <template #toolbar>
+        <a-button @click="$goto('/guide/presets?kind=select&from=/rule/select', $router)">从预设导入</a-button>
+        <fn-quick-size kind="select" :existing="selectAliases" @added="listSelectRule"/>
         <a-button type="primary" @click="openCreate">新增</a-button>
         <fn-column-settings
           :items="columnSettingItems"
@@ -29,14 +31,19 @@
       :customRow="listCustomRow"
     >
       <template #bodyCell="{ column, record }">
+        <template v-if="column.dataIndex === 'usedBy'">
+          <span :title="usedByTitle(record)">{{ usedByText(record, '未引用') }}</span>
+        </template>
         <template v-if="column.dataIndex === 'sortType'">
           {{ (conditionKeys.filter(item => item.key === record.sortBy)[0] || {}).name }}
           {{ record.sortType ? record.sortType === 'asc' ? '/ 升序' : '/ 降序' : '' }}
         </template>
         <template v-if="column.title === '操作'">
           <fn-ops>
+            <a-button type="link" @click="cloneClick(record)">克隆</a-button>
+            <fn-rule-dryrun link kind="select" :rule="record"/>
             <a-button type="link" @click="modifyClick(record)">编辑</a-button>
-            <a-popconfirm title="确认删除这条数据？" ok-text="删除" cancel-text="取消" @confirm="deleteSelectRule(record)">
+            <a-popconfirm :title="deleteConfirm(record)" ok-text="删除" cancel-text="取消" :disabled="record.used" @confirm="deleteSelectRule(record)">
               <a-button type="link" danger>删除</a-button>
             </a-popconfirm>
           </fn-ops>
@@ -114,7 +121,7 @@
             >
               <template #bodyCell="{ column, record }">
                 <template v-if="column.dataIndex === 'key'">
-                  <a-select size="small" v-model:value="record.key"  >
+                  <a-select size="small" v-model:value="record.key" @change="onConditionKeyChange(record)">
                     <a-select-option v-for="conditionKey of conditionKeys" :key="conditionKey.key" :value="conditionKey.key">{{ conditionKey.name }}</a-select-option>
                   </a-select>
                 </template>
@@ -132,7 +139,13 @@
                   </a-select>
                 </template>
                 <template v-if="column.dataIndex === 'value'">
-                  <a-input size="small" v-model:value="record.value"/>
+                  <fn-unit-input
+                    v-if="conditionKind(record.key)"
+                    v-model:value="record.value"
+                    v-model:unit="record._unit"
+                    :units="unitsFor(record.key)"
+                  />
+                  <a-input v-else size="small" v-model:value="record.value"/>
                 </template>
                 <template v-if="column.dataIndex === 'option'">
                   <a style="color: red" @click="selectRule.conditions = selectRule.conditions.filter(item => item !== record)">删除</a>
@@ -156,6 +169,7 @@
         </a-form-item>
         <a-form-item>
           <a-button type="primary" html-type="submit">保存</a-button>
+          <fn-rule-dryrun kind="select" :rule="dryrunRule"/>
           <a-button style="margin-left: 12px;" @click="closeForm">取消</a-button>
         </a-form-item>
       </a-form>
@@ -165,9 +179,14 @@
 <script>
 import { scrollToTop } from '../../util/scroll';
 import adminCrud from '../../mixins/adminCrud';
+import conditionUnit from '../../mixins/conditionUnit';
+import FnQuickSize from '../../components/FnQuickSize.vue';
+import FnRuleDryrun from '../../components/FnRuleDryrun.vue';
+import { findRuleConflict, usedByText, usedByTitle } from '../../util/ruleConflict';
 
 export default {
-  mixins: [adminCrud],
+  components: { FnQuickSize, FnRuleDryrun },
+  mixins: [adminCrud, conditionUnit],
   data () {
     const columns = [
       {
@@ -183,6 +202,10 @@ export default {
           multiple: 1
         },
         width: 30
+      }, {
+        title: '引用',
+        dataIndex: 'usedBy',
+        width: 28
       }, {
         title: '优先级',
         dataIndex: 'priority',
@@ -264,7 +287,9 @@ export default {
       condition: {
         key: '',
         compareType: '',
-        value: ''
+        value: '',
+        _kind: '',
+        _unit: ''
       },
       selectRule: {},
       defaultSelectRule: {
@@ -273,6 +298,10 @@ export default {
           compareType: '',
           value: ''
         }],
+        type: 'normal',
+        priority: '0',
+        sortBy: 'time',
+        sortType: 'desc',
         code: '(torrent) => {\n' +
               '  return false;\n' +
               '}'
@@ -281,7 +310,24 @@ export default {
       selectRuleList: []
     };
   },
+  computed: {
+    selectAliases () {
+      return (this.selectRuleList || []).map(item => item.alias);
+    },
+    dryrunRule () {
+      return {
+        ...this.selectRule,
+        conditions: this.serializeConditions(this.selectRule.conditions || [])
+      };
+    }
+  },
   methods: {
+    usedByText,
+    usedByTitle,
+    deleteConfirm (row) {
+      if (row.used) return usedByTitle(row) + '，先从订阅里去掉再删';
+      return '确认删除这条数据？';
+    },
     async listSelectRule () {
       try {
         const res = await this.$api().selectRule.list();
@@ -292,7 +338,18 @@ export default {
     },
     async modifySelectRule () {
       try {
-        await this.$api().selectRule.modify({ ...this.selectRule });
+        const conditions = this.serializeConditions(this.selectRule.conditions);
+        const hit = findRuleConflict(this.selectRuleList, this.selectRule, conditions);
+        if (hit.aliasHit || hit.condHit) {
+          const bits = [];
+          if (hit.aliasHit) bits.push('别名已有「' + hit.aliasHit.alias + '」');
+          if (hit.condHit) bits.push('条件和「' + hit.condHit.alias + '」相同');
+          if (!window.confirm(bits.join('，') + '，还要保存吗？')) return;
+        }
+        await this.$api().selectRule.modify({
+          ...this.selectRule,
+          conditions
+        });
         this.$message().success((this.selectRule.id ? '编辑' : '新增') + '成功, 列表正在刷新...');
         this.closeForm();
         this._formEditing = false;
@@ -309,13 +366,22 @@ export default {
       this.formVisible = true;
     },
     modifyClick (row) {
-      this.selectRule = { ...row };
+      this.selectRule = { ...row, conditions: this.hydrateConditions(row.conditions) };
       this._formEditing = true;
+      this.formVisible = true;
+    },
+    cloneClick (row) {
+      const cloned = this.cloneRuleFrom(row);
+      this.selectRule = {
+        ...cloned,
+        conditions: this.hydrateConditions(cloned.conditions)
+      };
+      this._formEditing = false;
       this.formVisible = true;
     },
     async deleteSelectRule (row) {
       if (row.used) {
-        this.$message().error('组件被占用, 取消占用后删除');
+        this.$message().error(usedByTitle(row) + '，先从订阅里去掉再删');
         return;
       }
       try {

@@ -1,5 +1,5 @@
 <template>
-  <div class="delete-rule fn-page">
+  <div class="delete-rule fn-page fn-page-flow">
     <fn-filter :active="listSearchActive" title="搜索">
       <fn-list-search
         v-model:query="listQuery"
@@ -7,6 +7,7 @@
         placeholder="别名 / ID"
         @reset="resetListSearch"/>
       <template #toolbar>
+        <a-button @click="$goto('/guide/presets?kind=delete&from=/rule/delete', $router)">从预设导入</a-button>
         <a-button type="primary" @click="openCreate">新增</a-button>
         <fn-column-settings
           :items="columnSettingItems"
@@ -29,13 +30,17 @@
       :customRow="listCustomRow"
     >
       <template #bodyCell="{ column, record }">
+        <template v-if="column.dataIndex === 'usedBy'">
+          <span :title="usedByTitle(record)">{{ usedByText(record, '未引用') }}</span>
+        </template>
         <template v-if="column.dataIndex === 'type'">
           {{ record.type === 'normal' ? '普通' : 'JavaScript'}}
         </template>
         <template v-if="column.title === '操作'">
           <fn-ops>
+            <a-button type="link" @click="cloneClick(record)">克隆</a-button>
             <a-button type="link" @click="modifyClick(record)">编辑</a-button>
-            <a-popconfirm title="确认删除这条数据？" ok-text="删除" cancel-text="取消" @confirm="deleteDeleteRule(record)">
+            <a-popconfirm :title="deleteConfirm(record)" ok-text="删除" cancel-text="取消" :disabled="record.used" @confirm="deleteDeleteRule(record)">
               <a-button type="link" danger>删除</a-button>
             </a-popconfirm>
           </fn-ops>
@@ -135,7 +140,7 @@
           >
             <template #bodyCell="{ column, record }">
               <template v-if="column.dataIndex === 'key'">
-                <a-select size="small" v-model:value="record.key"  >
+                <a-select size="small" v-model:value="record.key" @change="onConditionKeyChange(record)">
                   <a-select-option v-for="conditionKey of conditionKeys" :key="conditionKey.key" :value="conditionKey.key">{{ conditionKey.name }}</a-select-option>
                 </a-select>
               </template>
@@ -153,7 +158,13 @@
                 </a-select>
               </template>
               <template v-if="column.dataIndex === 'value'">
-                <a-input size="small" v-model:value="record.value"/>
+                <fn-unit-input
+                  v-if="conditionKind(record.key)"
+                  v-model:value="record.value"
+                  v-model:unit="record._unit"
+                  :units="unitsFor(record.key)"
+                />
+                <a-input v-else size="small" v-model:value="record.value"/>
               </template>
               <template v-if="column.dataIndex === 'option'">
                 <a style="color: red" @click="deleteRule.conditions = deleteRule.conditions.filter(item => item !== record)">删除</a>
@@ -212,9 +223,9 @@
         <a-descriptions-item label="02. 分享率二">上传 / 下载 的结果</a-descriptions-item>
         <a-descriptions-item label="03. 分享率三">上传 / 种子总大小 的结果</a-descriptions-item>
         <a-descriptions-item label="04. 站点域名">种子的 Tracker 地址的域名部分</a-descriptions-item>
-        <a-descriptions-item label="05. 各类时间">选项时间到当前时间的差值, 单位为 秒/s</a-descriptions-item>
-        <a-descriptions-item label="06. 各类大小">单位为 字节 / Byte, 可以使用 * 做乘法运算</a-descriptions-item>
-        <a-descriptions-item label="07. 各类速度">单位为 字节/s / Byte/s</a-descriptions-item>
+        <a-descriptions-item label="05. 各类时间">选项时间到当前时间的差值，用数字框选择 秒 / 分 / 时</a-descriptions-item>
+        <a-descriptions-item label="06. 各类大小">用数字框选择 Byte / KiB / MiB / GiB / TiB</a-descriptions-item>
+        <a-descriptions-item label="07. 各类速度">用数字框选择 Byte/s / KiB/s / MiB/s / GiB/s</a-descriptions-item>
         <a-descriptions-item label="08. 种子状态">
           参照 qBittorrent 对种子状态的定义, 主要包含以下几类:
           <br>
@@ -231,9 +242,9 @@
         <a-descriptions-item label="10. 当前时间">
           当天 0 点到当前时间的秒数, 0 点的时间戳取决于 Vertex 安装环境的时区
           <br>
-          例: 填写 当前时间大于 8*3600 与 当前时间小于 22*3600, 则只会在当天上午 8 点之后到 22 点之前删种
+          例: 填写 当前时间大于 8 时 与 当前时间小于 22 时, 则只会在当天上午 8 点之后到 22 点之前删种
         </a-descriptions-item>
-        <a-descriptions-item label="11. 全局速度">当前下载器的速度</a-descriptions-item>
+        <a-descriptions-item label="11. 全局速度">当前下载器的速度，用数字框选择 Byte/s / KiB/s / MiB/s / GiB/s</a-descriptions-item>
         <a-descriptions-item label="12. 做种下载连接">仅计算已连接上的数量, 也即 qBittorrent WebUI 内括号外的数字</a-descriptions-item>
         <a-descriptions-item label="13. 做种下载任务">任务的数量, 做种包含上传中状态与做种状态, 下载包含下载中与等待下载状态</a-descriptions-item>
         <a-descriptions-item label="14. 比较类型中的 包含 / 包含于 或 不包含 / 不包含于">
@@ -246,9 +257,11 @@
 import { scrollToTop } from '../../util/scroll';
 import adminCrud from '../../mixins/adminCrud';
 import { SPEED_UNITS, toBytes, fromBytes } from '../../util/sizeUnit';
+import conditionUnit from '../../mixins/conditionUnit';
+import { usedByText, usedByTitle } from '../../util/ruleConflict';
 
 export default {
-  mixins: [adminCrud],
+  mixins: [adminCrud, conditionUnit],
   data () {
     const columns = [
       {
@@ -262,6 +275,10 @@ export default {
         dataIndex: 'alias',
         sorter: (a, b) => a.alias.localeCompare(b.alias),
         width: 30
+      }, {
+        title: '引用',
+        dataIndex: 'usedBy',
+        width: 28
       }, {
         title: '持续时间',
         dataIndex: 'fitTime',
@@ -390,7 +407,9 @@ export default {
       condition: {
         key: '',
         compareType: '',
-        value: ''
+        value: '',
+        _kind: '',
+        _unit: ''
       },
       deleteRule: {},
       defaultDeleteRule: {
@@ -409,6 +428,12 @@ export default {
     };
   },
   methods: {
+    usedByText,
+    usedByTitle,
+    deleteConfirm (row) {
+      if (row.used) return usedByTitle(row) + '，先从下载器里去掉再删';
+      return '确认删除这条数据？';
+    },
     async listDeleteRule () {
       try {
         const res = await this.$api().deleteRule.list();
@@ -420,6 +445,7 @@ export default {
     async modifyDeleteRule () {
       try {
         const payload = { ...this.deleteRule };
+        payload.conditions = this.serializeConditions(payload.conditions);
         payload.limitSpeed = toBytes(payload.limitSpeed, this.limitSpeedUnit);
         await this.$api().deleteRule.modify(payload);
         this.$message().success((this.deleteRule.id ? '编辑' : '新增') + '成功, 列表正在刷新...');
@@ -439,14 +465,30 @@ export default {
     },
     modifyClick (row) {
       const parsed = fromBytes(row.limitSpeed, 'KiB');
-      this.deleteRule = { ...row, limitSpeed: parsed.value };
+      this.deleteRule = {
+        ...row,
+        limitSpeed: parsed.value,
+        conditions: this.hydrateConditions(row.conditions)
+      };
       this.limitSpeedUnit = parsed.unit;
       this._formEditing = true;
       this.formVisible = true;
     },
+    cloneClick (row) {
+      const cloned = this.cloneRuleFrom(row);
+      const parsed = fromBytes(cloned.limitSpeed, 'KiB');
+      this.deleteRule = {
+        ...cloned,
+        limitSpeed: parsed.value,
+        conditions: this.hydrateConditions(cloned.conditions)
+      };
+      this.limitSpeedUnit = parsed.unit;
+      this._formEditing = false;
+      this.formVisible = true;
+    },
     async deleteDeleteRule (row) {
       if (row.used) {
-        this.$message().error('组件被占用, 取消占用后删除');
+        this.$message().error(usedByTitle(row) + '，先从下载器里去掉再删');
         return;
       }
       try {

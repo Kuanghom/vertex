@@ -21,6 +21,10 @@ export default {
     const url = '/api/rss/dryrun';
     return await post(url, rss);
   },
+  dryrunRule: async (body) => {
+    const url = '/api/rss/dryrunRule';
+    return await post(url, body);
+  },
   scrapeDryrun: async (rss) => {
     const url = '/api/rss/scrapeDryrun';
     return await post(url, rss);

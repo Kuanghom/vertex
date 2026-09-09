@@ -23,12 +23,8 @@
       <template #tools>
         <a-select v-model:value="type" class="fn-log-cat" @change="() => refreshLog(false)">
           <a-select-option value="info">信息</a-select-option>
-          <a-select-option value="binge">豆瓣</a-select-option>
-          <a-select-option value="binge-debug">豆瓣调试</a-select-option>
           <a-select-option value="advanced">超级模式</a-select-option>
           <a-select-option value="advanced-debug">超级模式调试</a-select-option>
-          <a-select-option value="watch">监控分类</a-select-option>
-          <a-select-option value="watch-debug">监控分类调试</a-select-option>
           <a-select-option value="sc">定时脚本</a-select-option>
           <a-select-option value="sc-debug">定时脚本调试</a-select-option>
           <a-select-option value="error">错误</a-select-option>

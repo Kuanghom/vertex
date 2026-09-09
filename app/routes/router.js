@@ -9,6 +9,8 @@ const config = require('../libs/config');
 const logger = require('../libs/logger');
 const ctrl = require('../controller');
 const util = require('../libs/util');
+const compress = require('../libs/compress');
+const setStaticHeaders = require('../libs/staticHeaders');
 
 const client = redis.createClient(config.getRedisConfig());
 const RedisStore = require('connect-redis')(session);
@@ -199,6 +201,7 @@ module.exports = function (app, express, router) {
   router.get('/rss/list', ctrl.Rss.list);
   router.post('/rss/add', ctrl.Rss.add);
   router.post('/rss/dryrun', ctrl.Rss.dryrun);
+  router.post('/rss/dryrunRule', ctrl.Rss.dryrunRule);
   router.post('/rss/scrapeDryrun', ctrl.Rss.scrapeDryrun);
   router.post('/rss/scrapeTorrent', ctrl.Rss.scrapeTorrent);
   router.get('/rss/promoSupport', ctrl.Rss.promoSupport);
@@ -212,6 +215,11 @@ module.exports = function (app, express, router) {
   router.post('/u2Rss/save', ctrl.U2Rss.save);
   router.post('/u2Rss/preview', ctrl.U2Rss.preview);
   router.get('/u2Rss/regenerateToken', ctrl.U2Rss.regenerateToken);
+
+  router.get('/preset/catalog', ctrl.Preset.catalog);
+  router.post('/preset/apply', ctrl.Preset.apply);
+  router.post('/preset/previewImport', multipartMiddleware, ctrl.Preset.previewImport);
+  router.post('/preset/importSelected', multipartMiddleware, ctrl.Preset.importSelected);
 
   router.get('/deleteRule/list', ctrl.DeleteRule.list);
   router.post('/deleteRule/add', ctrl.DeleteRule.add);
@@ -288,44 +296,42 @@ module.exports = function (app, express, router) {
   app.use('/api', router);
   app.use('/proxy/client/:client', clientProxy);
   app.use('/proxy/site/:site', siteProxy);
+  app.use(compress);
+  const staticDir = path.join(__dirname, '../static');
+  app.use(compress.staticGzip(staticDir, setStaticHeaders));
   app.use('/assets/styles/theme.less', (req, res) => {
     const _path = path.join(__dirname, '../static/assets/styles/' + (global.theme || 'follow') + '.less');
     if (!_path.startsWith(path.join(__dirname, '../static/'))) {
       res.status(404);
       return res.end('Not Found');
     }
-    return res.download(_path, (err) => {
+    res.type('text/less');
+    setStaticHeaders(res, _path);
+    return res.sendFile(_path, (err) => {
       if (!err) return;
       logger.error(err);
       res.status(404);
       return res.end('Not Found');
     });
   });
-  app.use('*', (req, res, next) => {
+  app.use(express.static(staticDir, {
+    etag: true,
+    lastModified: true,
+    setHeaders: setStaticHeaders
+  }));
+  app.use('*', (req, res) => {
     const pathname = req._parsedOriginalUrl.pathname;
     if (pathname === '/favicon.ico') {
       res.status(404);
       return res.end('Not Found');
     }
-    if (pathname.startsWith('/assets') || pathname.startsWith('/workbox') || pathname.startsWith('/service-worker.js')) {
-      const _path = path.join(__dirname, '../static', pathname);
-      if (!_path.startsWith(path.join(__dirname, '../static/'))) {
-        res.status(404);
-        return res.end('Not Found');
-      }
-      return res.download(_path, (err) => {
-        if (!err) return;
-        logger.error(err);
-        res.status(404);
-        return res.end('Not Found');
-      });
-    }
     try {
-      let indexHTML = fs.readFileSync(path.join(__dirname, '../static/index.html'), 'utf-8');
+      let indexHTML = fs.readFileSync(path.join(staticDir, 'index.html'), 'utf-8');
       if (global.theme === 'dark') {
         indexHTML = indexHTML.replace('<meta name="theme-color" content="#0099E3">', '<meta name="theme-color" content="#000">');
       }
       indexHTML = indexHTML.replace('VERTEX-THEME', global.theme);
+      res.setHeader('Cache-Control', 'no-cache');
       res.send(indexHTML);
     } catch (err) {
       logger.error(err);

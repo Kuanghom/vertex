@@ -41,7 +41,16 @@ class DeleteRuleMod {
     const deleteRuleList = util.listDeleteRule();
     const clientList = util.listClient();
     for (const deleteRule of deleteRuleList) {
-      deleteRule.used = clientList.some(item => (item.deleteRules.indexOf(deleteRule.id) !== -1 || (item.rejectDeleteRules || []).indexOf(deleteRule.id) !== -1));
+      const usedBy = [];
+      clientList.forEach((item) => {
+        const del = item.deleteRules || [];
+        const reject = item.rejectDeleteRules || [];
+        if (del.indexOf(deleteRule.id) !== -1 || reject.indexOf(deleteRule.id) !== -1) {
+          usedBy.push({ id: item.id, alias: item.alias, kind: 'client' });
+        }
+      });
+      deleteRule.usedBy = usedBy;
+      deleteRule.used = usedBy.length > 0;
     }
     return deleteRuleList;
   };

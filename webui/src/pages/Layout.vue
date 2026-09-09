@@ -6,7 +6,7 @@
         <span class="fn-bare-title">{{ pageTitle }}</span>
       </header>
       <header v-else class="fn-titlebar">
-        <button v-if="narrow" class="fn-icon-btn" type="button" aria-label="菜单" title="菜单" @click="mobileMenu = true">
+        <button v-if="narrow || compact" class="fn-icon-btn" type="button" aria-label="菜单" title="菜单" @click="mobileMenu = true">
           <fa :icon="['fas', 'bars']"/>
         </button>
         <div class="fn-brand" @click="gotoWiki">
@@ -21,6 +21,7 @@
           <button v-if="!narrow" class="fn-icon-btn" type="button" title="HTTP 代理" @click="openDrawer('proxy')">
             <fa :icon="['fas', 'globe']"/>
           </button>
+          <fn-notice-bell/>
           <button class="fn-icon-btn" type="button" :title="dark ? '浅色' : '深色'" @click="toggleTheme">
             <fa :icon="dark ? ['fas', 'sun'] : ['fas', 'moon']"/>
           </button>
@@ -39,7 +40,7 @@
       </header>
 
       <div class="fn-body">
-        <nav v-if="!narrow && !bareMode" class="fn-sidebar">
+        <nav v-if="!narrow && !compact && !bareMode" class="fn-sidebar">
           <template v-for="item of visibleMenu" :key="item.path">
             <button
               v-if="!item.sub"
@@ -201,6 +202,7 @@
 <script>
 import { viewport } from '../mixins/responsive';
 import FnRowDetail from '../components/FnRowDetail.vue';
+import FnNoticeBell from '../components/FnNoticeBell.vue';
 import { applyTheme } from '../util/theme';
 
 const BARE_PATHS = ['/info/log', '/tool/clientLog'];
@@ -235,7 +237,7 @@ const TILES_DARK = {
 };
 
 export default {
-  components: { FnRowDetail },
+  components: { FnRowDetail, FnNoticeBell },
   data () {
     return {
       selectedKeys: [],
@@ -258,6 +260,9 @@ export default {
   computed: {
     narrow () {
       return viewport.narrow;
+    },
+    compact () {
+      return viewport.compact;
     },
     pageTitle () {
       return (this.$route.meta && this.$route.meta.title) || 'Vertex';
@@ -287,6 +292,11 @@ export default {
     drawerWidth () {
       if (this.narrow) return Math.min(viewport.width, 440);
       return 440;
+    }
+  },
+  watch: {
+    '$route.path' () {
+      this.syncKeys();
     }
   },
   methods: {

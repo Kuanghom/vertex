@@ -98,7 +98,7 @@
             <a-select-option value="wecom">企业微信群机器人</a-select-option>
             <a-select-option value="dingtalk">钉钉群机器人</a-select-option>
             <a-select-option value="iyuu">IYUU</a-select-option>
-            <a-select-option value="slack">Slack</a-select-option>
+<a-select-option value="slack">Slack</a-select-option>
             <a-select-option value="ntfy">Ntfy</a-select-option>
             <a-select-option value="webhook">Webhook</a-select-option>
           </a-select>
@@ -224,7 +224,7 @@
           :rules="[{ required: true, message: '${label}不可为空! ' }]">
           <a-input size="small" v-model:value="notification.iyuuToken" placeholder="IYUU…"/>
         </a-form-item>
-        <a-form-item
+<a-form-item
           v-if="notification.type === 'webhook'"
           label="Url"
           name="webhookurl"
@@ -331,10 +331,7 @@ export default {
         }, {
           key: 'getMaindataError',
           value: '获取下载器信息失败'
-        }, {
-          key: 'spaceAlarm',
-          value: '空间警告'
-        }
+        }, { key: 'spaceAlarm', value: '空间警告' }
       ],
       typeLabels: {
         telegram: 'Telegram',

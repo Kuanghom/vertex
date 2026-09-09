@@ -65,11 +65,7 @@ export function normalizeTableColumns (cols, opts) {
     }
     if (ops) {
       next.align = 'center';
-      if (next.dataIndex === 'option') {
-        width = Math.min(Math.max(width, 72), 96);
-      } else {
-        width = Math.max(width, 248);
-      }
+      width = Math.min(Math.max(width, 96), 120);
     }
     if (key === 'id') width = Math.max(width, 120);
     if (key === 'alias' || key === 'name') width = Math.max(width, 200);

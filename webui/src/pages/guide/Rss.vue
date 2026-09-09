@@ -7,6 +7,7 @@
       <li>在「Rss 任务」填写 RSS 地址、绑定下载器后保存</li>
     </ol>
     <a-space>
+      <a-button type="primary" @click="$goto('/guide/presets?kind=task&from=/guide/rss', $router)">快速导入</a-button>
       <a-button @click="$goto('/base/downloader', $router)">下载器</a-button>
       <a-button @click="$goto('/rule/rss', $router)">RSS 规则</a-button>
       <a-button type="primary" @click="$goto('/task/rss', $router)">去创建任务</a-button>

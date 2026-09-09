@@ -61,6 +61,29 @@
             </div>
           </div>
         </div>
+        <div v-if="healthIssues.length" class="dash-row dash-health">
+          <div
+            v-for="item in healthIssues"
+            :key="item.title + item.body"
+            class="data-rect-2 dash-health-card"
+            :class="'dash-health-' + item.level"
+            @click="$goto(item.href || '/index', $router)">
+            <div class="data-rect-body">
+              <div>{{ item.title }}</div>
+              <div class="data-rect-sub">{{ item.body }}</div>
+            </div>
+          </div>
+        </div>
+        <div
+          v-if="!downloaders.length"
+          class="dash-row">
+          <div class="data-rect-2" style="cursor: pointer;" @click="$goto('/guide/presets?from=/index', $router)">
+            <div class="data-rect-body">
+              <div>还没有下载器和规则</div>
+              <div class="data-rect-sub">去任务引导 → 快速导入，一键加上推荐套餐</div>
+            </div>
+          </div>
+        </div>
         <div
           class="dash-row"
           v-if="showDownloaders || showServers"
@@ -100,7 +123,28 @@
   </div>
 </template>
 <script>
+import { use } from 'echarts/core';
+import { CanvasRenderer } from 'echarts/renderers';
+import { LineChart } from 'echarts/charts';
+import {
+  TitleComponent,
+  TooltipComponent,
+  GridComponent,
+  DataZoomComponent
+} from 'echarts/components';
+import VChart from 'vue-echarts';
+
+use([
+  CanvasRenderer,
+  LineChart,
+  TitleComponent,
+  TooltipComponent,
+  GridComponent,
+  DataZoomComponent
+]);
+
 export default {
+  components: { VChart },
   data () {
     return {
       trackerChart: {
@@ -244,6 +288,9 @@ export default {
     },
     showServers () {
       return (this.runInfo.dashboardContent || []).includes('server');
+    },
+    healthIssues () {
+      return ((this.runInfo.health && this.runInfo.health.issues) || []).slice(0, 8);
     }
   },
   methods: {
@@ -260,18 +307,6 @@ export default {
       try {
         const res = await this.$api().setting.getRunInfo();
         this.runInfo = res.data;
-        for (const error of this.runInfo.errors.reverse()) {
-          await this.$notification().error({
-            message: '存在错误信息, 请检查日志',
-            description: error.map(item => {
-              if (typeof item === 'object') {
-                return item.message || item.code || item.description;
-              }
-              return item;
-            }).join(', '),
-            duration: 0
-          });
-        }
       } catch (e) {
         await this.$message().error(e.message);
       }
@@ -437,6 +472,15 @@ export default {
   justify-content: center;
   gap: 16px;
   margin: 0 0 24px;
+}
+.dash-health-card {
+  cursor: pointer;
+  background: var(--warn-soft);
+  color: var(--warn);
+}
+.dash-health-danger {
+  background: var(--bad-soft);
+  color: var(--bad);
 }
 .dash-chart-wrap {
   display: flex;

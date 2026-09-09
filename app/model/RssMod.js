@@ -66,6 +66,69 @@ class RssMod {
     return torrents;
   };
 
+  async dryrunRule (options) {
+    const urls = (options.rssUrls || []).map(url => String(url || '').trim()).filter(url => /^https?:\/\//i.test(url));
+    if (!urls.length) throw new Error('请填写有效的 RSS 地址');
+    const rule = options.rule || {};
+    const kind = options.kind === 'select' ? 'select' : 'rss';
+    const mode = options.mode === 'reject' ? 'reject' : 'accept';
+    const rss = new Rss({
+      id: util.uuid.v4().split('-')[0],
+      alias: '规则试运行',
+      rssUrls: urls,
+      cron: '* * * * *',
+      dryrun: true,
+      acceptRules: [],
+      rejectRules: [],
+      clientArr: [],
+      clientSortBy: 'leechingCount',
+      allocateRule: 'builtin:original',
+      skipSameTorrent: false
+    });
+    const torrents = (await Promise.all(urls.map(url => require('../libs/rss').getTorrents(url)))).flat();
+    const usableKeys = kind === 'select'
+      ? ['title', 'subtitle', 'name', 'size', 'tags']
+      : ['name', 'size', 'description'];
+    const conditions = Array.isArray(rule.conditions) ? rule.conditions.filter(item => item && item.key && item.compareType) : [];
+    const skipped = conditions.filter(item => usableKeys.indexOf(item.key) === -1);
+    for (const torrent of torrents) {
+      const mapped = {
+        ...torrent,
+        name: torrent.name || '',
+        title: torrent.name || '',
+        subtitle: torrent.description || '',
+        description: torrent.description || '',
+        size: torrent.size,
+        tags: ''
+      };
+      if (rule.type === 'javascript') {
+        torrent.status = '脚本规则请保存后到任务里试运行';
+        continue;
+      }
+      const usable = conditions.filter(item => usableKeys.indexOf(item.key) !== -1);
+      if (!usable.length) {
+        torrent.status = skipped.length ? 'RSS 测不了这条规则用到的字段' : '规则还没有条件';
+        continue;
+      }
+      let fit = false;
+      try {
+        fit = rss._fitConditions(mapped, usable);
+      } catch (e) {
+        torrent.status = '匹配出错: ' + e.message;
+        continue;
+      }
+      if (kind === 'select') {
+        torrent.status = fit ? '命中' : '未命中';
+      } else if (mode === 'reject') {
+        torrent.status = fit ? '会拒绝' : '不会拒绝';
+      } else {
+        torrent.status = fit ? '会选中' : '不会选中';
+      }
+      if (skipped.length) torrent.status += ' · 已跳过 ' + skipped.map(item => item.key).join(',');
+    }
+    return torrents;
+  };
+
   async scrapeDryrun (options) {
     logger.info('[rss] 开始检测免费/HR 试运行:', options.alias || options.id || '新任务');
     const torrents = await this.dryrun(options);

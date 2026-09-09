@@ -1,5 +1,5 @@
 <template>
-  <div class="allocate-rule fn-page">
+  <div class="allocate-rule fn-page fn-page-flow">
     <fn-filter :active="listSearchActive" title="搜索">
       <fn-list-search
         v-model:query="listQuery"
@@ -33,7 +33,7 @@
           {{ typeLabel(record) }}
         </template>
         <template v-if="column.dataIndex === 'used'">
-          <a-tag color="success" v-if="record.used">{{ record.usedCount || 0 }} 个任务</a-tag>
+          <a-tag color="success" v-if="record.used" :title="usedByTitle(record)">{{ record.usedCount || 0 }} 个任务</a-tag>
           <a-tag v-else>空闲</a-tag>
         </template>
         <template v-if="column.title === '操作'">
@@ -346,6 +346,7 @@ const scrollToTop = () => {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 import adminCrud from '../../mixins/adminCrud';
+import { usedByTitle } from '../../util/ruleConflict';
 
 export default {
   mixins: [adminCrud],
@@ -513,6 +514,7 @@ export default {
     }
   },
   methods: {
+    usedByTitle,
     typeLabel (record) {
       if (record.builtin) return '内置';
       if (record.type === 'javascript') return 'JavaScript';
@@ -574,7 +576,7 @@ export default {
     },
     async deleteAllocateRule (row) {
       if (row.used) {
-        this.$message().error('组件被占用, 取消占用后删除');
+        this.$message().error(usedByTitle(row) + '，先从 RSS 任务里换掉再删');
         return;
       }
       try {

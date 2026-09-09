@@ -7,6 +7,7 @@
         placeholder="别名 / ID / URL"
         @reset="resetListSearch"/>
       <template #toolbar>
+        <a-button @click="$goto('/guide/presets?kind=client&from=/base/downloader', $router)">从预设导入</a-button>
         <a-button type="primary" @click="openCreate">新增</a-button>
         <fn-column-settings
           :items="columnSettingItems"
@@ -456,7 +457,7 @@ export default {
       const refs = this.refData || {};
       const groups = [];
       if ((refs.rss || []).length) groups.push({ key: 'rss', title: 'RSS 任务', path: '/task/rss', items: refs.rss });
-      if ((refs.rssRule || []).length) groups.push({ key: 'rssRule', title: 'RSS 规则', path: '/rule/rss', items: refs.rssRule });
+if ((refs.rssRule || []).length) groups.push({ key: 'rssRule', title: 'RSS 规则', path: '/rule/rss', items: refs.rssRule });
       if ((refs.client || []).length) groups.push({ key: 'client', title: '同服下载器', path: '/base/downloader', items: refs.client });
       return groups;
     }
@@ -567,7 +568,7 @@ export default {
       for (const item of refs.rss || []) {
         lines.push(`RSS 任务「${item.alias}」(${item.detail}${item.enable ? '' : '，任务已禁用'})`);
       }
-      for (const item of refs.rssRule || []) {
+for (const item of refs.rssRule || []) {
         lines.push(`RSS 规则「${item.alias}」`);
       }
       for (const item of refs.client || []) {

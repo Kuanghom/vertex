@@ -5,6 +5,7 @@ const UA_MOBILE = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini
 
 export const viewport = reactive({
   narrow: false,
+  compact: false,
   width: 1280,
   pageLoading: false
 });
@@ -15,7 +16,9 @@ function applyViewport () {
   viewport.narrow = window.matchMedia
     ? window.matchMedia('(max-width: 960px)').matches
     : window.innerWidth <= 960;
+  viewport.compact = !viewport.narrow && window.innerWidth <= 1180;
   document.documentElement.classList.toggle('fn-narrow', viewport.narrow);
+  document.documentElement.classList.toggle('fn-compact', viewport.compact);
   document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
 }
 
@@ -32,6 +35,9 @@ export default {
   computed: {
     isNarrow () {
       return viewport.narrow;
+    },
+    isCompact () {
+      return viewport.compact;
     },
     displayColumns () {
       return normalizeTableColumns(this.columns || [], { narrow: this.isNarrow });

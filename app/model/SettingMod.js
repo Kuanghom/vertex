@@ -143,6 +143,12 @@ class SettingMod {
     }
     const errors = global.ignoreError ? [] : JSON.parse(await redis.get('vertex:error:list') || '[]');
     await redis.set('vertex:error:list', '[]');
+    let health;
+    try {
+      health = await this.getHealth();
+    } catch (e) {
+      health = { issues: [] };
+    }
     return {
       dashboardContent: global.dashboardContent,
       uploaded: uploaded || 0,
@@ -158,9 +164,131 @@ class SettingMod {
       startTime: global.startTime,
       perTracker,
       perTrackerToday,
-      errors
+      errors,
+      health
     };
   };
+
+  async getHealth () {
+    const issues = [];
+    const now = moment().unix();
+    const GB = 1024 * 1024 * 1024;
+
+    (util.listClient() || []).forEach((client) => {
+      if (!client.enable) return;
+      const running = global.runningClient[client.id];
+      const ok = !!(running && running.status && running.maindata);
+      if (!ok) {
+        issues.push({
+          level: 'danger',
+          group: '下载器',
+          title: client.alias + ' 连不上',
+          body: '已启用但没有数据',
+          href: '/base/downloader'
+        });
+        return;
+      }
+      const free = running.maindata.freeSpaceOnDisk || 0;
+      if (free > 0 && free < 5 * GB) {
+        issues.push({
+          level: 'danger',
+          group: '下载器',
+          title: client.alias + ' 磁盘将满',
+          body: '剩余 ' + util.formatSize(free),
+          href: '/base/downloader'
+        });
+      } else if (free > 0 && free < 20 * GB) {
+        issues.push({
+          level: 'warn',
+          group: '下载器',
+          title: client.alias + ' 磁盘偏低',
+          body: '剩余 ' + util.formatSize(free),
+          href: '/base/downloader'
+        });
+      }
+    });
+
+    (util.listSite() || []).forEach((site) => {
+      if (!site.enable) return;
+      if (!String(site.cookie || '').trim()) {
+        issues.push({
+          level: 'warn',
+          group: '站点',
+          title: (site.name || '站点') + ' 未填 Cookie',
+          body: '刷流或刷新可能失败',
+          href: '/base/site'
+        });
+      }
+      const info = global.runningSite[site.name] && global.runningSite[site.name].info;
+      const updateTime = info && (info.updateTime || info.update_time);
+      if (updateTime && now - Number(updateTime) > 36 * 3600) {
+        issues.push({
+          level: 'warn',
+          group: '站点',
+          title: (site.name || '站点') + ' 很久没刷新',
+          body: '上次刷新超过 36 小时',
+          href: '/base/site'
+        });
+      }
+    });
+
+    const since = moment().subtract(6, 'hours').unix();
+    let rssStats = [];
+    try {
+      rssStats = await util.getRecords(
+        'select rss_id as rssId, sum(case when record_type = 1 then 1 else 0 end) as added, sum(case when record_type = 2 then 1 else 0 end) as rejected from torrents where record_time > ? and record_type in (1, 2) group by rss_id',
+        [since]
+      );
+    } catch (e) {
+      rssStats = [];
+    }
+    const statMap = {};
+    rssStats.forEach((row) => { statMap[row.rssId] = row; });
+
+    (util.listRss() || []).filter(item => item.enable).forEach((task) => {
+      const urls = (task.rssUrls || []).map(url => String(url || '').trim()).filter(url => /^https?:\/\//i.test(url));
+      if (!urls.length) {
+        issues.push({
+          level: 'warn',
+          group: 'RSS',
+          title: task.alias + ' 还没填地址',
+          body: '任务已开，RSS 仍是占位',
+          href: '/task/rss'
+        });
+      }
+      if (!(task.clientArr || []).length) {
+        issues.push({
+          level: 'warn',
+          group: 'RSS',
+          title: task.alias + ' 未绑下载器',
+          body: '推送时没有可用下载器',
+          href: '/task/rss'
+        });
+      }
+      const running = global.runningRss[task.id];
+      if (running && running.lastRssTime && now - running.lastRssTime > 6 * 3600) {
+        issues.push({
+          level: 'warn',
+          group: 'RSS',
+          title: task.alias + ' 很久没有拉取',
+          body: '超过 6 小时没有成功 RSS',
+          href: '/history/rss'
+        });
+      }
+      const stat = statMap[task.id];
+      if (stat && +stat.rejected >= 8 && +stat.added === 0) {
+        issues.push({
+          level: 'warn',
+          group: 'RSS',
+          title: task.alias + ' 连续拒绝',
+          body: '近 6 小时拒绝 ' + stat.rejected + ' 条，没有添加',
+          href: '/history/rss'
+        });
+      }
+    });
+
+    return { issues, generatedAt: Date.now() };
+  }
 
   async backupVertex (options) {
     const backupsFile = `/tmp/Vertex-backups-${moment().format('YYYY-MM-DD_HH:mm:ss')}.tar.gz`;

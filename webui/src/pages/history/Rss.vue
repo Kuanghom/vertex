@@ -59,6 +59,17 @@
           @reset="resetColumnPrefs"/>
       </template>
     </fn-filter>
+    <div v-if="reasonChips.length" class="rss-reasons">
+      <button
+        v-for="item in reasonChips"
+        :key="item.note"
+        type="button"
+        class="rss-reason-chip"
+        :class="{ on: filterStatus.indexOf(item.note) !== -1 }"
+        @click="toggleReason(item.note)">
+        {{ formatStatusLabel(item.note) }} · {{ item.n }}
+      </button>
+    </div>
     <a-table
       :columns="displayColumns"
       size="middle"
@@ -114,6 +125,7 @@
         </template>
         <template v-if="column.title === '操作'">
           <fn-ops>
+            <a-button type="link" @click="openChain(record)">为什么</a-button>
             <a-button type="link" @click="gotoDetail(record)">打开</a-button>
             <a-popconfirm title="确认删除这条数据？" ok-text="删除" cancel-text="取消" @confirm="delRecord(record)">
               <a-button type="link" danger>删除</a-button>
@@ -122,6 +134,25 @@
         </template>
       </template>
     </a-table>
+    <a-drawer
+      v-model:visible="chainOpen"
+      title="这条记录怎么来的"
+      :width="isNarrow ? '100%' : 420"
+      :placement="isNarrow ? 'bottom' : 'right'"
+    >
+      <div v-if="chain" class="rss-chain">
+        <p><strong>{{ chain.name }}</strong></p>
+        <p>{{ $formatSize(chain.size) }}</p>
+        <p>任务：{{ (rssList.filter(item => item.id === chain.rssId)[0] || { alias: '已删除' }).alias }}</p>
+        <p>结果：{{ formatRecordNote(chain) }}</p>
+        <p>下载器：{{ chain.clientAlias || '无' }}</p>
+        <div v-if="chain.recordDetail && chain.recordDetail.failedRules && chain.recordDetail.failedRules.length">
+          <div class="rss-chain-h">未匹配的选择规则</div>
+          <p v-for="rule in chain.recordDetail.failedRules" :key="rule.id">{{ rule.alias }}（优先级 {{ rule.priority }}）</p>
+        </div>
+        <a-button v-if="chain.link" type="link" @click="gotoDetail(chain)">打开种子页</a-button>
+      </div>
+    </a-drawer>
   </div>
 </template>
 <script>
@@ -204,7 +235,10 @@ export default {
       clientList: [],
       filterRss: [],
       filterStatus: [],
-      filterClient: []
+      filterClient: [],
+      reasonChips: [],
+      chainOpen: false,
+      chain: null
     };
   },
   computed: {
@@ -255,6 +289,15 @@ export default {
       this.qs.status = this.filterStatus.join(',');
       this.qs.client = this.filterClient.join(',');
     },
+    toggleReason (note) {
+      const i = this.filterStatus.indexOf(note);
+      this.filterStatus = i === -1 ? this.filterStatus.concat(note) : this.filterStatus.filter(item => item !== note);
+      this.applyFilter();
+    },
+    openChain (record) {
+      this.chain = record;
+      this.chainOpen = true;
+    },
     applyFilter () {
       this.qs.page = 1;
       this.syncFilterQuery();
@@ -294,6 +337,14 @@ export default {
         this.$message().error(e.message);
       }
     },
+    async listSummary () {
+      try {
+        const res = (await this.$api().torrent.listHistorySummary('rss')).data;
+        this.reasonChips = res.reasons || [];
+      } catch (e) {
+        this.reasonChips = [];
+      }
+    },
     async listClient () {
       try {
         const res = await this.$api().downloader.list();
@@ -329,6 +380,7 @@ export default {
     this.listHistory();
     this.listRss();
     this.listFilterOptions();
+    this.listSummary();
     this.listClient();
   }
 };
@@ -371,5 +423,33 @@ export default {
   display: block;
   width: 14px;
   height: 14px;
+}
+.rss-reasons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 12px;
+}
+.rss-reason-chip {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--text-2);
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.rss-reason-chip.on {
+  border-color: var(--blue);
+  background: var(--blue-soft);
+  color: var(--text);
+}
+.rss-chain p {
+  margin: 0 0 8px;
+  color: var(--text-2);
+}
+.rss-chain-h {
+  margin: 12px 0 8px;
+  font-weight: 600;
 }
 </style>

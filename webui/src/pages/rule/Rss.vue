@@ -7,6 +7,8 @@
         placeholder="别名 / ID"
         @reset="resetListSearch"/>
       <template #toolbar>
+        <a-button @click="$goto('/guide/presets?kind=rss&from=/rule/rss', $router)">从预设导入</a-button>
+        <fn-quick-size kind="rss" :existing="rssAliases" @added="listRssRule"/>
         <a-button type="primary" @click="openCreate">新增</a-button>
         <fn-column-settings
           :items="columnSettingItems"
@@ -29,6 +31,9 @@
       :customRow="listCustomRow"
     >
       <template #bodyCell="{ column, record }">
+        <template v-if="column.dataIndex === 'usedBy'">
+          <span :title="usedByTitle(record)">{{ usedByText(record, '未引用') }}</span>
+        </template>
         <template v-if="column.dataIndex === 'downloader'">
           <a-select size="small" :allowClear="true" v-model:value="record.client" style="width: 100%;" @change="modifyRssRuleDownloader(record)">
             <template v-for="downloader of downloaders" :key="downloader.id">
@@ -41,8 +46,9 @@
         <template v-if="column.title === '操作'">
           <fn-ops>
             <a-button type="link" @click="cloneClick(record)">克隆</a-button>
+            <fn-rule-dryrun link kind="rss" :rule="record"/>
             <a-button type="link" @click="modifyClick(record)">编辑</a-button>
-            <a-popconfirm title="确认删除这条数据？" ok-text="删除" cancel-text="取消" @confirm="deleteRssRule(record)">
+            <a-popconfirm :title="deleteConfirm(record)" ok-text="删除" cancel-text="取消" :disabled="record.used" @confirm="deleteRssRule(record)">
               <a-button type="link" danger>删除</a-button>
             </a-popconfirm>
           </fn-ops>
@@ -129,7 +135,7 @@
           >
             <template #bodyCell="{ column, record }">
               <template v-if="column.dataIndex === 'key'">
-                <a-select size="small" v-model:value="record.key"  >
+                <a-select size="small" v-model:value="record.key" @change="onConditionKeyChange(record)">
                   <a-select-option v-for="conditionKey of conditionKeys" :key="conditionKey.key" :value="conditionKey.key">{{ conditionKey.name }}</a-select-option>
                 </a-select>
               </template>
@@ -147,7 +153,13 @@
                 </a-select>
               </template>
               <template v-if="column.dataIndex === 'value'">
-                <a-input size="small" v-model:value="record.value"/>
+                <fn-unit-input
+                  v-if="conditionKind(record.key)"
+                  v-model:value="record.value"
+                  v-model:unit="record._unit"
+                  :units="unitsFor(record.key)"
+                />
+                <a-input v-else size="small" v-model:value="record.value"/>
               </template>
               <template v-if="column.dataIndex === 'option'">
                 <a style="color: red" @click="rssRule.conditions = rssRule.conditions.filter(item => item !== record)">删除</a>
@@ -170,6 +182,7 @@
         </a-form-item>
         <a-form-item>
           <a-button type="primary" html-type="submit">保存</a-button>
+          <fn-rule-dryrun kind="rss" :rule="dryrunRule" :disabled="!canDryrun"/>
           <a-button style="margin-left: 12px;" @click="closeForm">取消</a-button>
         </a-form-item>
       </a-form>
@@ -179,9 +192,14 @@
 <script>
 import { scrollToTop } from '../../util/scroll';
 import adminCrud from '../../mixins/adminCrud';
+import conditionUnit from '../../mixins/conditionUnit';
+import FnQuickSize from '../../components/FnQuickSize.vue';
+import FnRuleDryrun from '../../components/FnRuleDryrun.vue';
+import { findRuleConflict, usedByText, usedByTitle } from '../../util/ruleConflict';
 
 export default {
-  mixins: [adminCrud],
+  components: { FnQuickSize, FnRuleDryrun },
+  mixins: [adminCrud, conditionUnit],
   data () {
     const columns = [
       {
@@ -196,6 +214,10 @@ export default {
         sorter: (a, b) => a.alias.localeCompare(b.alias),
         defaultSortOrder: 'ascend',
         width: 30
+      }, {
+        title: '引用',
+        dataIndex: 'usedBy',
+        width: 28
       }, {
         title: '下载器',
         dataIndex: 'downloader',
@@ -241,7 +263,9 @@ export default {
       condition: {
         key: '',
         compareType: '',
-        value: ''
+        value: '',
+        _kind: '',
+        _unit: ''
       },
       rssRule: {},
       defaultRssRule: {
@@ -261,7 +285,27 @@ export default {
       rssRuleList: []
     };
   },
+  computed: {
+    rssAliases () {
+      return (this.rssRuleList || []).map(item => item.alias);
+    },
+    dryrunRule () {
+      return {
+        ...this.rssRule,
+        conditions: this.serializeConditions(this.rssRule.conditions || [])
+      };
+    },
+    canDryrun () {
+      return !!(this.rssRule && this.rssRule.alias);
+    }
+  },
   methods: {
+    usedByText,
+    usedByTitle,
+    deleteConfirm (row) {
+      if (row.used) return usedByTitle(row) + '，先从任务里去掉再删';
+      return '确认删除这条数据？';
+    },
     async listRssRule () {
       try {
         const res = await this.$api().rssRule.list();
@@ -281,7 +325,19 @@ export default {
     },
     async modifyRssRule () {
       try {
-        await this.$api().rssRule.modify({ ...this.rssRule });
+        const conditions = this.serializeConditions(this.rssRule.conditions);
+        const hit = findRuleConflict(this.rssRuleList, this.rssRule, conditions);
+        if (hit.aliasHit || hit.condHit) {
+          const bits = [];
+          if (hit.aliasHit) bits.push('别名已有「' + hit.aliasHit.alias + '」');
+          if (hit.condHit) bits.push('条件和「' + hit.condHit.alias + '」相同');
+          const ok = window.confirm(bits.join('，') + '，还要保存吗？');
+          if (!ok) return;
+        }
+        await this.$api().rssRule.modify({
+          ...this.rssRule,
+          conditions
+        });
         this.$message().success((this.rssRule.id ? '编辑' : '新增') + '成功, 列表正在刷新...');
         this.closeForm();
         setTimeout(() => this.listRssRule(), 1000);
@@ -296,18 +352,22 @@ export default {
       this.formVisible = true;
     },
     modifyClick (row) {
-      this.rssRule = { ...row };
+      this.rssRule = { ...row, conditions: this.hydrateConditions(row.conditions) };
       this._formEditing = true;
       this.formVisible = true;
     },
     cloneClick (row) {
-      this.rssRule = { ...row, id: undefined };
+      const cloned = this.cloneRuleFrom(row);
+      this.rssRule = {
+        ...cloned,
+        conditions: this.hydrateConditions(cloned.conditions)
+      };
       this._formEditing = false;
       this.formVisible = true;
     },
     async deleteRssRule (row) {
       if (row.used) {
-        this.$message().error('组件被占用, 取消占用后删除');
+        this.$message().error(usedByTitle(row) + '，先从任务里去掉再删');
         return;
       }
       try {

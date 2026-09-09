@@ -105,6 +105,23 @@ class Rss {
     }
   };
 
+  async dryrunRule (req, res) {
+    const options = req.body;
+    try {
+      const r = await rssMod.dryrunRule(options);
+      res.send({
+        success: true,
+        data: r
+      });
+    } catch (e) {
+      logger.error('[rss] 规则试运行失败:', e.message);
+      res.send({
+        success: false,
+        message: e.message
+      });
+    }
+  };
+
   async dryrun (req, res) {
     const options = req.body;
     logger.info('[rss] API 试运行请求:', options.alias || options.id || '新任务');

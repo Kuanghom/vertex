@@ -25,6 +25,8 @@ class ClientMod {
     if (rssSet.enable) global.runningRss[rssSet.id] = new Rss(rssSet);
   }
 
+
+
   _reloadClient (clientSet) {
     fs.writeFileSync(path.join(__dirname, '../data/client/', clientSet.id + '.json'), JSON.stringify(clientSet, null, 2));
     if (global.runningClient[clientSet.id]) global.runningClient[clientSet.id].destroy();
@@ -67,6 +69,8 @@ class ClientMod {
       });
     }
 
+
+
     const rssRule = rssRuleList
       .filter(item => item.client === clientId)
       .map(item => ({ id: item.id, alias: item.alias }));
@@ -94,6 +98,8 @@ class ClientMod {
       this._reloadRss(rssSet);
       cleaned.rss += 1;
     }
+
+
 
     const affectedRuleIds = [];
     for (const rssRule of util.listRssRule()) {
@@ -179,6 +185,7 @@ class ClientMod {
         c.downloadSpeed = global.runningClient[client.id].maindata.downloadSpeed;
         c.leechingCount = global.runningClient[client.id].maindata.leechingCount;
         c.seedingCount = global.runningClient[client.id].maindata.seedingCount;
+        c.freeSpaceOnDisk = global.runningClient[client.id].maindata.freeSpaceOnDisk || 0;
       }
       clientInfos.push(c);
     }
@@ -231,6 +238,9 @@ class ClientMod {
         throw new Error(`下载器「${config.alias}」已禁用, 请先启用后再查看日志`);
       }
       throw new Error('下载器未连接, 无法获取日志');
+    }
+    if (!client.status) {
+      throw new Error(`下载器「${client.alias}」登录失败, 无法获取日志`);
     }
     return await client.getLogs();
   };

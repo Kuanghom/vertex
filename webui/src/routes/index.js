@@ -52,6 +52,7 @@ import MixSearch from '@/pages/mix/Search';
 import MixDownloader from '@/pages/mix/Downloader';
 
 import GuideRss from '@/pages/guide/Rss';
+import GuidePresets from '@/pages/guide/Presets';
 
 import Login from '@/pages/user/Login';
 
@@ -328,9 +329,15 @@ const mix = {
 const guide = {
   path: 'guide',
   component: Layout,
-  redirect: '/guide/rss',
+  redirect: '/guide/presets',
   children: [
     {
+      path: 'presets',
+      component: GuidePresets,
+      meta: {
+        title: '配置预设 - 任务引导'
+      }
+    }, {
       path: 'rss',
       component: GuideRss,
       meta: {

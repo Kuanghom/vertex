@@ -38,6 +38,24 @@
           <a-input size="small" v-model:value="setting.wechatCover"/>
         </a-form-item>
         <a-form-item
+          label="Emby 通知封面"
+          name="embyCover"
+          extra="Emby 通知时使用的封面, 留空显示 Vertex Logo">
+          <a-input size="small" v-model:value="setting.embyCover"/>
+        </a-form-item>
+        <a-form-item
+          label="Plex 通知封面"
+          name="plexCover"
+          extra="Plex 通知时使用的封面, 留空显示 Vertex Logo">
+          <a-input size="small" v-model:value="setting.plexCover"/>
+        </a-form-item>
+        <a-form-item
+          label="Jellyfin 通知封面"
+          name="jellyfinCover"
+          extra="Jellyfin 通知时使用的封面, 留空显示 Vertex Logo">
+          <a-input size="small" v-model:value="setting.jellyfinCover"/>
+        </a-form-item>
+        <a-form-item
           label="首页显示内容"
           name="dashboardContent"
           extra="选择首页数据展示">
@@ -95,6 +113,9 @@ export default {
           theme: s.theme || 'follow',
           background: s.background,
           wechatCover: s.wechatCover,
+          embyCover: s.embyCover,
+          plexCover: s.plexCover,
+          jellyfinCover: s.jellyfinCover,
           dashboardContent: s.dashboardContent || []
         };
         applyTheme(this.setting.theme);

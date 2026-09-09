@@ -37,7 +37,14 @@ class RaceRuleMod {
     const raceRuleList = util.listRaceRule();
     const raceRuleSetList = util.listRaceRuleSet();
     for (const raceRule of raceRuleList) {
-      raceRule.used = !!raceRuleSetList.some(item => item.raceRules.indexOf(raceRule.id) !== -1);
+      const usedBy = [];
+      raceRuleSetList.forEach((item) => {
+        if ((item.raceRules || []).indexOf(raceRule.id) !== -1) {
+          usedBy.push({ id: item.id, alias: item.alias, kind: 'set' });
+        }
+      });
+      raceRule.usedBy = usedBy;
+      raceRule.used = usedBy.length > 0;
     }
     return raceRuleList;
   };
