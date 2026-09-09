@@ -273,6 +273,9 @@ class ClientMod {
       }
       throw new Error('下载器未连接, 无法获取日志');
     }
+    if (!client.status) {
+      throw new Error(`下载器「${client.alias}」登录失败, 无法获取日志`);
+    }
     return await client.getLogs();
   };
 }

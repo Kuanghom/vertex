@@ -147,7 +147,11 @@ class Client {
         data: r
       });
     } catch (e) {
-      logger.error(e);
+      if (/登录失败|未登录|会话已失效|已禁用|未连接/.test(e.message)) {
+        logger.warn(e.message);
+      } else {
+        logger.error(e);
+      }
       res.send({
         success: false,
         message: e.message

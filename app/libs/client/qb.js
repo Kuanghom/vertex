@@ -3,6 +3,22 @@ const logger = require('../logger');
 const url = require('url');
 const fs = require('fs');
 
+function parseQbJson (res, api) {
+  const body = res && res.body != null ? String(res.body) : '';
+  if (res.statusCode === 403 || /^Forbidden/i.test(body) || /^Fails\.?/i.test(body)) {
+    throw new Error('qBittorrent 未登录或会话已失效');
+  }
+  if (res.statusCode && res.statusCode >= 400) {
+    throw new Error(`qBittorrent ${api} 返回 ${res.statusCode}`);
+  }
+  try {
+    return JSON.parse(body);
+  } catch (e) {
+    const preview = body.replace(/\s+/g, ' ').slice(0, 80);
+    throw new Error(`qBittorrent ${api} 返回非 JSON: ${preview || '(空)'}`);
+  }
+}
+
 exports.login = async function (username, clientUrl, password) {
   const message = {
     url: clientUrl + '/api/v2/auth/login',
@@ -269,7 +285,7 @@ exports.getFiles = async (clientUrl, cookie, hash) => {
     }
   };
   const res = await util.requestPromise(message);
-  return JSON.parse(res.body);
+  return parseQbJson(res, 'files');
 };
 
 exports.getLogs = async (clientUrl, cookie) => {
@@ -280,7 +296,7 @@ exports.getLogs = async (clientUrl, cookie) => {
     }
   };
   const res = await util.requestPromise(message);
-  return JSON.parse(res.body);
+  return parseQbJson(res, 'log/main');
 };
 
 exports.setSpeedLimit = async (clientUrl, cookie, hash, type, speed) => {
