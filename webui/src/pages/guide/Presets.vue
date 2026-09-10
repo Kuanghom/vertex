@@ -161,7 +161,7 @@
     </template>
 
     <div v-else class="preset-backup">
-      <p class="fn-guide-lead">上传 Vertex 备份或规则包（zip / tar.gz），按类型勾选后再导入。地址和密钥会清空。</p>
+      <p class="fn-guide-lead">上传规则包或含规则 JSON 的 Vertex 备份（zip / tar.gz），按类型勾选后再导入。地址和密钥会清空。整机空备份请到「设置 → 备份还原」。</p>
       <a-upload
         accept=".zip,.tar.gz,.tgz,.tar"
         :before-upload="beforeBackup"
@@ -567,8 +567,14 @@ export default {
           (this.importGroups[kind] || []).forEach((row) => rows.push(row.source));
         });
         this.importPicked = rows;
+        if (!rows.length) {
+          this.importGroups = null;
+          this.importFile = null;
+          this.$message().error('备份里没有可导入的规则、任务或下载器');
+        }
+        return;
       }
-      if (file.status === 'error') {
+      if (file.status === 'done' || file.status === 'error') {
         this.$message().error((file.response && file.response.message) || '预览失败');
       }
     },

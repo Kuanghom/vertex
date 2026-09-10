@@ -268,6 +268,15 @@ class PresetMod {
         sensitive
       });
     });
+    const total = Object.keys(groups).reduce((n, kind) => n + groups[kind].length, 0);
+    if (!total) {
+      const names = Object.keys(files);
+      const official = names.some((name) => /(^|\/)vertex\/(data|db|config)(\/|$)/.test(name.replace(/\\/g, '/')));
+      if (official) {
+        throw new Error('这是 Vertex 整机备份，但 data/rule、data/rss、data/client 里没有 JSON。当前这份备份是空实例，不能当规则包导入。请到「设置 → 备份还原」整包恢复，或从有规则的机器重新导出后再试。');
+      }
+      throw new Error('压缩包里没有可导入的规则、任务或下载器。需要包含 data/rule、data/rss、data/client 下的 json。');
+    }
     return groups;
   }
 
