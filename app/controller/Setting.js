@@ -34,6 +34,22 @@ class Setting {
     }
   };
 
+  async cookieFromRss (req, res) {
+    try {
+      const r = await settingMod.cookieFromRss(req.body || {});
+      res.send({
+        success: true,
+        data: r
+      });
+    } catch (e) {
+      logger.error(e);
+      res.send({
+        success: false,
+        message: e.message
+      });
+    }
+  };
+
   async modify (req, res) {
     const options = req.body;
     try {

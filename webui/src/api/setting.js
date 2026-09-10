@@ -10,6 +10,10 @@ export default {
     const url = '/api/setting/modify';
     return await post(url, body);
   },
+  cookieFromRss: async (body) => {
+    const url = '/api/setting/cookieFromRss';
+    return await post(url, body);
+  },
   getTrackerFlowHistory: async () => {
     const url = '/api/setting/getTrackerFlowHistory';
     return await get(url);

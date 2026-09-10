@@ -595,21 +595,115 @@ exports.mikanSearch = async function (name) {
   return torrents;
 };
 
-exports.syncCookieCloud = async (cc) => {
-  const { uuid, passwd, host, sites, douban } = cc;
-  const { body } = await exports.requestPromise(`${host}/get/${uuid}`);
+function normalizeCookieHost (host) {
+  return String(host || '').toLowerCase().replace(/^\./, '').replace(/\.$/, '').split(':')[0];
+}
+
+function cookieHostMatches (host, domain) {
+  const h = normalizeCookieHost(host);
+  const d = normalizeCookieHost(domain);
+  if (!h || !d) return false;
+  return h === d || h.endsWith('.' + d) || d.endsWith('.' + h);
+}
+
+exports.hostsFromRssUrls = function (urls) {
+  const hosts = [];
+  (urls || []).forEach((raw) => {
+    const text = String(raw || '').trim();
+    if (!/^https?:\/\//i.test(text)) return;
+    try {
+      const host = normalizeCookieHost(new URL(text).hostname);
+      if (host && hosts.indexOf(host) === -1) hosts.push(host);
+    } catch (e) {}
+  });
+  return hosts;
+};
+
+exports.isMteamHost = function (host) {
+  return /m-?team/i.test(String(host || ''));
+};
+
+exports.fetchCookieCloudCookies = async (cc) => {
+  const { uuid, passwd, host } = cc || {};
+  if (!host || !uuid || !passwd) {
+    throw new Error('请先在「设置 → CookieCloud」启用并填写 Host、uuid、password');
+  }
+  const { body } = await exports.requestPromise(`${host.replace(/\/$/, '')}/get/${uuid}`);
   const { encrypted } = JSON.parse(body);
+  if (!encrypted) {
+    throw new Error('CookieCloud 没有返回可解密的数据');
+  }
   const key = CryptoJS.MD5(uuid + '-' + passwd).toString().substring(0, 16);
   const decrypted = CryptoJS.AES.decrypt(encrypted, key).toString(CryptoJS.enc.Utf8);
   const parsed = JSON.parse(decrypted);
-  const cookies = Object.values(parsed.cookie_data).flat().map(item => ({
+  const rows = [];
+  Object.values(parsed.cookie_data || {}).flat().forEach((item) => {
+    if (!item || !item.name) return;
+    rows.push({
+      domain: item.domain || '',
+      name: String(item.name),
+      value: item.value == null ? '' : String(item.value)
+    });
+  });
+  return rows;
+};
+
+exports.matchCookiesForHost = function (rows, host) {
+  const hits = (rows || []).filter(item => cookieHostMatches(host, item.domain));
+  hits.sort((a, b) => normalizeCookieHost(b.domain).length - normalizeCookieHost(a.domain).length);
+  const byName = {};
+  const domains = [];
+  hits.forEach((item) => {
+    const d = normalizeCookieHost(item.domain);
+    if (d && domains.indexOf(d) === -1) domains.push(d);
+    if (byName[item.name] == null) byName[item.name] = item.value;
+  });
+  const cookie = Object.keys(byName).map(name => name + '=' + byName[name]).join('; ');
+  return { cookie, domains, host: normalizeCookieHost(host) };
+};
+
+exports.syncRssCookieCloud = function (rows) {
+  const tasks = exports.listRss();
+  tasks.forEach((task) => {
+    if (!task.cookieCloudAuto) return;
+    const hosts = exports.hostsFromRssUrls(task.rssUrls);
+    if (hosts.length !== 1) {
+      logger.warn('RSS 任务', task.alias, '自动更新 Cookie 跳过: RSS 域名不唯一');
+      return;
+    }
+    if (exports.isMteamHost(hosts[0])) {
+      logger.warn('RSS 任务', task.alias, '自动更新 Cookie 跳过: 馒头请使用 API Key');
+      return;
+    }
+    const matched = exports.matchCookiesForHost(rows, hosts[0]);
+    if (!matched.cookie) {
+      logger.warn('RSS 任务', task.alias, '域名', hosts[0], '在 CookieCloud 中没有 Cookie');
+      return;
+    }
+    if (task.cookie === matched.cookie) {
+      logger.info('RSS 任务', task.alias, 'Cookie 未改变');
+      return;
+    }
+    task.cookie = matched.cookie;
+    fs.writeFileSync(path.join(__dirname, '../data/rss/', task.id + '.json'), JSON.stringify(task, null, 2));
+    if (global.runningRss && global.runningRss[task.id]) {
+      global.runningRss[task.id].cookie = matched.cookie;
+    }
+    logger.info('RSS 任务', task.alias, '已按', hosts[0], '更新 Cookie');
+  });
+};
+
+exports.syncCookieCloud = async (cc) => {
+  const { sites, douban } = cc;
+  const rows = await exports.fetchCookieCloudCookies(cc);
+  const cookies = rows.map(item => ({
     domain: item.domain,
     cookie: `${item.name}=${item.value}`
   }));
 
   const _sites = exports.listSite();
   const _doubans = exports.listDouban();
-  for (const s of sites) {
+  for (const s of sites || []) {
     // 判断站点是否启用
     const __site = _sites.filter(item => item.name === s)[0];
     if (!__site || !global.runningSite[s]) {
@@ -645,6 +739,8 @@ exports.syncCookieCloud = async (cc) => {
       logger.info('豆瓣同步 Cookie');
     }
   }
+
+  exports.syncRssCookieCloud(rows);
 };
 
 exports.initCookieCloud = function () {

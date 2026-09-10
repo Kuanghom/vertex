@@ -355,9 +355,29 @@
           label="Cookie"
           v-if="needScrapeCookie"
           name="cookie"
-          extra="Cookie, M-Team 为 api key"
+          extra="馒头填 API Key。右上角云图标按 RSS 域名填入；勾选后随 CookieCloud 周期覆盖，默认关。"
           :rules="[{ required: true, message: '${label}不可为空! ' }]">
-          <a-input size="small" v-model:value="rss.cookie"/>
+          <div class="rss-cookie-box">
+            <a-textarea
+              v-model:value="rss.cookie"
+              :auto-size="{ minRows: 3, maxRows: 10 }"
+              autocomplete="off"
+              :auto-complete="'off'"
+              placeholder="粘贴站点 Cookie"/>
+            <a-tooltip title="按 RSS 域名从 CookieCloud 填入">
+              <button
+                type="button"
+                class="rss-cookie-cloud"
+                :disabled="fillingCookie"
+                :aria-label="'从 CookieCloud 填入'"
+                @click="fillCookieFromCloud">
+                <fa :icon="['fas', fillingCookie ? 'spinner' : 'cloud-arrow-down']" :spin="fillingCookie"/>
+              </button>
+            </a-tooltip>
+          </div>
+          <a-checkbox v-model:checked="rss.cookieCloudAuto" class="rss-cookie-auto">
+            自动从 CookieCloud 更新
+          </a-checkbox>
         </a-form-item>
           </div>
         </div>
@@ -659,6 +679,7 @@
   </a-modal>
 </template>
 <script>
+import { Modal } from 'ant-design-vue';
 import PromoTag from '../../components/PromoTag.vue';
 import { PROMO_OPTIONS } from '../../util/promoTag';
 import { scrollToTop } from '../../util/scroll';
@@ -748,8 +769,10 @@ export default {
         maxClientUploadSpeedUnit: 'MiB',
         maxClientDownloadSpeedUnit: 'MiB',
         uploadLimitUnit: 'MiB',
-        downloadLimitUnit: 'MiB'
+        downloadLimitUnit: 'MiB',
+        cookieCloudAuto: false
       },
+      fillingCookie: false,
       loading: true,
       registCode: [],
       selectedRssIds: [],
@@ -1097,6 +1120,36 @@ export default {
         .map(url => (url || '').trim())
         .filter(url => /^https?:\/\//i.test(url));
     },
+    async applyCookieFromCloud () {
+      const urls = this.getValidRssUrls();
+      if (!urls.length) {
+        this.$message().warning('请先填写有效的 RSS 地址');
+        return;
+      }
+      this.fillingCookie = true;
+      try {
+        const res = await this.$api().setting.cookieFromRss({ urls });
+        this.rss.cookie = res.data.cookie;
+        this.$message().success('已按 ' + res.data.host + ' 填入 Cookie');
+      } catch (e) {
+        this.$message().error(e.message);
+      } finally {
+        this.fillingCookie = false;
+      }
+    },
+    fillCookieFromCloud () {
+      if (this.rss.cookie) {
+        Modal.confirm({
+          title: '覆盖当前 Cookie？',
+          content: '将按 RSS 域名从 CookieCloud 重新填入。',
+          okText: '覆盖',
+          cancelText: '取消',
+          onOk: () => this.applyCookieFromCloud()
+        });
+        return;
+      }
+      this.applyCookieFromCloud();
+    },
     async dryrun () {
       const rssUrls = this.getValidRssUrls();
       if (rssUrls.length === 0) {
@@ -1405,5 +1458,48 @@ export default {
   color: var(--text-3);
   font-weight: 400;
   font-size: 12px;
+}
+.rss-cookie-box {
+  position: relative;
+  width: 100%;
+}
+.rss-cookie-box :deep(textarea.ant-input) {
+  display: block;
+  width: 100% !important;
+  height: auto !important;
+  min-height: 84px !important;
+  padding: 8px 40px 8px 12px !important;
+  line-height: 1.5 !important;
+  resize: vertical;
+  word-break: break-all;
+}
+.rss-cookie-cloud {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--text-3) 10%, transparent);
+  color: var(--text-3);
+  cursor: pointer;
+}
+.rss-cookie-cloud:hover:not(:disabled) {
+  color: var(--text);
+  background: color-mix(in srgb, var(--text-3) 20%, transparent);
+}
+.rss-cookie-cloud:disabled {
+  cursor: wait;
+  opacity: 0.55;
+}
+.rss-cookie-auto {
+  display: flex;
+  margin-top: 10px;
 }
 </style>

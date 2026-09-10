@@ -50,6 +50,7 @@ class RssMod {
       rss.autoSiteTag = rss.autoSiteTag !== false;
       rss.tags = rss.tags || '';
       rss.allocateRule = rss.allocateRule || 'builtin:original';
+      rss.cookieCloudAuto = !!rss.cookieCloudAuto;
     }
     return rssList;
   };

@@ -18,6 +18,30 @@ class SettingMod {
     return { time: moment().unix(), ...JSON.parse(settingStr), password: '' };
   };
 
+  async cookieFromRss (options) {
+    const setting = JSON.parse(fs.readFileSync(settingPath, { encoding: 'utf-8' }));
+    const cc = setting.cookiecloud || {};
+    if (!cc.enable) {
+      throw new Error('请先在「设置 → CookieCloud」启用同步');
+    }
+    const hosts = util.hostsFromRssUrls(options.urls || options.rssUrls);
+    if (!hosts.length) {
+      throw new Error('请先填写有效的 RSS 地址');
+    }
+    if (hosts.length > 1) {
+      throw new Error('这些 RSS 不是同一站点: ' + hosts.join(', '));
+    }
+    if (util.isMteamHost(hosts[0])) {
+      throw new Error('馒头请填 API Key，不要从 CookieCloud 填网页 Cookie');
+    }
+    const rows = await util.fetchCookieCloudCookies(cc);
+    const matched = util.matchCookiesForHost(rows, hosts[0]);
+    if (!matched.cookie) {
+      throw new Error('CookieCloud 里没有「' + hosts[0] + '」的 Cookie，请确认浏览器已同步该站');
+    }
+    return matched;
+  };
+
   getBackground () {
     return `@vt-bg-image: url('${global.background}');`;
   };
